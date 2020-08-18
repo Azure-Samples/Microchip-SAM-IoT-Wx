@@ -51,11 +51,16 @@
 void LED_test(void);
 void LED_flashYellow(void);
 void LED_holdYellowOn(bool holdHigh);
+void LED_holdGreenOn(bool holdHigh);
+void LED_holdRedOn(bool holdHigh);
 void LED_flashRed(void);
 void LED_blinkingBlue(bool amBlinking);
 void LED_startBlinkingGreen(void);
 void LED_stopBlinkingGreen(void);
+void LED_startBlinkingRed(void);
+void LED_stopBlinkingRed(void);
 bool LED_isBlinkingGreen (void);
+bool LED_isBlinkingRed(void);
 void LED_sched(void);
 
 #endif /* LED_H_ */

@@ -70,7 +70,6 @@
 #include "system/command/sys_command.h"
 #endif
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Local Function Prototypes
@@ -114,8 +113,10 @@ static void APP_ConnectNotifyCb(DRV_HANDLE handle, WDRV_WINC_CONN_STATE currentS
 // *****************************************************************************
 
 /* Place holder for ECC608A unique serial id */
-char attDeviceID[20] = "BAAAAADD1DBAAADD1D";
 ATCA_STATUS appCryptoClientSerialNumber;
+ATCA_STATUS retValCryptoClientSerialNumber;
+char* attDeviceID;
+char attDeviceID_buf[20] = "BAAAAADD1DBAAADD1D";
 
 shared_networking_params_t shared_networking_params;
 
@@ -136,6 +137,9 @@ SYS_TIME_HANDLE App_DataTaskHandle = SYS_TIME_HANDLE_INVALID;
 volatile bool App_DataTaskTmrExpired = false;
 SYS_TIME_HANDLE App_CloudTaskHandle = SYS_TIME_HANDLE_INVALID;  
 volatile bool App_CloudTaskTmrExpired = false;
+
+
+
 
 // *****************************************************************************
 /* Application Data
@@ -235,6 +239,31 @@ void APP_Initialize(void)
 #if (CFG_APP_WINC_DEBUG == 1)    
     WDRV_WINC_DebugRegisterCallback(debug_printf);
 #endif
+
+#ifdef HUB_DEVICE_ID
+    attDeviceID = HUB_DEVICE_ID;
+#else  
+    	// Get serial number from the ECC608 chip 
+	retValCryptoClientSerialNumber = CRYPTO_CLIENT_printSerialNumber(attDeviceID_buf);
+	if (retValCryptoClientSerialNumber != ATCA_SUCCESS)
+	{
+		switch (retValCryptoClientSerialNumber)
+		{
+		case ATCA_GEN_FAIL:
+			debug_printError("APP: DeviceID generation failed, unspecified error");
+			break;
+		case ATCA_BAD_PARAM:
+			debug_printError("APP: DeviceID generation failed, bad argument");
+		default:
+			debug_printError("APP: DeviceID generation failed");
+			break;
+		}
+	}
+    else
+    {
+        attDeviceID = attDeviceID_buf;
+    }
+#endif 
 }
 
 static void APP_ConnectNotifyCb(DRV_HANDLE handle, WDRV_WINC_CONN_STATE currentState, WDRV_WINC_CONN_ERROR errorCode)
@@ -271,7 +300,7 @@ static void APP_GetTimeNotifyCb(DRV_HANDLE handle, uint32_t timeUTC)
 
 static void APP_DHCPAddressEventCb(DRV_HANDLE handle, uint32_t ipAddress)
 {
-    WiFi_HostLookupCb();    
+//    WiFi_HostLookupCb();    
 }
              
 static void APP_ProvisionRespCb(DRV_HANDLE handle, WDRV_WINC_SSID * targetSSID, 

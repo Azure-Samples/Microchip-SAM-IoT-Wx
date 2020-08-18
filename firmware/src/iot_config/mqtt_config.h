@@ -28,7 +28,6 @@
 #ifndef MQTT_CONFIG_H
 #define	MQTT_CONFIG_H
 
-#define CFG_MQTT_PORT               443
 #define CFG_MQTT_CONN_TIMEOUT       10
 #define TOPIC_SIZE				    512	    //Defines the topic length that is supported when we process a published packet 
 #define PAYLOAD_SIZE                1024	//Defines the payload size that is supported when we process a published packet

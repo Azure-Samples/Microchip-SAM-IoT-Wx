@@ -34,6 +34,7 @@
 
 static bool ledForDefaultCredentials = false;
 static bool ledHeld = false;
+static bool isRedLedFlashing = false;
 
 void LED_MSDelay(uint32_t ms);
 
@@ -144,6 +145,30 @@ void LED_holdYellowOn(bool holdHigh)
     yellow_taskHandle = SYS_TIME_CallbackRegisterMS(yellow_taskcb, 0, LEDS_HOLD_INTERVAL, SYS_TIME_SINGLE);
 }
 
+void LED_holdGreenOn(bool holdHigh)
+{
+    if (holdHigh == LED_ON)
+    {
+        LED_GREEN_SetLow();
+    }
+    else
+    {
+        LED_GREEN_SetHigh();
+    }
+}
+
+void LED_holdRedOn(bool holdHigh)
+{
+    if (holdHigh == LED_ON)
+    {
+        LED_RED_SetLow();
+    }
+    else
+    {
+        LED_RED_SetHigh();
+    }
+}
+
 void LED_flashRed(void)
 {
    LED_RED_SetLow();
@@ -175,6 +200,26 @@ void LED_stopBlinkingGreen(void)
         SYS_TIME_TimerStop(defaultCredentials_taskHandle);
         ledForDefaultCredentials = false;
     }
+}
+
+void LED_startBlinkingRed(void)
+{
+    LED_flashRed();
+    isRedLedFlashing = true;
+}
+
+void LED_stopBlinkingRed(void)
+{
+    if (red_taskHandle == true)
+    {
+        SYS_TIME_TimerStop(red_taskHandle);
+    }
+    isRedLedFlashing = false;
+}
+
+bool LED_isBlinkingRed(void)
+{
+    return isRedLedFlashing;
 }
 
 bool LED_isBlinkingGreen (void)

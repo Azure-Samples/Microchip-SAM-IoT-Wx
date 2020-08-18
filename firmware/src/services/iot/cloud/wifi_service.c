@@ -38,6 +38,7 @@ SOFTWARE.
 #include "socket.h"
 #include "../../../credentials_storage/credentials_storage.h"
 #include "../../../led.h"
+#include "../../../config/SAMD21_WG_IOT/driver/winc/include/drv/driver/m2m_ssl.h"
 
 #define CLOUD_WIFI_TASK_INTERVAL        50L
 #define CLOUD_NTP_TASK_INTERVAL         500L
@@ -101,6 +102,15 @@ void wifi_init(void (*funcPtr)(uint8_t), uint8_t mode)
 {
     wifiConnectionStateChangedCallback = funcPtr;
 
+    // clear out client/device tls cert
+
+    uint8_t sector_buffer[512] = { 0 };
+    int8_t status = m2m_ssl_send_certs_to_winc(sector_buffer, sizeof(sector_buffer));
+    if (status != M2M_SUCCESS)
+    {
+        debug_printInfo("m2m_ssl_send_certs_to_winc() failed with ret=%d", status);
+    }
+
     // Mode == 0 means AP configuration mode
     if(mode == WIFI_SOFT_AP)
     {
@@ -117,6 +127,15 @@ bool wifi_connectToAp(uint8_t passed_wifi_creds)
 {
 	int8_t e = 0;
 	
+    m2m_wifi_configure_sntp((uint8_t*)"time-a-g.nist.gov", 18, SNTP_ENABLE_DHCP);
+
+#ifdef CFG_MAIN_WLAN_SSID
+    passed_wifi_creds = NEW_CREDENTIALS;
+    sprintf(authType, "%d", CFG_MAIN_WLAN_AUTH);
+    strcpy(ssid, CFG_MAIN_WLAN_SSID);
+    strcpy(pass, CFG_MAIN_WLAN_PSK);
+#endif
+
 	if(passed_wifi_creds == NEW_CREDENTIALS)
 	{
 		e=m2m_wifi_connect((char *)ssid, sizeof(ssid), atoi((char*)authType), (char *)pass, M2M_WIFI_CH_ALL);
@@ -130,6 +149,7 @@ bool wifi_connectToAp(uint8_t passed_wifi_creds)
 	{
 	  debug_printError("WIFI: wifi error = %d",e);
 	  shared_networking_params.haveERROR = 1;
+      LED_holdGreenOn(LED_OFF);
 	  return false;
 	}
 	
@@ -179,6 +199,7 @@ void checkBackTask(void)
 	shared_networking_params.haveAPConnection = 0;
 	shared_networking_params.haveERROR = 1;
 	shared_networking_params.amDisconnecting = 0;
+    LED_holdGreenOn(LED_OFF);
 }
 
 void enable_provision_ap(void)
@@ -229,6 +250,7 @@ void WiFi_ConStateCb(tenuM2mConnState status)
     } 
 }
 
+/*
 void WiFi_HostLookupCb(void)
 {
     if (gethostbyname((char*)CFG_MQTT_HOST) == M2M_SUCCESS) {
@@ -239,6 +261,7 @@ void WiFi_HostLookupCb(void)
         debug_printGOOD("CLOUD: DHCP CONF");
     }   
 }
+*/
 
 void WiFi_ProvisionCb(uint8_t sectype, uint8_t * SSID, uint8_t * password)
 {
@@ -272,6 +295,11 @@ void wifi_sched(void)
         softApConnectTaskTmrExpired = false;        
         softApConnectTask();       
     }
+}
+
+bool wifi_getIpAddressByHostName(uint8_t* host_name)
+{
+    return gethostbyname((char*)host_name) == M2M_SUCCESS;
 }
 
 

@@ -41,6 +41,9 @@ IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
 #include "../../iot_config/mqtt_config.h"
 #include "../../iot_config/IoT_Sensor_Node_config.h"
 #include "../../debug_print.h"
+#include "services/iot/cloud/mqtt_packetPopulation/mqtt_packetPopulate.h"
+
+extern pf_MQTT_CLIENT* pf_mqtt_client;
 
 /***********************MQTT Client definitions********************************/
 
@@ -669,7 +672,7 @@ bool MQTT_CreateSubscribePacket(mqttSubscribePacket *newSubscribePacket) {
       txSubscribePacket.packetIdentifierMSB = newSubscribePacket->packetIdentifierMSB;
 
       // Payload
-      for (topicCount = 0; topicCount < NUM_TOPICS_SUBSCRIBE; topicCount++) {
+      for (topicCount = 0; topicCount < MAX_NUM_TOPICS_SUBSCRIBE && newSubscribePacket->subscribePayload[topicCount].topicLength > 0; topicCount++) {
          txSubscribePacket.subscribePayload[topicCount].topicLength = htons(newSubscribePacket->subscribePayload[topicCount].topicLength);
          txSubscribePacket.subscribePayload[topicCount].topic = newSubscribePacket->subscribePayload[topicCount].topic;
          txSubscribePacket.subscribePayload[topicCount].requestedQoS = newSubscribePacket->subscribePayload[topicCount].requestedQoS;
@@ -905,6 +908,12 @@ static mqttCurrentState mqttProcessSuback(mqttContext *mqttConnectionPtr) {
    // Re-initialize the RX exchange buffer to be able to process the
    // next incoming MQTT packet
    MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff);
+
+   if (ret == CONNECTED)
+   {
+       pf_mqtt_client->MQTT_CLIENT_connected();
+   }
+
    return ret;
 }
 
@@ -947,6 +956,56 @@ static mqttCurrentState mqttProcessUnsuback(mqttContext *mqttConnectionPtr)
 	return ret;
 }
 
+bool matchTopicSubscribe(char* SubTopic, char* publishTopic)
+{
+    while (SubTopic != NULL && publishTopic != NULL)
+    {
+        int subTopicLen, publishTopicLen;
+        char* endSubTopic = strchr(SubTopic, '/');
+        char* endPublishTopic = strchr(publishTopic, '/');
+        if (endSubTopic == NULL && endPublishTopic == NULL)
+        {
+            return true;
+        }
+
+        if (endSubTopic == NULL)
+        {
+            subTopicLen = strlen(SubTopic);
+        }
+        else
+        {
+            subTopicLen = endSubTopic - SubTopic;
+        }
+
+        if (endPublishTopic == NULL)
+        {
+            publishTopicLen = strlen(publishTopic);
+        }
+        else
+        {
+            publishTopicLen = endPublishTopic - publishTopic;
+        }
+
+        if (memcmp(SubTopic, "+", 1) == 0 && subTopicLen == 1)
+        {
+            // wildcard
+        }
+        else if (memcmp(SubTopic, "#", 1) == 0 && subTopicLen == 1)
+        {
+            return true; // end wild card
+        }
+        else if (memcmp(SubTopic, publishTopic, publishTopicLen) != 0 || publishTopicLen != subTopicLen)
+        {
+            break;
+        }
+
+        SubTopic = endSubTopic + 1;
+        publishTopic = endPublishTopic + 1;
+    }
+
+    return false;
+}
+
 static mqttCurrentState mqttProcessPublish(mqttContext *mqttConnectionPtr) {
    mqttCurrentState ret;
    uint32_t decodedLength;
@@ -966,8 +1025,8 @@ static mqttCurrentState mqttProcessPublish(mqttContext *mqttConnectionPtr) {
    // Fixed header
    MQTT_ExchangeBufferRead(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff, &rxPublishPacket.publishHeaderFlags.All, sizeof (rxPublishPacket.publishHeaderFlags.All));
    MQTT_ExchangeBufferRead(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff, &rxPublishPacket.remainingLength[0], sizeof (rxPublishPacket.remainingLength[0]));
-   for (i = 2; rxPublishPacket.remainingLength[i - 1] & 0x80 && i < sizeof (rxPublishPacket.remainingLength); i++) {
-      MQTT_ExchangeBufferRead(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff, &rxPublishPacket.remainingLength[i], 1);
+   for (i = 1; (rxPublishPacket.remainingLength[i - 1] & 0x80) && (i < sizeof(rxPublishPacket.remainingLength)); i++) {
+       MQTT_ExchangeBufferRead(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff, &rxPublishPacket.remainingLength[i], 1);
    }
    decodedLength = mqttDecodeLength(&rxPublishPacket.remainingLength[0]);
 
@@ -982,11 +1041,14 @@ static mqttCurrentState mqttProcessPublish(mqttContext *mqttConnectionPtr) {
    rxPublishPacket.payload = (uint8_t*) mqttPayload;
    MQTT_ExchangeBufferRead(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff, rxPublishPacket.payload, decodedLength);
 
+   mqttPayload[sizeof(mqttPayload) - 1] = 0;  // make sure buffer is null terminated
+   mqttTopic[sizeof(mqttTopic) - 1] = 0;    // make sure buffer is null terminated
+
    // Send payload information to the application
    publishRecvHandlerInfo = MQTT_GetPublishReceptionHandlerTable();
-   for (i = 0; i < NUM_TOPICS_SUBSCRIBE; i++) {
-      if (publishRecvHandlerInfo) {
-         if (memcmp((void*) publishRecvHandlerInfo->topic, (void*) rxPublishPacket.topic, ntohs(rxPublishPacket.topicLength)) == 0) {
+   for (i = 0; i < MAX_NUM_TOPICS_SUBSCRIBE; i++) {
+       if (publishRecvHandlerInfo) {
+         if (publishRecvHandlerInfo && matchTopicSubscribe((char*)publishRecvHandlerInfo->topic, (char*)rxPublishPacket.topic)) {
             publishRecvHandlerInfo->mqttHandlePublishDataCallBack(rxPublishPacket.topic, rxPublishPacket.payload);
             break;
          }
@@ -1214,7 +1276,7 @@ static bool mqttSendSubscribe(mqttContext *mqttConnectionPtr) {
    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txSubscribePacket.packetIdentifierMSB, sizeof (txSubscribePacket.packetIdentifierMSB));
    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txSubscribePacket.packetIdentifierLSB, sizeof (txSubscribePacket.packetIdentifierLSB));
 
-   for (topicCount = 0; topicCount < NUM_TOPICS_SUBSCRIBE; topicCount++) {
+   for (topicCount = 0; topicCount < MAX_NUM_TOPICS_SUBSCRIBE && txSubscribePacket.subscribePayload[topicCount].topicLength > 0; topicCount++) {
       MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*) & txSubscribePacket.subscribePayload[topicCount].topicLength, sizeof (txSubscribePacket.subscribePayload[topicCount].topicLength));
       MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, txSubscribePacket.subscribePayload[topicCount].topic, ntohs(txSubscribePacket.subscribePayload[topicCount].topicLength));
       MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txSubscribePacket.subscribePayload[topicCount].requestedQoS, sizeof (txSubscribePacket.subscribePayload[topicCount].requestedQoS));

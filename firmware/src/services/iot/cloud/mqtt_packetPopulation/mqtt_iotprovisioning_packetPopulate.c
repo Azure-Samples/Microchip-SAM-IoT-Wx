@@ -31,14 +31,15 @@
 #include <stdio.h>
 #include <time.h>
 #include <ctype.h>
-#include "../../mqtt/mqtt_core/mqtt_core.h"
-#include "../../mqtt/mqtt_packetTransfer_interface.h"
+#include "mqtt/mqtt_core/mqtt_core.h"
+#include "mqtt/mqtt_packetTransfer_interface.h"
 #include "mqtt_packetPopulate.h"
 #include "mqtt_iotprovisioning_packetPopulate.h"
-#include "../../config/IoT_Sensor_Node_config.h"
+#include "iot_config/IoT_Sensor_Node_config.h"
 #include "../../debug_print.h"
-#include "../../../platform/cryptoauthlib/lib/basic/atca_basic.h"
-#include "az_iot_provisioning_client.h"
+#include "cryptoauthlib/lib/basic/atca_basic.h"
+#include "azure/iot/az_iot_provisioning_client.h"
+#include "azure/core/az_span.h"
 
 #ifdef CFG_MQTT_PROVISIONING_HOST
 
@@ -88,7 +89,7 @@ void MQTT_CLIENT_iotprovisioning_publish(uint8_t* data, uint16_t len)
 
 }
 
-void MQTT_CLIENT_iotprovisioning_receive(uint8_t* data, uint8_t len)
+void MQTT_CLIENT_iotprovisioning_receive(uint8_t* data, uint16_t len)
 {
 	MQTT_GetReceivedData(data, len);
 }
@@ -97,7 +98,7 @@ void MQTT_CLIENT_iotprovisioning_connect(char* deviceID)
 {
     const az_span global_device_endpoint = AZ_SPAN_LITERAL_FROM_STR(CFG_MQTT_PROVISIONING_HOST);
     const az_span id_scope = AZ_SPAN_LITERAL_FROM_STR(PROVISIONING_ID_SCOPE);
-    const az_span registration_id = az_span_from_str(deviceID);    
+    const az_span registration_id = az_span_create_from_str(deviceID);    
     az_result result = az_iot_provisioning_client_init(&provisioning_client, global_device_endpoint, id_scope, registration_id, NULL);
 	if (az_failed(result))
 	{
@@ -145,8 +146,8 @@ void MQTT_CLIENT_iotprovisioning_connect(char* deviceID)
 	url_encode_rfc3986(signature_hash_buf, signature_hash_encoded_buf, _az_COUNTOF(signature_hash_encoded_buf));
 
 	size_t sas_token_buf_len;
-	az_span signature_hash_encoded = az_span_from_str(signature_hash_encoded_buf);
-	result = az_iot_provisioning_client_sas_get_password(&provisioning_client, signature_hash_encoded, expire_time, az_span_from_str("registration"), sas_token_buf, sizeof(sas_token_buf), &sas_token_buf_len);
+	az_span signature_hash_encoded = az_span_create_from_str(signature_hash_encoded_buf);
+	result = az_iot_provisioning_client_sas_get_password(&provisioning_client, signature_hash_encoded, expire_time, AZ_SPAN_FROM_STR("registration"), sas_token_buf, sizeof(sas_token_buf), &sas_token_buf_len);
 	if (az_failed(result))
 	{
 		debug_printError("az_iot_provisioning_client_sas_get_password failed");
@@ -192,13 +193,13 @@ bool MQTT_CLIENT_iotprovisioning_subscribe()
 //	cloudSubscribePacket.subscribePayload[3].topicLength = mqtt_sub_topic_twin_document_buf_len;
 	cloudSubscribePacket.subscribePayload[3].requestedQoS = 0;
 
-//	imqtt_iotprovisioning_publishReceiveCallBackTable[0].topic = (uint8_t*)mqtt_sub_c2d_topic_buf;
+//	imqtt_iotprovisioning_publishReceiveCallBackTable[0].topic = mqtt_sub_c2d_topic_buf;
 //	imqtt_iotprovisioning_publishReceiveCallBackTable[0].mqttHandlePublishDataCallBack = receivedFromCloud_c2d;
-//	imqtt_iotprovisioning_publishReceiveCallBackTable[1].topic = (uint8_t*)mqtt_sub_topic_methods_buf;
+//	imqtt_iotprovisioning_publishReceiveCallBackTable[1].topic = mqtt_sub_topic_methods_buf;
 //	imqtt_iotprovisioning_publishReceiveCallBackTable[1].mqttHandlePublishDataCallBack = receivedFromCloud_message;
-//	imqtt_iotprovisioning_publishReceiveCallBackTable[2].topic = (uint8_t*)mqtt_sub_topic_twin_patch_buf;
+//	imqtt_iotprovisioning_publishReceiveCallBackTable[2].topic = mqtt_sub_topic_twin_patch_buf;
 //	imqtt_iotprovisioning_publishReceiveCallBackTable[2].mqttHandlePublishDataCallBack = receivedFromCloud_patch;
-//	imqtt_iotprovisioning_publishReceiveCallBackTable[3].topic = (uint8_t*)mqtt_sub_topic_twin_document_buf;
+//	imqtt_iotprovisioning_publishReceiveCallBackTable[3].topic = mqtt_sub_topic_twin_document_buf;
 //	imqtt_iotprovisioning_publishReceiveCallBackTable[3].mqttHandlePublishDataCallBack = receivedFromCloud_twin;
 	MQTT_SetPublishReceptionHandlerTable(imqtt_iotprovisioning_publishReceiveCallBackTable);
 

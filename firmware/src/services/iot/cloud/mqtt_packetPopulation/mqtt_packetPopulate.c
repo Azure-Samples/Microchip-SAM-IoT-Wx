@@ -27,64 +27,39 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "../../../../mqtt/mqtt_core/mqtt_core.h"
+#include <ctype.h>
 #include "mqtt_packetPopulate.h"
-#include "../../../../iot_config/IoT_Sensor_Node_config.h"
-#include "../../../../iot_config/mqtt_config.h"
-#include "../../../../debug_print.h"
+#include "iot_config/cloud_config.h"
 
+char* hub_hostname = CFG_MQTT_HUB_HOST;
+char mqtt_password_buf[512];
+char mqtt_username_buf[200];
 
-#define MQTT_CID_LENGTH 100
-#define MQTT_TOPIC_LENGTH 38
-
-char mqttPassword[456];
-char cid[MQTT_CID_LENGTH];
-char mqttTopic[MQTT_TOPIC_LENGTH];
-char mqttHostName[] = CFG_MQTT_HOST;
-char username[7] = "unused";
-
-
-void MQTT_CLIENT_publish(uint8_t *data, uint16_t len)
+char digit_to_hex(char number)
 {
-	 mqttPublishPacket cloudPublishPacket;
-    
-    // Fixed header
-    cloudPublishPacket.publishHeaderFlags.duplicate = 0;
-    cloudPublishPacket.publishHeaderFlags.qos = 0;
-    cloudPublishPacket.publishHeaderFlags.retain = 0;
-    
-    // Variable header
-    cloudPublishPacket.topic = (uint8_t*)mqttTopic;
-    
-    // Payload
-    cloudPublishPacket.payload = data;
-    // ToDo Check whether sizeof can be used for integers and strings
-    cloudPublishPacket.payloadLength = len;
-    
-    if(MQTT_CreatePublishPacket(&cloudPublishPacket) != true)
-    {
-        debug_printError("MQTT: Connection lost PUBLISH failed");
-    }
+	return (char)(number + (number < 10 ? '0' : 'A' - 10));
 }
 
-void MQTT_CLIENT_receive(uint8_t *data, uint8_t len)
-{
-    MQTT_GetReceivedData(data, len);
-}
+char* url_encode_rfc3986(char* s, char* dest, size_t dest_len) {
 
-void MQTT_CLIENT_connect(void)
-{
-	mqttConnectPacket cloudConnectPacket;
-	memset(&cloudConnectPacket, 0, sizeof(mqttConnectPacket));
-    
-	cloudConnectPacket.connectVariableHeader.connectFlagsByte.All = 0x02;
-    cloudConnectPacket.connectVariableHeader.keepAliveTimer = CFG_MQTT_CONN_TIMEOUT;
-	cloudConnectPacket.clientID = (uint8_t*)cid;
-	cloudConnectPacket.password = (uint8_t*)mqttPassword;
-	cloudConnectPacket.passwordLength = strlen(mqttPassword);
-	cloudConnectPacket.username = (uint8_t*)username;
-	cloudConnectPacket.usernameLength = 6;
+	for (; *s && dest_len > 1; s++) {
 
-	MQTT_CreateConnectPacket(&cloudConnectPacket);
+		if (isalnum(*s) || *s == '~' || *s == '-' || *s == '.' || *s == '_')
+		{
+			*dest++ = *s;
+		}
+		else if (dest_len < 4)
+		{
+			break;
+		}
+		else
+		{
+			*dest++ = '%';
+			*dest++ = digit_to_hex(*s / 16);
+			*dest++ = digit_to_hex(*s % 16);
+		}
+	}
 
+	*dest++ = '\0';
+	return dest;
 }

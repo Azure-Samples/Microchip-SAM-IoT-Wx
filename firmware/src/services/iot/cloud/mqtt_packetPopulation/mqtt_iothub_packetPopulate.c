@@ -37,8 +37,9 @@
 #include "mqtt_iothub_packetPopulate.h"
 #include "../../config/IoT_Sensor_Node_config.h"
 #include "../../debug_print.h"
-#include "../../../platform/cryptoauthlib/lib/basic/atca_basic.h"
-#include "az_iot_hub_client.h"
+#include "cryptoauthlib/lib/basic/atca_basic.h"
+#include "azure/iot/az_iot_hub_client.h"
+#include "azure/core/az_span.h"
 
 pf_MQTT_CLIENT pf_mqqt_iothub_client = {
   MQTT_CLIENT_iothub_publish,
@@ -73,35 +74,6 @@ az_iot_hub_client hub_client;
  *       Sample publish handler function  = void handlePublishMessage(uint8_t *topic, uint8_t *payload)
  */
 publishReceptionHandler_t imqtt_iothub_publishReceiveCallBackTable[MAX_NUM_TOPICS_SUBSCRIBE];
-
-char digit_to_hex(char number)
-{
-	return (char)(number + (number < 10 ? '0' : 'A' - 10));
-}
-
-char* url_encode_rfc3986(char* s, char* dest, size_t dest_len) {
-
-	for (; *s && dest_len > 1; s++) {
-
-		if (isalnum(*s) || *s == '~' || *s == '-' || *s == '.' || *s == '_')
-		{
-			*dest++ = *s;
-		}
-		else if (dest_len < 4)
-		{
-			break;
-		}
-		else
-		{
-			*dest++ = '%';
-			*dest++ = digit_to_hex(*s / 16);
-			*dest++ = digit_to_hex(*s % 16);
-		}
-	}
-
-	*dest++ = '\0';
-	return dest;
-}
 
 void MQTT_CLIENT_iothub_publish(uint8_t* data, uint16_t len)
 {
@@ -149,7 +121,7 @@ void MQTT_CLIENT_iothub_publish(uint8_t* data, uint16_t len)
 	}
 }
 
-void MQTT_CLIENT_iothub_receive(uint8_t* data, uint8_t len)
+void MQTT_CLIENT_iothub_receive(uint8_t* data, uint16_t len)
 {
 	MQTT_GetReceivedData(data, len);
 }
@@ -157,7 +129,7 @@ void MQTT_CLIENT_iothub_receive(uint8_t* data, uint8_t len)
 void MQTT_CLIENT_iothub_connect(char* deviceID)
 {
 	const az_span iothub_hostname = AZ_SPAN_LITERAL_FROM_STR(CFG_MQTT_HUB_HOST);
-	const az_span deviceID_parm = az_span_from_str(deviceID);
+	const az_span deviceID_parm = az_span_create_from_str(deviceID);
 	az_span device_id = AZ_SPAN_FROM_BUFFER(device_id_buf);
 	az_span_copy(device_id, deviceID_parm);
 	device_id = az_span_slice(device_id, 0, az_span_size(deviceID_parm));
@@ -208,7 +180,7 @@ void MQTT_CLIENT_iothub_connect(char* deviceID)
 	url_encode_rfc3986(signature_hash_buf, signature_hash_encoded_buf, _az_COUNTOF(signature_hash_encoded_buf));
 
 	size_t sas_token_buf_len;
-	az_span signature_hash_encoded = az_span_from_str(signature_hash_encoded_buf);
+	az_span signature_hash_encoded = az_span_create_from_str(signature_hash_encoded_buf);
 	result = az_iot_hub_client_sas_get_password(&hub_client, signature_hash_encoded, expire_time, AZ_SPAN_NULL, sas_token_buf, sizeof(sas_token_buf), &sas_token_buf_len);
 	if (az_failed(result))
 	{
@@ -250,13 +222,13 @@ bool MQTT_CLIENT_iothub_subscribe()
 	cloudSubscribePacket.subscribePayload[3].topicLength = sizeof(AZ_IOT_HUB_CLIENT_TWIN_RESPONSE_SUBSCRIBE_TOPIC) - 1;
 	cloudSubscribePacket.subscribePayload[3].requestedQoS = 0;
 
-	imqtt_iothub_publishReceiveCallBackTable[0].topic = (uint8_t*) AZ_IOT_HUB_CLIENT_C2D_SUBSCRIBE_TOPIC;
+	imqtt_iothub_publishReceiveCallBackTable[0].topic = AZ_IOT_HUB_CLIENT_C2D_SUBSCRIBE_TOPIC;
 	imqtt_iothub_publishReceiveCallBackTable[0].mqttHandlePublishDataCallBack = receivedFromCloud_c2d;
-	imqtt_iothub_publishReceiveCallBackTable[1].topic = (uint8_t*) AZ_IOT_HUB_CLIENT_METHODS_SUBSCRIBE_TOPIC;
+	imqtt_iothub_publishReceiveCallBackTable[1].topic = AZ_IOT_HUB_CLIENT_METHODS_SUBSCRIBE_TOPIC;
 	imqtt_iothub_publishReceiveCallBackTable[1].mqttHandlePublishDataCallBack = receivedFromCloud_message;
-	imqtt_iothub_publishReceiveCallBackTable[2].topic = (uint8_t*) AZ_IOT_HUB_CLIENT_TWIN_PATCH_SUBSCRIBE_TOPIC;
+	imqtt_iothub_publishReceiveCallBackTable[2].topic = AZ_IOT_HUB_CLIENT_TWIN_PATCH_SUBSCRIBE_TOPIC;
 	imqtt_iothub_publishReceiveCallBackTable[2].mqttHandlePublishDataCallBack = receivedFromCloud_patch;
-	imqtt_iothub_publishReceiveCallBackTable[3].topic = (uint8_t*) AZ_IOT_HUB_CLIENT_TWIN_RESPONSE_SUBSCRIBE_TOPIC;
+	imqtt_iothub_publishReceiveCallBackTable[3].topic = AZ_IOT_HUB_CLIENT_TWIN_RESPONSE_SUBSCRIBE_TOPIC;
 	imqtt_iothub_publishReceiveCallBackTable[3].mqttHandlePublishDataCallBack = receivedFromCloud_twin;
 	MQTT_SetPublishReceptionHandlerTable(imqtt_iothub_publishReceiveCallBackTable);
 

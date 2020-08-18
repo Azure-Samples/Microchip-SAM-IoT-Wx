@@ -9,11 +9,13 @@
 #define CLOUD_SERVICE_H_
 
 #include <stdbool.h>
+#include "mqtt_packetPopulation/mqtt_packetPopulate.h"
 
 #define CLOUD_PACKET_RECV_TABLE_SIZE	2
 #define CLOUD_MAX_DEVICEID_LENGTH 30
 #define PASSWORD_SPACE 456
 
+void CLOUD_init_host(char* host, char* deviceId, pf_MQTT_CLIENT* pf_table);
 void CLOUD_reset(void);
 void CLOUD_subscribe(void);
 void CLOUD_disconnect(void);

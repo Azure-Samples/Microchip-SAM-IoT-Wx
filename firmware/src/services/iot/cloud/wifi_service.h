@@ -52,5 +52,6 @@ void WiFi_ConStateCb(tenuM2mConnState status);
 void WiFi_HostLookupCb(void);
 void WiFi_ProvisionCb(uint8_t sectype, uint8_t *SSID, uint8_t *password);
 void wifi_sched(void);
+bool wifi_getIpAddressByHostName(uint8_t* host_name);
 #endif /* WIFI_SERVICE_H_ */
 

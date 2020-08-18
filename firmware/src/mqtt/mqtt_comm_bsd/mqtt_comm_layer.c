@@ -33,8 +33,8 @@
 #include "../../services/iot/cloud/bsd_adapter/bsdWINC.h"
 #include "../../debug_print.h"
 
-#define TX_BUFF_SIZE 400
-#define RX_BUFF_SIZE 100
+#define TX_BUFF_SIZE 2096
+#define RX_BUFF_SIZE 2096
 #define USER_LENGTH 0
 #define MQTT_KEEP_ALIVE_TIME 120
 
@@ -89,7 +89,7 @@ bool MQTT_Close(mqttContext *connectionPtr)
 	return ret;
 }
 
-void MQTT_GetReceivedData(uint8_t *pData, uint8_t len)
+void MQTT_GetReceivedData(uint8_t *pData, uint16_t len)
 {
 	MQTT_ExchangeBufferInit(&mqttConn.mqttDataExchangeBuffers.rxbuff);
 	MQTT_ExchangeBufferWrite(&mqttConn.mqttDataExchangeBuffers.rxbuff, pData, len);

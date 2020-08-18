@@ -3,3 +3,5 @@
 ################################################################################
 
 /.vs
+/firmware/sam_d21_iot_wg.X/build/SAMD21_WG_IOT/production/_ext
+/firmware/sam_d21_iot_wg.X/dist/SAMD21_WG_IOT/production

@@ -296,7 +296,7 @@ typedef struct
     
     // Payload
     // The payload of a SUBSCRIBE packet MUST contain at least one Topic Filter / QoS pair.
-    mqttSubscribePayload subscribePayload[NUM_TOPICS_SUBSCRIBE];
+    mqttSubscribePayload subscribePayload[MAX_NUM_TOPICS_SUBSCRIBE];
 	
     uint16_t totalLength;
 } mqttSubscribePacket;
@@ -316,7 +316,7 @@ typedef struct
 	uint8_t packetIdentifierLSB;		
 		
 	//payload
-	subscribeAckReturnCode returnCode[NUM_TOPICS_SUBSCRIBE];
+	subscribeAckReturnCode returnCode[MAX_NUM_TOPICS_SUBSCRIBE];
 } mqttSubackPacket;
 
 

@@ -31,13 +31,15 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "../../config/IoT_Sensor_Node_config.h"
+#include "iot_config/cloud_config.h"
 
 void MQTT_CLIENT_iothub_publish(uint8_t *data, uint16_t len);
-void MQTT_CLIENT_iothub_receive(uint8_t *data, uint8_t len);
+void MQTT_CLIENT_iothub_receive(uint8_t *data, uint16_t len);
 void MQTT_CLIENT_iothub_connect(char* deviceID);
 bool MQTT_CLIENT_iothub_subscribe();
 void MQTT_CLIENT_iothub_connected();
+
+char digit_to_hex(char number);
 
 static const char* const hub_device_key = HUB_DEVICE_KEY;
 
