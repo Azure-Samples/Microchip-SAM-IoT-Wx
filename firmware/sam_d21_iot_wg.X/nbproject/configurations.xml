@@ -4,6 +4,53 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="f4" displayName="azure-sdk-for-c" projectFiles="true">
+        <logicalFolder name="f1" displayName="SDK" projectFiles="true">
+          <logicalFolder name="f1" displayName="inc" projectFiles="true">
+            <logicalFolder name="azure" displayName="azure" projectFiles="true">
+              <logicalFolder name="core" displayName="core" projectFiles="true">
+                <logicalFolder name="internal" displayName="internal" projectFiles="true">
+                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_config_internal.h</itemPath>
+                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_credentials_internal.h</itemPath>
+                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_http_internal.h</itemPath>
+                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_log_internal.h</itemPath>
+                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_precondition_internal.h</itemPath>
+                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_retry_internal.h</itemPath>
+                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_span_internal.h</itemPath>
+                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_spinlock_internal.h</itemPath>
+                </logicalFolder>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_config.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_context.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_credentials.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_http.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_http_transport.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_json.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_log.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_platform.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_precondition.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_result.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_span.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_version.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/_az_cfg.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/_az_cfg_prefix.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/_az_cfg_suffix.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/_az_spinlock.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="iot" displayName="iot" projectFiles="true">
+                <logicalFolder name="internal" displayName="internal" projectFiles="true">
+                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/iot/internal/az_iot_common_internal.h</itemPath>
+                </logicalFolder>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/iot/az_iot_common.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/iot/az_iot_hub_client.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/iot/az_iot_provisioning_client.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="storage" displayName="storage" projectFiles="true">
+                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/storage/az_storage_blobs.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="SAMD21_WG_IOT" projectFiles="true">
           <logicalFolder name="f2" displayName="driver" projectFiles="true">
@@ -319,6 +366,8 @@
                            displayName="mqtt_packetPopulation"
                            projectFiles="true">
               <itemPath>../src/services/iot/cloud/mqtt_packetPopulation/mqtt_packetPopulate.h</itemPath>
+              <itemPath>../src/services/iot/cloud/mqtt_packetPopulation/mqtt_iothub_packetPopulate.h</itemPath>
+              <itemPath>../src/services/iot/cloud/mqtt_packetPopulation/mqtt_iotprovisioning_packetPopulate.h</itemPath>
             </logicalFolder>
             <itemPath>../src/services/iot/cloud/cloud_service.h</itemPath>
             <itemPath>../src/services/iot/cloud/wifi_service.h</itemPath>
@@ -336,6 +385,35 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <logicalFolder name="f2" displayName="azure-sdk-for-c" projectFiles="true">
+        <logicalFolder name="f1" displayName="SDK" projectFiles="true">
+          <logicalFolder name="f1" displayName="src" projectFiles="true">
+            <logicalFolder name="f1" displayName="azure" projectFiles="true">
+              <logicalFolder name="f1" displayName="core" projectFiles="true">
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_precondition.c</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_span.c</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_span_private.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_log.c</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_json_private.h</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_json_reader.c</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_json_token.c</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_json_writer.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="f2" displayName="iot" projectFiles="true">
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_common.c</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_hub_client.c</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_hub_client_c2d.c</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_hub_client_methods.c</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_hub_client_sas.c</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_hub_client_telemetry.c</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_hub_client_twin.c</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_provisioning_client.c</itemPath>
+                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_provisioning_client_sas.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="SAMD21_WG_IOT" projectFiles="true">
           <logicalFolder name="f2" displayName="driver" projectFiles="true">
@@ -583,6 +661,8 @@
                            displayName="mqtt_packetPopulation"
                            projectFiles="true">
               <itemPath>../src/services/iot/cloud/mqtt_packetPopulation/mqtt_packetPopulate.c</itemPath>
+              <itemPath>../src/services/iot/cloud/mqtt_packetPopulation/mqtt_iothub_packetPopulate.c</itemPath>
+              <itemPath>../src/services/iot/cloud/mqtt_packetPopulation/mqtt_iotprovisioning_packetPopulate.c</itemPath>
             </logicalFolder>
             <itemPath>../src/services/iot/cloud/cloud_service.c</itemPath>
             <itemPath>../src/services/iot/cloud/wifi_service.c</itemPath>
@@ -619,8 +699,8 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
         <pack name="SAMD21_DFP" vendor="Microchip" version="3.3.98"/>
+        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>
@@ -686,7 +766,7 @@
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
         <property key="make-warnings-into-errors" value="true"/>
-        <property key="optimization-level" value="-O1"/>
+        <property key="optimization-level" value=""/>
         <property key="place-data-into-section" value="true"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
@@ -795,7 +875,8 @@
         <property key="use-indirect-calls" value="false"/>
       </C32CPP>
       <C32Global>
-        <property key="common-include-directories" value=""/>
+        <property key="common-include-directories"
+                  value="..\src\azure-sdk-for-c\sdk\inc"/>
         <property key="gp-relative-option" value=""/>
         <property key="legacy-libc" value="false"/>
         <property key="mdtcm" value=""/>
@@ -1356,7 +1437,7 @@
         <property key="memories.programmemory.ranges" value="0-3ffff"/>
         <property key="poweroptions.powerenable" value="false"/>
         <property key="programmerToGoFilePath"
-                  value="E:/00_Data/01_Project/Harmony_3/02_WG_IOT/release/sam_d21_iot/azure_cloud_iot/firmware/sam_d21_iot_wg.X/debug/SAMD21_WG_IOT/sam_d21_iot_wg_ptg"/>
+                  value="C:/Users/ericwol/Desktop/MicroChip/repos/Microchip-SAMD21-MCU32-AzureIoT/firmware/sam_d21_iot_wg.X/debug/SAMD21_WG_IOT/sam_d21_iot_wg_ptg"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preservedataflash.ranges"

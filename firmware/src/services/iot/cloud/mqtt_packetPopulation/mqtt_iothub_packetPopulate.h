@@ -41,6 +41,5 @@ void MQTT_CLIENT_iothub_connected();
 
 char digit_to_hex(char number);
 
-static const char* const hub_device_key = HUB_DEVICE_KEY;
 
 #endif /* MQTT_IOTHUB_PACKET_POPULATE_H */

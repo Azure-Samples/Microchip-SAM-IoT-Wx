@@ -39,6 +39,4 @@ void MQTT_CLIENT_iotprovisioning_connect(char* deviceID);
 bool MQTT_CLIENT_iotprovisioning_subscribe();
 void MQTT_CLIENT_iotprovisioning_connected();
 
-static const char* const provisioning_device_key = PROVISIONING_ENROLLMENT_KEY;
-
 #endif /* MQTT_IOTPROVISIONING_PACKET_POPULATE_H */

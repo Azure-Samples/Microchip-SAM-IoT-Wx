@@ -54,7 +54,6 @@ static bool cloudInitialized = false;
 static bool waitingForMQTT = false;
 pf_MQTT_CLIENT* pf_mqtt_client;
 char* mqtt_host;
-char* deviceId;
 uint32_t mqttHostIP;
 uint32_t dnsRetryDelay = 0;
 
@@ -159,7 +158,7 @@ static void connectMQTT()
    
    if (currentTime > 0)
    {  
-        pf_mqtt_client->MQTT_CLIENT_connect(deviceId);
+        pf_mqtt_client->MQTT_CLIENT_connect(ateccsn);
    }      
    debug_print("CLOUD: MQTT Connect");
    

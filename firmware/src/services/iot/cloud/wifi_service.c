@@ -39,6 +39,7 @@ SOFTWARE.
 #include "../../../credentials_storage/credentials_storage.h"
 #include "../../../led.h"
 #include "../../../config/SAMD21_WG_IOT/driver/winc/include/drv/driver/m2m_ssl.h"
+#include "iot_config/cloud_config.h"
 
 #define CLOUD_WIFI_TASK_INTERVAL        50L
 #define CLOUD_NTP_TASK_INTERVAL         500L
@@ -119,6 +120,25 @@ void wifi_init(void (*funcPtr)(uint8_t), uint8_t mode)
     }
     else
     {
+        //When the input comes through cli/.cfg
+        uint8_t wifi_creds;
+        if ((strcmp(ssid,"") != 0) &&  (strcmp(authType,"") != 0))
+        {
+          wifi_creds = NEW_CREDENTIALS;
+          debug_printInfo("Connecting to AP with new credentials");
+        }
+        //This works provided the board had connected to the AP successfully	
+        else 
+        {
+          wifi_creds = DEFAULT_CREDENTIALS;
+          debug_printInfo("Connecting to AP with the last used credentials");
+        }
+
+        if (!wifi_connectToAp(wifi_creds))
+        {
+            return;
+        }
+
         ntpTimeFetchTaskHandle = SYS_TIME_CallbackRegisterMS(ntpTimeFetchTaskcb, 0, CLOUD_NTP_TASK_INTERVAL, SYS_TIME_PERIODIC); 
     }
 }
@@ -126,8 +146,6 @@ void wifi_init(void (*funcPtr)(uint8_t), uint8_t mode)
 bool wifi_connectToAp(uint8_t passed_wifi_creds)
 {
 	int8_t e = 0;
-	
-    m2m_wifi_configure_sntp((uint8_t*)"time-a-g.nist.gov", 18, SNTP_ENABLE_DHCP);
 
 #ifdef CFG_MAIN_WLAN_SSID
     passed_wifi_creds = NEW_CREDENTIALS;
@@ -200,6 +218,7 @@ void checkBackTask(void)
 	shared_networking_params.haveERROR = 1;
 	shared_networking_params.amDisconnecting = 0;
     LED_holdGreenOn(LED_OFF);
+    checkBackTaskHandle = SYS_TIME_HANDLE_INVALID;
 }
 
 void enable_provision_ap(void)
@@ -239,6 +258,11 @@ void WiFi_ConStateCb(tenuM2mConnState status)
         debug_printGOOD("wifi_cb: M2M_WIFI_RESP_CON_STATE_CHANGED: CONNECTED");
         CREDENTIALS_STORAGE_clearWifiCredentials();
         LED_stopBlinkingGreen();
+        if (checkBackTaskHandle != SYS_TIME_HANDLE_INVALID)
+        {
+            SYS_TIME_TimerStop(checkBackTaskHandle);
+            checkBackTaskHandle = SYS_TIME_HANDLE_INVALID;
+        }
     // We need more than AP to have an APConnection, we also need a DHCP IP address!
     } else if (status == M2M_WIFI_DISCONNECTED) {
         checkBackTaskHandle = SYS_TIME_CallbackRegisterMS(checkBackTaskcb, 0, CLOUD_WIFI_TASK_INTERVAL, SYS_TIME_SINGLE);
@@ -250,10 +274,10 @@ void WiFi_ConStateCb(tenuM2mConnState status)
     } 
 }
 
-/*
 void WiFi_HostLookupCb(void)
 {
-    if (gethostbyname((char*)CFG_MQTT_HOST) == M2M_SUCCESS) {
+
+    if (gethostbyname((char*)CFG_MQTT_PROVISIONING_HOST) == M2M_SUCCESS) {
         if (shared_networking_params.amDisconnecting == 1) {
             shared_networking_params.amDisconnecting = 0;
         }
@@ -261,7 +285,6 @@ void WiFi_HostLookupCb(void)
         debug_printGOOD("CLOUD: DHCP CONF");
     }   
 }
-*/
 
 void WiFi_ProvisionCb(uint8_t sectype, uint8_t * SSID, uint8_t * password)
 {

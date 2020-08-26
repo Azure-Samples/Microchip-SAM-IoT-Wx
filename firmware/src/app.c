@@ -66,6 +66,9 @@
 #include "debug_print.h"
 #include "led.h"
 #include "mqtt/mqtt_core/mqtt_core.h"
+#include "services/iot/cloud/mqtt_packetPopulation/mqtt_packetPopulate.h"
+#include "services/iot/cloud/mqtt_packetPopulation/mqtt_iothub_packetPopulate.h"
+#include "services/iot/cloud/mqtt_packetPopulation/mqtt_iotprovisioning_packetPopulate.h"
 #if CFG_ENABLE_CLI
 #include "system/command/sys_command.h"
 #endif
@@ -138,7 +141,8 @@ volatile bool App_DataTaskTmrExpired = false;
 SYS_TIME_HANDLE App_CloudTaskHandle = SYS_TIME_HANDLE_INVALID;  
 volatile bool App_CloudTaskTmrExpired = false;
 
-
+extern pf_MQTT_CLIENT pf_mqqt_iotprovisioning_client;
+extern pf_MQTT_CLIENT pf_mqqt_iothub_client;
 
 
 // *****************************************************************************
@@ -239,31 +243,6 @@ void APP_Initialize(void)
 #if (CFG_APP_WINC_DEBUG == 1)    
     WDRV_WINC_DebugRegisterCallback(debug_printf);
 #endif
-
-#ifdef HUB_DEVICE_ID
-    attDeviceID = HUB_DEVICE_ID;
-#else  
-    	// Get serial number from the ECC608 chip 
-	retValCryptoClientSerialNumber = CRYPTO_CLIENT_printSerialNumber(attDeviceID_buf);
-	if (retValCryptoClientSerialNumber != ATCA_SUCCESS)
-	{
-		switch (retValCryptoClientSerialNumber)
-		{
-		case ATCA_GEN_FAIL:
-			debug_printError("APP: DeviceID generation failed, unspecified error");
-			break;
-		case ATCA_BAD_PARAM:
-			debug_printError("APP: DeviceID generation failed, bad argument");
-		default:
-			debug_printError("APP: DeviceID generation failed");
-			break;
-		}
-	}
-    else
-    {
-        attDeviceID = attDeviceID_buf;
-    }
-#endif 
 }
 
 static void APP_ConnectNotifyCb(DRV_HANDLE handle, WDRV_WINC_CONN_STATE currentState, WDRV_WINC_CONN_ERROR errorCode)
@@ -300,7 +279,7 @@ static void APP_GetTimeNotifyCb(DRV_HANDLE handle, uint32_t timeUTC)
 
 static void APP_DHCPAddressEventCb(DRV_HANDLE handle, uint32_t ipAddress)
 {
-//    WiFi_HostLookupCb();    
+    WiFi_HostLookupCb();    
 }
              
 static void APP_ProvisionRespCb(DRV_HANDLE handle, WDRV_WINC_SSID * targetSSID, 
@@ -319,23 +298,29 @@ static void APP_ProvisionRespCb(DRV_HANDLE handle, WDRV_WINC_SSID * targetSSID,
     }    
 }
 
+#ifdef CFG_MQTT_PROVISIONING_HOST
+void iot_provisioning_completed(void)
+{
+    CLOUD_init_host(hub_hostname, attDeviceID, &pf_mqqt_iothub_client);
+}
+#endif //CFG_MQTT_PROVISIONING_HOST 
+
 void APP_Tasks(void)
 {
     switch(appData.state)
     {
         case APP_STATE_CRYPTO_INIT:
         {
-        #if CFG_ENABLE_CLI     
-            set_deviceId(attDeviceID);
-        #endif   
-            debug_init(attDeviceID);      
-
             cryptoauthlib_init(); 
             if (cryptoDeviceInitialized == false)
             {
                debug_printError("APP: CryptoAuthInit failed");
             }
-            appCryptoClientSerialNumber = CRYPTO_CLIENT_printSerialNumber(attDeviceID);
+            
+#ifdef HUB_DEVICE_ID
+            attDeviceID = HUB_DEVICE_ID;
+#else              
+            appCryptoClientSerialNumber = CRYPTO_CLIENT_printSerialNumber(attDeviceID_buf);
             if(appCryptoClientSerialNumber != ATCA_SUCCESS )
             {
                switch(appCryptoClientSerialNumber)
@@ -350,9 +335,15 @@ void APP_Tasks(void)
                   break;
                }
             }
+            else
+            {
+                attDeviceID = attDeviceID_buf;
+            }
+#endif             
         #if CFG_ENABLE_CLI   
             set_deviceId(attDeviceID);
         #endif  
+            debug_init(attDeviceID); 
             debug_setPrefix(attDeviceID);
             CLOUD_setdeviceId(attDeviceID);
             appData.state = APP_STATE_WDRV_INIT;
@@ -395,7 +386,14 @@ void APP_Tasks(void)
                 WDRV_WINC_BSSReconnect(wdrvHandle, &APP_ConnectNotifyCb); 
                 WDRV_WINC_SystemTimeGetCurrent(wdrvHandle, &APP_GetTimeNotifyCb);
             }
-            
+
+#ifdef CFG_MQTT_PROVISIONING_HOST
+            pf_mqqt_iotprovisioning_client.MQTT_CLIENT_task_completed = iot_provisioning_completed;
+            CLOUD_init_host(CFG_MQTT_PROVISIONING_HOST, attDeviceID, &pf_mqqt_iotprovisioning_client);
+#else
+            CLOUD_init_host(hub_hostname, attDeviceID, &pf_mqqt_iothub_client);
+#endif //CFG_MQTT_PROVISIONING_HOST 
+    
             appData.state = APP_STATE_WDRV_ACTIV;
             break;
         }
@@ -550,6 +548,20 @@ void APP_application_post_provisioning(void)
     App_DataTaskHandle = SYS_TIME_CallbackRegisterMS(APP_DataTaskcb, 0, 
                                 APP_DATATASK_INTERVAL, SYS_TIME_PERIODIC);  
 }
+
+
+// This must exist to keep the linker happy but is never called.
+int _gettimeofday( struct timeval *tv, void *tzvp )
+{
+    struct tm sys_time;
+    RTC_RTCCTimeGet(&sys_time);
+    time_t currentTime = mktime(&sys_time);
+    tv->tv_sec = currentTime;
+    tv->tv_usec = 0;
+    
+    return 0;  // return non-zero for error
+} // end _gettimeofday()
+
 
 /*******************************************************************************
  End of File
