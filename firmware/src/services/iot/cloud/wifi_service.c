@@ -103,15 +103,6 @@ void wifi_init(void (*funcPtr)(uint8_t), uint8_t mode)
 {
     wifiConnectionStateChangedCallback = funcPtr;
 
-    // clear out client/device tls cert
-
-    uint8_t sector_buffer[512] = { 0 };
-    int8_t status = m2m_ssl_send_certs_to_winc(sector_buffer, sizeof(sector_buffer));
-    if (status != M2M_SUCCESS)
-    {
-        debug_printInfo("m2m_ssl_send_certs_to_winc() failed with ret=%d", status);
-    }
-
     // Mode == 0 means AP configuration mode
     if(mode == WIFI_SOFT_AP)
     {
@@ -276,14 +267,13 @@ void WiFi_ConStateCb(tenuM2mConnState status)
 
 void WiFi_HostLookupCb(void)
 {
-
-    if (gethostbyname((char*)CFG_MQTT_PROVISIONING_HOST) == M2M_SUCCESS) {
-        if (shared_networking_params.amDisconnecting == 1) {
-            shared_networking_params.amDisconnecting = 0;
-        }
-        shared_networking_params.haveERROR = 0;
-        debug_printGOOD("CLOUD: DHCP CONF");
-    }   
+//    if (gethostbyname((char*)CFG_MQTT_PROVISIONING_HOST) == M2M_SUCCESS) {
+//        if (shared_networking_params.amDisconnecting == 1) {
+//            shared_networking_params.amDisconnecting = 0;
+//        }
+//        shared_networking_params.haveERROR = 0;
+//        debug_printGOOD("CLOUD: DHCP CONF");
+//    }   
 }
 
 void WiFi_ProvisionCb(uint8_t sectype, uint8_t * SSID, uint8_t * password)

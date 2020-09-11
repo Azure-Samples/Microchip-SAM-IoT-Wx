@@ -114,12 +114,14 @@ static void APP_ConnectNotifyCb(DRV_HANDLE handle, WDRV_WINC_CONN_STATE currentS
 // Section: Global Data Definitions
 // *****************************************************************************
 // *****************************************************************************
+#define SN_STRING "sn"
 
 /* Place holder for ECC608A unique serial id */
 ATCA_STATUS appCryptoClientSerialNumber;
 ATCA_STATUS retValCryptoClientSerialNumber;
 char* attDeviceID;
-char attDeviceID_buf[20] = "BAAAAADD1DBAAADD1D";
+char attDeviceID_buf[25] = "BAAAAADD1DBAAADD1D";
+char buf[25];
 
 shared_networking_params_t shared_networking_params;
 
@@ -301,6 +303,7 @@ static void APP_ProvisionRespCb(DRV_HANDLE handle, WDRV_WINC_SSID * targetSSID,
 #ifdef CFG_MQTT_PROVISIONING_HOST
 void iot_provisioning_completed(void)
 {
+    debug_printGOOD("Azure IoT Provisioning Completed.");
     CLOUD_init_host(hub_hostname, attDeviceID, &pf_mqqt_iothub_client);
 }
 #endif //CFG_MQTT_PROVISIONING_HOST 
@@ -311,6 +314,7 @@ void APP_Tasks(void)
     {
         case APP_STATE_CRYPTO_INIT:
         {
+            debug_init(attDeviceID);
             cryptoauthlib_init(); 
             if (cryptoDeviceInitialized == false)
             {
@@ -319,7 +323,7 @@ void APP_Tasks(void)
             
 #ifdef HUB_DEVICE_ID
             attDeviceID = HUB_DEVICE_ID;
-#else              
+#else 
             appCryptoClientSerialNumber = CRYPTO_CLIENT_printSerialNumber(attDeviceID_buf);
             if(appCryptoClientSerialNumber != ATCA_SUCCESS )
             {
@@ -337,13 +341,18 @@ void APP_Tasks(void)
             }
             else
             {
-                attDeviceID = attDeviceID_buf;
+                // To use Azure provisioning service, attDeviceID should match with the device cert CN,
+                // which is the serial number of ECC608 prefixed with "sn" if you are using the 
+                // the microchip provisioning tool for PIC24.
+                strcat(buf, SN_STRING);
+                strcat(buf, attDeviceID_buf);
+                attDeviceID = buf;
+                debug_printInfo("CRYPTO_CLIENT_printSerialNumber %s\n", attDeviceID);
             }
-#endif             
+#endif
         #if CFG_ENABLE_CLI   
             set_deviceId(attDeviceID);
-        #endif  
-            debug_init(attDeviceID); 
+        #endif             
             debug_setPrefix(attDeviceID);
             CLOUD_setdeviceId(attDeviceID);
             appData.state = APP_STATE_WDRV_INIT;
@@ -514,6 +523,7 @@ void APP_SendToCloud(void)
 {
    static char json[70];
          
+   debug_printGOOD("APP_SendToCloud.");
    // This part runs every CFG_SEND_INTERVAL seconds
    float rawTemperature = APP_GetTempSensorValue();
    int light = APP_GetLightSensorValue();

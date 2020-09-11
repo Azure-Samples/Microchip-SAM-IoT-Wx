@@ -48,6 +48,8 @@
 #include "iot_config/mqtt_config.h"
 #include "led.h"
 
+#include "../../../config/SAMD21_WG_IOT/driver/winc/include/drv/driver/m2m_ssl.h"
+
 #define UNIX_OFFSET  946684800
 
 static bool cloudInitialized = false;
@@ -101,6 +103,31 @@ void cloudResetTask(void);
 packetReceptionHandler_t cloud_packetReceiveCallBackTable[CLOUD_PACKET_RECV_TABLE_SIZE];
 
 static char *ateccsn = NULL;
+
+void NETWORK_wifiSslCallback(uint8_t u8MsgType, void *pvMsg)
+{
+    switch (u8MsgType)
+    {
+        case M2M_SSL_REQ_ECC:
+        {
+            tstrEccReqInfo *ecc_request = (tstrEccReqInfo*)pvMsg;
+            CRYPTO_CLIENT_processEccRequest(ecc_request);
+
+            break;
+        }
+
+        case M2M_SSL_RESP_SET_CS_LIST:
+        {
+            tstrSslSetActiveCsList *pstrCsList = (tstrSslSetActiveCsList *)pvMsg;
+            debug_printInfo("ActiveCS bitmap:%04x", pstrCsList->u32CsBMP);
+
+            break;
+        }
+
+        default:
+            break;
+    }
+}
 
 void CLOUD_setdeviceId(char *id)
 {
@@ -189,6 +216,15 @@ static int8_t connectMQTTSocket(void)
 {
    int8_t ret = false;
    
+    // Abstract the SSL section into a separate function
+    int8_t sslInit;
+
+    sslInit = m2m_ssl_init(NETWORK_wifiSslCallback);
+    if(sslInit != M2M_SUCCESS)
+    {
+        debug_printInfo("WiFi SSL Initialization failed");
+    }
+  
    if (mqttHostIP > 0)
    {
       struct bsd_sockaddr_in addr;
@@ -235,7 +271,7 @@ void CLOUD_task(void)
 {
 	mqttContext* mqttConnnectionInfo = MQTT_GetClientConnectionInfo();
 	socketState_t socketState;
-
+    
 	if (!cloudInitialized)
 	{
       if (!isResetting)
@@ -393,7 +429,7 @@ void dnsHandler(uint8_t* domainName, uint32_t serverIP)
     {
         dnsRetryDelay = 0;
         mqttHostIP = serverIP;
-        debug_printInfo("CLOUD: mqttHostIP = (%lu.%lu.%lu.%lu)", (0x0FF & (serverIP)), (0x0FF & (serverIP >> 8)), (0x0FF & (serverIP >> 16)), (0x0FF & (serverIP >> 24)));
+        debug_printInfo("CLOUD: mqttHostIP = (%lu.%lu.%lu.%lu)\n", (0x0FF & (serverIP)), (0x0FF & (serverIP >> 8)), (0x0FF & (serverIP >> 16)), (0x0FF & (serverIP >> 24)));
     }
 }
 

@@ -53,7 +53,7 @@ static const char *level_strings[] = {
 };
  
 static debug_severity_t debug_severity_filter = SEVERITY_NONE;
-static char debug_message_prefix[20] = "<PREFIX>";
+static char debug_message_prefix[25] = "<PREFIX>";
 
 void debug_init(const char *prefix)
 { 

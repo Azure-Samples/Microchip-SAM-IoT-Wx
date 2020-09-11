@@ -51,7 +51,6 @@ typedef struct
 
 char* url_encode_rfc3986(char* s, char* dest, size_t dest_len);
 
-extern char* hub_device_key;
 extern char* hub_hostname;
 
 #endif /* MQTT_PACKET_POPULATE_H */
