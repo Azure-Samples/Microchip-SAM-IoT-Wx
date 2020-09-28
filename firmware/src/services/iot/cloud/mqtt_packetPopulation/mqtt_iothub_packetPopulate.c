@@ -78,16 +78,16 @@ void MQTT_CLIENT_iothub_publish(uint8_t* data, uint16_t len)
 {
 	uint8_t properties_buf[256];
 	az_span properties = AZ_SPAN_FROM_BUFFER(properties_buf);
-	az_iot_hub_client_properties properties_topic;
-	az_result result = az_iot_hub_client_properties_init(&properties_topic, properties, 0);
-	if (az_failed(result))
+	az_iot_message_properties  properties_topic;
+	az_result result = az_iot_message_properties_init(&properties_topic, properties, 0);
+	if (az_result_failed(result))
 	{
 		debug_printError("az_iot_hub_client_properties_init failed");
 		return;
 	}
 
-	result = az_iot_hub_client_properties_append(&properties_topic, AZ_SPAN_FROM_STR("foo"), AZ_SPAN_FROM_STR("bar"));
-	if (az_failed(result))
+	result = az_iot_message_properties_append(&properties_topic, AZ_SPAN_FROM_STR("foo"), AZ_SPAN_FROM_STR("bar"));
+	if (az_result_failed(result))
 	{
 		debug_printError("az_iot_hub_client_properties_append failed");
 		return;
@@ -96,7 +96,7 @@ void MQTT_CLIENT_iothub_publish(uint8_t* data, uint16_t len)
 	result = az_iot_hub_client_telemetry_get_publish_topic(
 		&hub_client, &properties_topic, mqtt_telemetry_topic_buf, sizeof(mqtt_telemetry_topic_buf), NULL);
 
-	if (az_failed(result))
+	if (az_result_failed(result))
 	{
 		debug_printError("az_iot_hub_client_telemetry_get_publish_topic failed");
 		return;
@@ -104,9 +104,9 @@ void MQTT_CLIENT_iothub_publish(uint8_t* data, uint16_t len)
 
 	mqttPublishPacket cloudPublishPacket;
 	// Fixed header
-	cloudPublishPacket.publishHeaderFlags.duplicate = AZ_HUB_CLIENT_DEFAULT_MQTT_TELEMETRY_DUPLICATE;
-	cloudPublishPacket.publishHeaderFlags.qos = AZ_HUB_CLIENT_DEFAULT_MQTT_TELEMETRY_QOS;
-	cloudPublishPacket.publishHeaderFlags.retain = AZ_HUB_CLIENT_DEFAULT_MQTT_TELEMETRY_RETAIN;
+	cloudPublishPacket.publishHeaderFlags.duplicate = 0;
+	cloudPublishPacket.publishHeaderFlags.qos = 1;
+	cloudPublishPacket.publishHeaderFlags.retain = 0;
 	// Variable header
 	cloudPublishPacket.topic = (uint8_t*)mqtt_telemetry_topic_buf;
 
@@ -135,7 +135,7 @@ void MQTT_CLIENT_iothub_connect(char* deviceID)
 
 	az_iot_hub_client_options options = az_iot_hub_client_options_default();
 	az_result result = az_iot_hub_client_init(&hub_client, iothub_hostname, device_id, &options);
-	if (az_failed(result))
+	if (az_result_failed(result))
 	{
 		debug_printError("az_iot_hub_client_init failed");
 		return;
@@ -143,7 +143,7 @@ void MQTT_CLIENT_iothub_connect(char* deviceID)
 
 	size_t username_buf_len;
 	result = az_iot_hub_client_get_user_name(&hub_client, username_buf, sizeof(username_buf), &username_buf_len);
-	if (az_failed(result))
+	if (az_result_failed(result))
 	{
 		debug_printError("az_iot_hub_client_get_user_name failed");
 		return;
@@ -207,7 +207,7 @@ void MQTT_CLIENT_iothub_connected()
 	// get the current state of the device twin
 
 	az_result result = az_iot_hub_client_twin_document_get_publish_topic(&hub_client, twin_request_id, mqtt_get_topic_twin_buf, sizeof(mqtt_get_topic_twin_buf), NULL);
-	if (az_failed(result))
+	if (az_result_failed(result))
 	{
 		debug_printError("az_iot_hub_client_twin_document_get_publish_topic failed");
 		return;
@@ -215,9 +215,9 @@ void MQTT_CLIENT_iothub_connected()
 
 	mqttPublishPacket cloudPublishPacket;
 	// Fixed header
-	cloudPublishPacket.publishHeaderFlags.duplicate = AZ_HUB_CLIENT_DEFAULT_MQTT_TELEMETRY_DUPLICATE;
-	cloudPublishPacket.publishHeaderFlags.qos = AZ_HUB_CLIENT_DEFAULT_MQTT_TELEMETRY_QOS;
-	cloudPublishPacket.publishHeaderFlags.retain = AZ_HUB_CLIENT_DEFAULT_MQTT_TELEMETRY_RETAIN;
+	cloudPublishPacket.publishHeaderFlags.duplicate = 0;
+	cloudPublishPacket.publishHeaderFlags.qos = 0;
+	cloudPublishPacket.publishHeaderFlags.retain = 0;
 	// Variable header
 	cloudPublishPacket.topic = (uint8_t*)mqtt_get_topic_twin_buf;
 
