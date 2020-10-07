@@ -370,8 +370,9 @@ void iot_provisioning_completed(void)
 {
     debug_printGOOD("Azure IoT Provisioning Completed.");
     CLOUD_init_host(hub_hostname, attDeviceID, &pf_mqqt_iothub_client);
-    CLOUD_reset();
     CLOUD_disconnect();
+    CLOUD_reset();
+    App_DataTaskHandle = SYS_TIME_CallbackRegisterMS(APP_DataTaskcb, 0, APP_DATATASK_INTERVAL, SYS_TIME_PERIODIC);
 }
 #endif //CFG_MQTT_PROVISIONING_HOST 
 
@@ -458,7 +459,6 @@ void APP_Tasks(void)
                 WDRV_WINC_IPUseDHCPSet(wdrvHandle, &APP_DHCPAddressEventCb);
             
                 App_CloudTaskHandle = SYS_TIME_CallbackRegisterMS(APP_CloudTaskcb, 0, 500, SYS_TIME_PERIODIC);
-                //App_DataTaskHandle = SYS_TIME_CallbackRegisterMS(APP_DataTaskcb, 0, APP_DATATASK_INTERVAL, SYS_TIME_PERIODIC);
                 WDRV_WINC_BSSReconnect(wdrvHandle, &APP_ConnectNotifyCb); 
                 WDRV_WINC_SystemTimeGetCurrent(wdrvHandle, &APP_GetTimeNotifyCb);
             }
@@ -1142,28 +1142,13 @@ void APP_SendToCloud(void)
      send_telemetry_message();
 }
 
-//void APP_ReceivedFromCloud(uint8_t *topic, uint8_t *payload)
-//{
-//    char *toggleToken = "\"toggle\":";
-//    char *subString;
-//    
-//    if ((subString = strstr((char*)payload, toggleToken)))
-//    {
-//        LED_holdYellowOn( subString[strlen(toggleToken)] == '1' );
-//    }
-//
-//    debug_print("topic: %s", topic);
-//    debug_print("payload: %s", payload);
-//}
-
 void APP_application_post_provisioning(void)
 {
     App_CloudTaskHandle = SYS_TIME_CallbackRegisterMS(APP_CloudTaskcb, 0, 500,
                                                         SYS_TIME_PERIODIC);
     App_DataTaskHandle = SYS_TIME_CallbackRegisterMS(APP_DataTaskcb, 0, 
-                                APP_DATATASK_INTERVAL, SYS_TIME_PERIODIC);  
+                                APP_DATATASK_INTERVAL, SYS_TIME_PERIODIC);
 }
-
 
 // This must exist to keep the linker happy but is never called.
 int _gettimeofday( struct timeval *tv, void *tzvp )
