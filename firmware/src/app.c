@@ -122,7 +122,6 @@ ATCA_STATUS appCryptoClientSerialNumber;
 ATCA_STATUS retValCryptoClientSerialNumber;
 char* attDeviceID;
 char attDeviceID_buf[25] = "BAAAAADD1DBAAADD1D";
-char buf[25];
 
 shared_networking_params_t shared_networking_params;
 
@@ -392,7 +391,8 @@ void APP_Tasks(void)
 #ifdef HUB_DEVICE_ID
             attDeviceID = HUB_DEVICE_ID;
 #else 
-            appCryptoClientSerialNumber = CRYPTO_CLIENT_printSerialNumber(attDeviceID_buf);
+            char serialNumber_buf[25];
+            appCryptoClientSerialNumber = CRYPTO_CLIENT_printSerialNumber(serialNumber_buf);
             if(appCryptoClientSerialNumber != ATCA_SUCCESS )
             {
                switch(appCryptoClientSerialNumber)
@@ -412,15 +412,16 @@ void APP_Tasks(void)
                 // To use Azure provisioning service, attDeviceID should match with the device cert CN,
                 // which is the serial number of ECC608 prefixed with "sn" if you are using the 
                 // the microchip provisioning tool for PIC24.
-                strcat(buf, SN_STRING);
-                strcat(buf, attDeviceID_buf);
-                attDeviceID = buf;
+                strcpy(attDeviceID_buf, SN_STRING);
+                strcat(attDeviceID_buf, serialNumber_buf);
+                attDeviceID = attDeviceID_buf;
                 debug_printInfo("CRYPTO_CLIENT_printSerialNumber %s\n", attDeviceID);
             }
 #endif
-        #if CFG_ENABLE_CLI   
+            
+#if CFG_ENABLE_CLI   
             set_deviceId(attDeviceID);
-        #endif             
+#endif             
             debug_setPrefix(attDeviceID);
             CLOUD_setdeviceId(attDeviceID);
             appData.state = APP_STATE_WDRV_INIT;
@@ -591,7 +592,7 @@ static int send_command_response(
                 sizeof(commands_response_topic),
                 NULL)))
     {
-      debug_printError("Unable to get twin document publish topic");
+      debug_printError("Unable to get command response publish topic");
       return rc;
     }
 
