@@ -31,7 +31,6 @@
 #include "mqtt_packetPopulate.h"
 #include "iot_config/cloud_config.h"
 
-char* hub_device_key = HUB_DEVICE_KEY;
 char* hub_hostname = CFG_MQTT_HUB_HOST;
 char mqtt_password_buf[512];
 char mqtt_username_buf[200];

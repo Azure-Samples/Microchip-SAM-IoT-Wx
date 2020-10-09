@@ -31,18 +31,17 @@ pf_MQTT_CLIENT pf_mqqt_iotprovisioning_client = {
   NULL
 };
 
+extern const az_span device_model_id;
 extern uint8_t device_id_buf[100];
 extern az_span device_id;
 char hub_hostname_buf[128];
 
-char *hub_device_key_buf = PROVISIONING_DEVICE_REGISTRATION_KEY;
-static const char* const provisioning_device_registration_key = PROVISIONING_DEVICE_REGISTRATION_KEY;
-
 az_iot_provisioning_client provisioning_client;
 az_iot_provisioning_client_register_response dps_register_response;
 char mqtt_dsp_topic_buf[200];
-char register_payload_buf[512];
-char register_topic_buf[64];
+az_span register_payload;
+char register_payload_buf[1024];
+az_span span_remainder;
 
 static uint16_t dps_retryTimer;
 static SYS_TIME_HANDLE dps_retry_timer_handle = SYS_TIME_HANDLE_INVALID;
@@ -54,58 +53,50 @@ static void dps_assigning_task(uintptr_t context);
 void dps_client_register(uint8_t* topic, uint8_t* payload)
 {
 	int rc;
-	strncpy(register_topic_buf, (char*)topic, sizeof(register_topic_buf));
-	strncpy(register_payload_buf, (char*)payload, sizeof(register_payload_buf));
-	register_topic_buf[sizeof(register_topic_buf) - 1] = '\0';
-	register_payload_buf[sizeof(register_payload_buf) - 1] = '\0';
-
-	if (az_failed(
+    int topic_len = strlen((const char*)topic);
+    int payload_len = strlen((const char*)payload);
+    
+	if (az_result_failed(
 		rc = az_iot_provisioning_client_parse_received_topic_and_payload(
 			&provisioning_client,
-			az_span_create_from_str(register_topic_buf),
-			az_span_create_from_str(register_payload_buf),
-			&dps_register_response)))
+            az_span_create(topic, topic_len),
+            az_span_create(payload, payload_len),
+            &dps_register_response)))
 	{
-		debug_printError("az_iot_provisioning_client_parse_received_topic_and_payload failed");
+		debug_printError("az_iot_provisioning_client_parse_received_topic_and_payload failed, return code %d\n", rc);
 		return;
 	}
 
-	az_iot_provisioning_client_operation_status operation_status;
-	if (az_failed(
-		rc = az_iot_provisioning_client_parse_operation_status(&dps_register_response, &operation_status)))
+	switch (dps_register_response.operation_status)
 	{
-		debug_printError("az_iot_provisioning_client_parse_operation_status failed");
-		return;
-	}
+        case AZ_IOT_PROVISIONING_STATUS_ASSIGNING:
+            dps_assigning_timer_handle = SYS_TIME_CallbackRegisterMS(dps_assigning_task, 0, 1000 * dps_register_response.retry_after_seconds, SYS_TIME_SINGLE);        
+            break;
 
-	switch (operation_status)
-	{
-	case AZ_IOT_PROVISIONING_STATUS_ASSIGNING:
-        dps_assigning_timer_handle = SYS_TIME_CallbackRegisterMS(dps_assigning_task, 0, 1000 * dps_register_response.retry_after_seconds, SYS_TIME_SINGLE);        
-		break;
+        case AZ_IOT_PROVISIONING_STATUS_ASSIGNED:
+            debug_printGOOD("mqtt_iotprovisioning_packetPopulate: AZ_IOT_PROVISIONING_STATUS_ASSIGNED");
+            LED_holdRedOn(LED_OFF);
+            SYS_TIME_TimerDestroy(dps_retry_timer_handle);
+            SYS_TIME_TimerDestroy(dps_assigning_timer_handle);
+            az_span_to_str(hub_hostname_buf, sizeof(hub_hostname_buf), dps_register_response.registration_state.assigned_hub_hostname);
+            hub_hostname = hub_hostname_buf;
+            pf_mqqt_iotprovisioning_client.MQTT_CLIENT_task_completed();
+            break;
 
-	case AZ_IOT_PROVISIONING_STATUS_ASSIGNED:
-		LED_holdRedOn(LED_OFF);
-        SYS_TIME_TimerDestroy(dps_retry_timer_handle);
-        SYS_TIME_TimerDestroy(dps_assigning_timer_handle);
-		az_span_to_str(hub_hostname_buf, sizeof(hub_hostname_buf), dps_register_response.registration_result.assigned_hub_hostname);
-		hub_hostname = hub_hostname_buf;
-		pf_mqqt_iotprovisioning_client.MQTT_CLIENT_task_completed();
-		break;
-
-	case AZ_IOT_PROVISIONING_STATUS_FAILED:
-	case AZ_IOT_PROVISIONING_STATUS_DISABLED:
-	default:
-		LED_holdRedOn(LED_ON);
-		break;
+        case AZ_IOT_PROVISIONING_STATUS_FAILED:
+            debug_printError("mqtt_iotprovisioning_packetPopulate: FAILED");
+        case AZ_IOT_PROVISIONING_STATUS_DISABLED:
+        default:
+            LED_holdRedOn(LED_ON);
+            break;
 	}
 }
 
 static void dps_assigning_task(uintptr_t context)
 {
 	int rc;
-	if (az_failed(
-		rc = az_iot_provisioning_client_query_status_get_publish_topic(&provisioning_client, &dps_register_response, mqtt_dsp_topic_buf, sizeof(mqtt_dsp_topic_buf), NULL)))
+	if (az_result_failed(
+		rc = az_iot_provisioning_client_query_status_get_publish_topic(&provisioning_client, dps_register_response.operation_id, mqtt_dsp_topic_buf, sizeof(mqtt_dsp_topic_buf), NULL)))
 	{
 		debug_printError("az_iot_provisioning_client_query_status_get_publish_topic failed");
 		return;
@@ -113,15 +104,21 @@ static void dps_assigning_task(uintptr_t context)
 
 	mqttPublishPacket cloudPublishPacket;
 	// Fixed header
-	cloudPublishPacket.publishHeaderFlags.duplicate = AZ_HUB_CLIENT_DEFAULT_MQTT_TELEMETRY_DUPLICATE;
-	cloudPublishPacket.publishHeaderFlags.qos = AZ_HUB_CLIENT_DEFAULT_MQTT_TELEMETRY_QOS;
-	cloudPublishPacket.publishHeaderFlags.retain = AZ_HUB_CLIENT_DEFAULT_MQTT_TELEMETRY_RETAIN;
+	cloudPublishPacket.publishHeaderFlags.duplicate = 0;
+	cloudPublishPacket.publishHeaderFlags.qos = 0;
+	cloudPublishPacket.publishHeaderFlags.retain = 1;
 	// Variable header
 	cloudPublishPacket.topic = (uint8_t*)mqtt_dsp_topic_buf;
 
 	// Payload
-	cloudPublishPacket.payload = NULL;
-	cloudPublishPacket.payloadLength = 0;
+    register_payload = az_span_create((uint8_t*)register_payload_buf, sizeof(register_payload_buf));
+    span_remainder = az_span_copy(register_payload, az_span_create_from_str("{\"payload\":{\"modelId\":\""));
+    span_remainder = az_span_copy(span_remainder, device_model_id);
+    span_remainder = az_span_copy(span_remainder, az_span_create_from_str("\"}}"));
+    az_span_copy_u8(span_remainder, '\0');
+     
+    cloudPublishPacket.payload = (uint8_t*)register_payload_buf;
+    cloudPublishPacket.payloadLength = strlen(register_payload_buf);
 
 	if (MQTT_CreatePublishPacket(&cloudPublishPacket) != true)
 	{
@@ -132,7 +129,6 @@ static void dps_assigning_task(uintptr_t context)
 
 static void dps_retry_task(uintptr_t context)
 {
-	debug_printError("az_iot_provisioning_client_parse_operation_status failed");
 	if (++dps_retryTimer % 240 > 0)  // retry every 2 mins
 		return;
 
@@ -169,14 +165,10 @@ void MQTT_CLIENT_iotprovisioning_connect(char* deviceID)
 	az_span_copy(device_id, deviceID_parm);
 	device_id = az_span_slice(device_id, 0, az_span_size(deviceID_parm));
 	    
-  	uint8_t device_registration_key[32];
-	size_t device_registration_key_size = sizeof(device_registration_key);
-    atcab_base64decode_(provisioning_device_registration_key, strlen(provisioning_device_registration_key), device_registration_key, &device_registration_key_size, az_iot_b64rules);
-
 	const az_span global_device_endpoint = AZ_SPAN_LITERAL_FROM_STR(CFG_MQTT_PROVISIONING_HOST);
 	const az_span id_scope = AZ_SPAN_LITERAL_FROM_STR(PROVISIONING_ID_SCOPE);
 	az_result result = az_iot_provisioning_client_init(&provisioning_client, global_device_endpoint, id_scope, device_id, NULL);
-	if (az_failed(result))
+	if (az_result_failed(result))
 	{
 		debug_printError("az_iot_provisioning_client_init failed");
 		return;
@@ -184,63 +176,27 @@ void MQTT_CLIENT_iotprovisioning_connect(char* deviceID)
 
 	size_t mqtt_username_buf_len;
 	result = az_iot_provisioning_client_get_user_name(&provisioning_client, mqtt_username_buf, sizeof(mqtt_username_buf), &mqtt_username_buf_len);
-	if (az_failed(result))
+	if (az_result_failed(result))
 	{
 		debug_printError("az_iot_provisioning_client_get_user_name failed");
 		return;
 	}
 
-	char mqtt_username_encoded_buf[256];
-	url_encode_rfc3986(mqtt_username_buf, mqtt_username_encoded_buf, _az_COUNTOF(mqtt_username_encoded_buf));
+    mqttConnectPacket cloudConnectPacket;
+    memset(&cloudConnectPacket, 0, sizeof(mqttConnectPacket));
+    cloudConnectPacket.connectVariableHeader.connectFlagsByte.cleanSession = 1; 
+    cloudConnectPacket.connectVariableHeader.keepAliveTimer = AZ_IOT_DEFAULT_MQTT_CONNECT_KEEPALIVE_SECONDS;    
+    cloudConnectPacket.clientID = (uint8_t*) az_span_ptr(device_id);
+    cloudConnectPacket.password = NULL;
+    cloudConnectPacket.passwordLength = 0;
+    cloudConnectPacket.username = (uint8_t*) mqtt_username_buf;
+    cloudConnectPacket.usernameLength = (uint16_t) mqtt_username_buf_len;
 
-	time_t expire_time = time(NULL) + 60 * 60; // token expires in 1 hour  
-	uint8_t signature_buf[128];
-	az_span signature = AZ_SPAN_FROM_BUFFER(signature_buf);
-	result = az_iot_provisioning_client_sas_get_signature(&provisioning_client, expire_time, signature, &signature);
-	if (az_failed(result))
-	{
-		debug_printError("az_iot_provisioning_client_sas_get_signature failed");
-		return;
-	}
-
-	uint8_t sas_hash[32];
-	atcab_nonce(device_registration_key);
-	ATCA_STATUS atca_status = atcab_sha_hmac(signature_buf, az_span_size(signature), ATCA_TEMPKEY_KEYID, sas_hash, SHA_MODE_TARGET_OUT_ONLY);
-	if (atca_status != ATCA_SUCCESS)
-	{
-		debug_printError("atcab_sha_hmac failed");
-		return;
-	}
-
-	char signature_hash_buf[64];
-	size_t key_size = _az_COUNTOF(signature_hash_buf);
-	atcab_base64encode_(sas_hash, sizeof(sas_hash), signature_hash_buf, &key_size, az_iot_b64rules);
-
-	size_t mqtt_password_buf_len;
-	az_span signature_hash = az_span_create_from_str(signature_hash_buf);
-	result = az_iot_provisioning_client_sas_get_password(&provisioning_client, signature_hash, expire_time, az_span_create_from_str("registration"), mqtt_password_buf, sizeof(mqtt_password_buf), &mqtt_password_buf_len);
-	if (az_failed(result))
-	{
-		debug_printError("az_iot_provisioning_client_sas_get_password failed");
-		return;
-	}
-
-	mqttConnectPacket cloudConnectPacket;
-	memset(&cloudConnectPacket, 0, sizeof(mqttConnectPacket));
-	cloudConnectPacket.connectVariableHeader.connectFlagsByte.cleanSession = 1;
-	cloudConnectPacket.connectVariableHeader.keepAliveTimer = AZ_IOT_DEFAULT_MQTT_CONNECT_KEEPALIVE_SECONDS;
-	cloudConnectPacket.clientID = (uint8_t*)az_span_ptr(device_id);
-	cloudConnectPacket.password = (uint8_t*)mqtt_password_buf;
-	cloudConnectPacket.passwordLength = mqtt_password_buf_len;
-	cloudConnectPacket.username = (uint8_t*)mqtt_username_buf;
-	cloudConnectPacket.usernameLength = (uint16_t)mqtt_username_buf_len;
-
-	MQTT_CreateConnectPacket(&cloudConnectPacket);
+    MQTT_CreateConnectPacket(&cloudConnectPacket);
 }
 
 bool MQTT_CLIENT_iotprovisioning_subscribe()
 {
-
 	mqttSubscribePacket cloudSubscribePacket = { 0 };
 	// Variable header   
 	cloudSubscribePacket.packetIdentifierLSB = 1;
@@ -267,7 +223,7 @@ bool MQTT_CLIENT_iotprovisioning_subscribe()
 void MQTT_CLIENT_iotprovisioning_connected()
 {
 	az_result result = az_iot_provisioning_client_register_get_publish_topic(&provisioning_client, mqtt_dsp_topic_buf, sizeof(mqtt_dsp_topic_buf), NULL);
-	if (az_failed(result))
+	if (az_result_failed(result))
 	{
 		debug_printError("az_iot_provisioning_client_register_get_publish_topic failed");
 		return;
@@ -275,18 +231,20 @@ void MQTT_CLIENT_iotprovisioning_connected()
 
 	mqttPublishPacket cloudPublishPacket;
 	// Fixed header
-	cloudPublishPacket.publishHeaderFlags.duplicate = AZ_HUB_CLIENT_DEFAULT_MQTT_TELEMETRY_DUPLICATE;
-	cloudPublishPacket.publishHeaderFlags.qos = AZ_HUB_CLIENT_DEFAULT_MQTT_TELEMETRY_QOS;
-	cloudPublishPacket.publishHeaderFlags.retain = AZ_HUB_CLIENT_DEFAULT_MQTT_TELEMETRY_RETAIN;
+	cloudPublishPacket.publishHeaderFlags.duplicate = 0;
+	cloudPublishPacket.publishHeaderFlags.qos = 0;
+	cloudPublishPacket.publishHeaderFlags.retain = 1;
 	// Variable header
 	cloudPublishPacket.topic = (uint8_t*)mqtt_dsp_topic_buf;
 
 	// Payload
-	strcpy(register_payload_buf, "{\"registrationId\":\"");
-	strcat(register_payload_buf, (char*)device_id_buf);
-	strcat(register_payload_buf, "\"}");
-	cloudPublishPacket.payload = (uint8_t*)register_payload_buf;
-	cloudPublishPacket.payloadLength = strlen(register_payload_buf);
+//	strcpy(register_payload_buf, "{\"registrationId\":\"");
+//	strcat(register_payload_buf, (char*)device_id_buf);
+//	strcat(register_payload_buf, "\"}");
+//	cloudPublishPacket.payload = (uint8_t*)register_payload_buf;
+//	cloudPublishPacket.payloadLength = strlen(register_payload_buf);
+    cloudPublishPacket.payload = NULL;
+    cloudPublishPacket.payloadLength = 0;
 
 	if (MQTT_CreatePublishPacket(&cloudPublishPacket) != true)
 	{
