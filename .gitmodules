@@ -1,0 +1,3 @@
+[submodule "src/azure-sdk-for-c"]
+	path = src/azure-sdk-for-c
+	url = https://github.com/Azure/azure-sdk-for-c
