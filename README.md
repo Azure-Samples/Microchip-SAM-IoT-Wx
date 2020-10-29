@@ -18,16 +18,15 @@
     - [Azure IoT Embedded C SDK](#azure-iot-embedded-c-sdk)
     - [TLS connection](#tls-connection)
     - [MQTT Connection](#mqtt-connection)
-  - [Sample Descriptions](#sample-descriptions)
-    - [AzureIotPnpDps.X](#azureiotpnpdpsx)
+  - [Demonstration Application Description](#demonstration-application-description)
   - [Checklist](#checklist)
   - [Instruction](#instruction)
-    - [Step 1: Prepare your development environment](#step-1-prepare-your-development-environment)
+    - [Section  1: Prepare your development environment](#section-1-prepare-your-development-environment)
       - [1. Set up Microchip’s MPLAB X IDE Tool Chain](#1-set-up-microchips-mplab-x-ide-tool-chain)
       - [2. Set up Azure cloud resources](#2-set-up-azure-cloud-resources)
       - [3. Set up Git](#3-set-up-git)
-    - [Step 2: Prepare your SAM-IoT board to connect to Azure](#step-2-prepare-your-sam-iot-board-to-connect-to-azure)
-    - [Step 3: Enroll device into DPS](#step-3-enroll-device-into-dps)
+    - [Section  2: Prepare your SAM-IoT board to connect to Azure](#section-2-prepare-your-sam-iot-board-to-connect-to-azure)
+    - [Section  3: Enroll device into DPS](#section-3-enroll-device-into-dps)
       - [1. Preparing your environment for the certification verifying process:](#1-preparing-your-environment-for-the-certification-verifying-process)
       - [2. In Azure portal, upload the root CA cert “root-ca.pem” in DPS and do proof-of-possession for X.509 CA certificates with your Device Provisioning Service](#2-in-azure-portal-upload-the-root-ca-cert-root-capem-in-dps-and-do-proof-of-possession-for-x509-ca-certificates-with-your-device-provisioning-service)
         - [a. Register the public part of an X.509 certificate and get a verification code](#a-register-the-public-part-of-an-x509-certificate-and-get-a-verification-code)
@@ -36,11 +35,11 @@
         - [STOP! Quick summary of this step](#stop-quick-summary-of-this-step)
       - [3. Add a new enrollment group using the signer-ca.pem file](#3-add-a-new-enrollment-group-using-the-signer-capem-file)
       - [STOP! Sanity checks:](#stop-sanity-checks)
-    - [Step 4: Connect the SAM-IoT device to Azure](#step-4-connect-the-sam-iot-device-to-azure)
-    - [Step 5: Verify the connection between SAM-IoT and Azure](#step-5-verify-the-connection-between-sam-iot-and-azure)
-    - [Step 6: View SAM-IoT board telemetry on Azure IoT Explorer](#step-6-view-sam-iot-board-telemetry-on-azure-iot-explorer)
+    - [Section  4: Connect the SAM-IoT device to Azure](#section-4-connect-the-sam-iot-device-to-azure)
+    - [Section  5: Verify the connection between SAM-IoT and Azure](#section-5-verify-the-connection-between-sam-iot-and-azure)
+    - [Section  6: View SAM-IoT board telemetry on Azure IoT Explorer](#section-6-view-sam-iot-board-telemetry-on-azure-iot-explorer)
     - [Further instructions for IoT Plug and Play](#further-instructions-for-iot-plug-and-play)
-  - [Further consideration](#further-consideration)
+  - [Further Consideration](#further-consideration)
   - [Conclusion](#conclusion)
 
 ## Background Knowledge
@@ -145,16 +144,9 @@ After successfully connecting on the TLS level, the board starts
 establishing the MQTT connection. Since the TLS handles authentication
 and security, MQTT does not have to provide a username or password.
 
-## Sample Descriptions
+## Demonstration Application Description
 
- The sample in this repo is using DPS to provision and then connects and interacts with IoT Hub using the IoT Plug and Play programming model. To further understand what IoT Plug and Play is, please see the documentation [here](https://docs.microsoft.com/en-us/azure/iot-pnp/overview-iot-plug-and-play).
-
-### AzureIotPnpDps.X
-
-Use an IoT Plug and Play enabled device with the DTMI detailed [here](https://github.com/Azure/opendigitaltwins-dtdl/blob/master/DTDL/v2/samples/Thermostat.json).
-You can monitor the telemetry, invoke methods, and modify properties easily with the additional instructions listed at [here](#further-instructions-for-iot-plug-and-play).
-
-![Iot Explorer](.//media/iotexplorer.png)
+ The provided demo project uses DPS to provision and then connects/interacts with IoT Hub using the IoT Plug and Play programming model. To further understand what IoT Plug and Play is, please see the documentation [here](https://docs.microsoft.com/en-us/azure/iot-pnp/overview-iot-plug-and-play).
 
 ## Checklist
 
@@ -165,7 +157,7 @@ list as you complete each stage:
 
 ## Instruction
 
-### Step 1: Prepare your development environment
+### Section 1: Prepare your development environment
 
 #### 1. Set up Microchip’s MPLAB X IDE Tool Chain
 
@@ -202,7 +194,7 @@ list as you complete each stage:
     <img src=".//media/image15.png"/>
 
 
-### Step 2: Prepare your SAM-IoT board to connect to Azure
+### Section 2: Prepare your SAM-IoT board to connect to Azure
 
 This step serves two purposes:
 
@@ -242,7 +234,7 @@ Hub.
 
 <img src=".//media/image14.png" />
 
-### Step 3: Enroll device into DPS
+### Section 3: Enroll device into DPS
 
 #### 1. Preparing your environment for the certification verifying process:
 
@@ -364,7 +356,7 @@ DPS &gt; click “IoT devices” (on the left-hand side under “Explorers”
 &gt; observe that your SAM-IoT device ID “sn01237F696BEB9C89FE” does
 not show up.
 
-### Step 4: Connect the SAM-IoT device to Azure
+### Section 4: Connect the SAM-IoT device to Azure
 
 In this step, we will flash the SAM-IoT board and connect it to Azure.
 
@@ -440,13 +432,12 @@ In this step, we will flash the SAM-IoT board and connect it to Azure.
 
     -   Right-click the AzureIotPnpDps project and select “Set as Main Project”
 
-    -   Right-click the AzureIotPnpDps project, select "Set as Main Project" and select “Make and Program Device”. This will first automatically clean and build the project. After the “BUILD SUCCESSFUL” message appears in the Output window, the application HEX file will be programmed onto the SAM-IoT board. Once programming has finished, the board will automatically reset and start running its application code. After a few seconds, you can check if the SAM-IoT board has successfully connected to your Wi-Fi Access Point by observing 3 colored LED’s on the board:
+    -   Right-click the AzureIotPnpDps project, select "Set as Main Project" and select “Make and Program Device”. This will first automatically clean and build the project. After the “BUILD SUCCESSFUL” message appears in the Output window, the application HEX file will be programmed onto the SAM-IoT board. Once programming has finished, the board will automatically reset and start running its application code. After approximately 2 minutes, you can check if the SAM-IoT board has successfully connected to your DPS by observing the colored LED’s on the board:
 
-        -   BLUE: Solid ON all the time (WIFI)
-        -   GREEN: Solid ON all the time (COMM)
-        -   ORANGE: Toggling every few seconds (DATA)
+        -   BLUE (WIFI): Solid ON all the time
+        -   GREEN (COMM): Solid ON all the time
 
-### Step 5: Verify the connection between SAM-IoT and Azure
+### Section  5: Verify the connection between SAM-IoT and Azure
 
 SAM-IoT and Azure connection can be verified by different ways:
 1) View debug log messages in the serial terminal
@@ -459,7 +450,7 @@ Here are the steps:
     may need to enable “Local Echo” in your Terminal settings to see
     your keystrokes displayed in the terminal window.
 
-   - Once the SAM-IoT has established a successful connection, continuous
+   - Once the SAM-IoT has established a successful connection (allow up to 2 minutes for the connection to fully stabilitze), continuous
     MQTT messages involving “sendresult” and “Uptime SocketState” will
     be displayed on the terminal window
         ```
@@ -492,7 +483,7 @@ Here are the steps:
 
     <img src=".//media/image29.png" style="width:4.91723in;height:2.58102in" alt="A screenshot of a cell phone Description automatically generated" />
 
-### Step 6: View SAM-IoT board telemetry on Azure IoT Explorer
+### Section 6: View SAM-IoT board telemetry on Azure IoT Explorer
 
  Once the SAM-IoT connection to Azure has been verified in the previous step, the telemetry can be monitored by taking advantage of Azure IoT Explorer. The Azure IoT explorer is a graphical tool for interacting with and testing your IoT device on Azure. View [this document](https://docs.microsoft.com/en-us/azure/iot-pnp/howto-install-iot-explorer#install-azure-iot-explorer) for more details.
  
@@ -522,16 +513,9 @@ Here are the steps:
 
         <img src=".//media/image33.png" style="width:5.76119in;height:1.45753in" alt="A screenshot of a cell phone Description automatically generated" />
 
-  5. Verify that the IoT Hub can send a command to the device. In the
-    device window:
-
-        Click Direct method tab &gt; enter “blink” in Method name &gt; enter {"duration":10} for payload &gt; Invoke method (a pop-up message displaying ERROR will appear, but that is expected since the IoT Hub is sending a simulated error condition to the SAM-IoT board). Observe that the RED LED stays on for 10 seconds.
-
-        <img src=".//media/image34.jpeg" style="width:1.65714in;height:2.32155in" alt="A circuit board Description automatically generated" />
-
-1. Monitor telemetry sending from SAM-IoT to Azure IoT Hub. 
+  5. Monitor telemetry sending from SAM-IoT to Azure IoT Hub. 
    
-   In the device window: Click Telemetry tab &gt; Start: after about 2 minutes, observe telemetry data is being updated in real-time approximately every 5s. 
+   In the device window: Click Telemetry tab &gt; Start: observe telemetry data is being updated in real-time approximately every 5 seconds. 
    
     <img src=".//media/image35.png" style="width:5.38735in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
     
@@ -546,7 +530,7 @@ Here are the steps:
 
 ![Iot Explorer](./docs/images/iotexplorer.png)
 
-## Further consideration
+## Further Consideration
 
 Instead of connection to IoT Hub and view the telemetry on Azure IoT
 explorer, the SAM-IoT board can be provisioned to the IoT Central
