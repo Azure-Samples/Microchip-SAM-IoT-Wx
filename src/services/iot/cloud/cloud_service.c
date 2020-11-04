@@ -260,8 +260,7 @@ static int8_t connectMQTTSocket(void)
              ret = BSD_setsockopt(*context->tcpClientSocket, SOL_SSL_SOCKET, SO_SSL_ENABLE_SNI_VALIDATION, &optVal, sizeof(optVal));
          }
 
-         if (ret == BSD_SUCCESS)
-         {
+         if (ret == BSD_SUCCESS) {
              debug_print("CLOUD: Connect socket");
              ret = BSD_connect(*context->tcpClientSocket, (struct bsd_sockaddr*) & addr, sizeof (struct bsd_sockaddr_in));
          }
