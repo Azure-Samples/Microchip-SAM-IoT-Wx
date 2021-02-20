@@ -1,382 +1,450 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="65">
   <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="f1" displayName="Azure-C-SDK" projectFiles="true">
+      <logicalFolder name="f1" displayName="core" projectFiles="true">
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="iot" projectFiles="true">
+      </logicalFolder>
+    </logicalFolder>
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f4" displayName="azure-sdk-for-c" projectFiles="true">
+      <logicalFolder name="f1" displayName="azure-sdk-for-c" projectFiles="true">
         <logicalFolder name="f1" displayName="SDK" projectFiles="true">
-          <logicalFolder name="f1" displayName="inc" projectFiles="true">
+          <logicalFolder name="inc" displayName="inc" projectFiles="true">
             <logicalFolder name="azure" displayName="azure" projectFiles="true">
               <logicalFolder name="core" displayName="core" projectFiles="true">
                 <logicalFolder name="internal" displayName="internal" projectFiles="true">
-                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_config_internal.h</itemPath>
-                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_credentials_internal.h</itemPath>
-                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_http_internal.h</itemPath>
-                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_log_internal.h</itemPath>
-                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_precondition_internal.h</itemPath>
-                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_retry_internal.h</itemPath>
-                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_span_internal.h</itemPath>
-                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/internal/az_spinlock_internal.h</itemPath>
+                  <itemPath>azure-sdk-for-c/sdk/inc/azure/core/internal/az_config_internal.h</itemPath>
+                  <itemPath>azure-sdk-for-c/sdk/inc/azure/core/internal/az_credentials_internal.h</itemPath>
+                  <itemPath>azure-sdk-for-c/sdk/inc/azure/core/internal/az_http_internal.h</itemPath>
+                  <itemPath>azure-sdk-for-c/sdk/inc/azure/core/internal/az_log_internal.h</itemPath>
+                  <itemPath>azure-sdk-for-c/sdk/inc/azure/core/internal/az_precondition_internal.h</itemPath>
+                  <itemPath>azure-sdk-for-c/sdk/inc/azure/core/internal/az_result_internal.h</itemPath>
+                  <itemPath>azure-sdk-for-c/sdk/inc/azure/core/internal/az_retry_internal.h</itemPath>
+                  <itemPath>azure-sdk-for-c/sdk/inc/azure/core/internal/az_span_internal.h</itemPath>
                 </logicalFolder>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_config.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_context.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_credentials.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_http.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_http_transport.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_json.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_log.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_platform.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_precondition.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_result.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_span.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/az_version.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/_az_cfg.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/_az_cfg_prefix.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/_az_cfg_suffix.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/core/_az_spinlock.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/core/az_config.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/core/az_context.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/core/az_credentials.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/core/az_http.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/core/az_http_transport.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/core/az_json.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/core/az_log.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/core/az_platform.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/core/az_precondition.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/core/az_result.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/core/az_span.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/core/az_version.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/core/_az_cfg.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/core/_az_cfg_prefix.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/core/_az_cfg_suffix.h</itemPath>
               </logicalFolder>
               <logicalFolder name="iot" displayName="iot" projectFiles="true">
                 <logicalFolder name="internal" displayName="internal" projectFiles="true">
-                  <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/iot/internal/az_iot_common_internal.h</itemPath>
+                  <itemPath>azure-sdk-for-c/sdk/inc/azure/iot/internal/az_iot_common_internal.h</itemPath>
                 </logicalFolder>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/iot/az_iot_common.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/iot/az_iot_hub_client.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/iot/az_iot_provisioning_client.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/iot/az_iot_common.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/iot/az_iot_hub_client.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/iot/az_iot_pnp_client.h</itemPath>
+                <itemPath>azure-sdk-for-c/sdk/inc/azure/iot/az_iot_provisioning_client.h</itemPath>
               </logicalFolder>
-              <logicalFolder name="storage" displayName="storage" projectFiles="true">
-                <itemPath>../src/azure-sdk-for-c/sdk/inc/azure/storage/az_storage_blobs.h</itemPath>
-              </logicalFolder>
+              <itemPath>azure-sdk-for-c/sdk/inc/azure/az_core.h</itemPath>
+              <itemPath>azure-sdk-for-c/sdk/inc/azure/az_iot.h</itemPath>
             </logicalFolder>
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f1" displayName="config" projectFiles="true">
-        <logicalFolder name="f1" displayName="SAMD21_IOT" projectFiles="true">
-          <logicalFolder name="f2" displayName="driver" projectFiles="true">
-            <logicalFolder name="f2" displayName="spi" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/driver/spi/drv_spi.h</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/spi/drv_spi_definitions.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f1" displayName="winc" projectFiles="true">
-              <logicalFolder name="f1" displayName="include" projectFiles="true">
-                <logicalFolder name="f1" displayName="dev" projectFiles="true">
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/include/dev/wdrv_winc_gpio.h</itemPath>
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/include/dev/wdrv_winc_spi.h</itemPath>
-                </logicalFolder>
-                <logicalFolder name="f2" displayName="drv" projectFiles="true">
-                  <logicalFolder name="f1" displayName="bsp" projectFiles="true">
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/bsp/nm_bsp.h</itemPath>
-                  </logicalFolder>
-                  <logicalFolder name="f2" displayName="common" projectFiles="true">
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/common/nm_common.h</itemPath>
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/common/nm_debug.h</itemPath>
-                  </logicalFolder>
-                  <logicalFolder name="f3" displayName="driver" projectFiles="true">
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/driver/ecc_types.h</itemPath>
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/driver/m2m_hif.h</itemPath>
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/driver/m2m_ota.h</itemPath>
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/driver/m2m_periph.h</itemPath>
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/driver/m2m_ssl.h</itemPath>
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/driver/m2m_types.h</itemPath>
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/driver/m2m_wifi.h</itemPath>
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/driver/nmasic.h</itemPath>
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/driver/nmbus.h</itemPath>
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/driver/nmdrv.h</itemPath>
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/driver/nmspi.h</itemPath>
-                  </logicalFolder>
-                  <logicalFolder name="f5" displayName="socket" projectFiles="true">
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/socket/m2m_socket_host_if.h</itemPath>
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/socket/netinet_in.h</itemPath>
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/socket/socket.h</itemPath>
-                  </logicalFolder>
-                  <logicalFolder name="f4" displayName="spi_flash" projectFiles="true">
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/spi_flash/flexible_flash.h</itemPath>
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/spi_flash/spi_flash.h</itemPath>
-                    <itemPath>../src/config/SAMD21_IOT/driver/winc/include/drv/spi_flash/spi_flash_map.h</itemPath>
-                  </logicalFolder>
-                </logicalFolder>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_api.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_assoc.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_authctx.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_bssctx.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_bssfind.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_client_api.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_common.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_custie.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_debug.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_host_file.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_httpprovctx.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_nvm.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_powersave.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_socket.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_softap.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_ssl.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_sta.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_systime.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/include/wdrv_winc_wps.h</itemPath>
-              </logicalFolder>
-            </logicalFolder>
-            <itemPath>../src/config/SAMD21_IOT/driver/driver.h</itemPath>
-            <itemPath>../src/config/SAMD21_IOT/driver/driver_common.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f8" displayName="adc" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/adc/plib_adc.h</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/peripheral/adc/plib_adc_common.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f5" displayName="clock" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/clock/plib_clock.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f7" displayName="dmac" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/dmac/plib_dmac.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f9" displayName="eic" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/eic/plib_eic.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f3" displayName="evsys" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/evsys/plib_evsys.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f6" displayName="nvic" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/nvic/plib_nvic.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="nvmctrl" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/nvmctrl/plib_nvmctrl.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f4" displayName="port" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/port/plib_port.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f10" displayName="rtc" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/rtc/plib_rtc.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f1" displayName="sercom" projectFiles="true">
-              <logicalFolder name="f1" displayName="i2c_master" projectFiles="true">
-                <itemPath>../src/config/SAMD21_IOT/peripheral/sercom/i2c_master/plib_sercom3_i2c_master.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/peripheral/sercom/i2c_master/plib_sercom_i2c_master_common.h</itemPath>
-              </logicalFolder>
-              <logicalFolder name="f3" displayName="spim" projectFiles="true">
-                <itemPath>../src/config/SAMD21_IOT/peripheral/sercom/spim/plib_sercom4_spi.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/peripheral/sercom/spim/plib_sercom_spi_common.h</itemPath>
-              </logicalFolder>
-              <logicalFolder name="f2" displayName="usart" projectFiles="true">
-                <itemPath>../src/config/SAMD21_IOT/peripheral/sercom/usart/plib_sercom5_usart.h</itemPath>
-                <itemPath>../src/config/SAMD21_IOT/peripheral/sercom/usart/plib_sercom_usart_common.h</itemPath>
-              </logicalFolder>
-            </logicalFolder>
-            <logicalFolder name="f11" displayName="tc" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/tc/plib_tc3.h</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/peripheral/tc/plib_tc_common.h</itemPath>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="f3" displayName="system" projectFiles="true">
-            <logicalFolder name="f1" displayName="command" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/system/command/sys_command.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f3" displayName="console" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/system/console/sys_console.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f7" displayName="debug" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/system/debug/sys_debug.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f6" displayName="dma" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/system/dma/sys_dma.h</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/system/dma/sys_dma_mapping.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f4" displayName="int" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/system/int/sys_int.h</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/system/int/sys_int_mapping.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f5" displayName="ports" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/system/ports/sys_ports.h</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/system/ports/sys_ports_mapping.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="time" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/system/time/sys_time.h</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/system/time/sys_time_definitions.h</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/system/time/src/sys_time_local.h</itemPath>
-            </logicalFolder>
-            <itemPath>../src/config/SAMD21_IOT/system/system.h</itemPath>
-            <itemPath>../src/config/SAMD21_IOT/system/system_common.h</itemPath>
-            <itemPath>../src/config/SAMD21_IOT/system/system_module.h</itemPath>
-          </logicalFolder>
-          <itemPath>../src/config/SAMD21_IOT/configuration.h</itemPath>
-          <itemPath>../src/config/SAMD21_IOT/definitions.h</itemPath>
-          <itemPath>../src/config/SAMD21_IOT/device_cache.h</itemPath>
-          <itemPath>../src/config/SAMD21_IOT/toolchain_specifics.h</itemPath>
-          <itemPath>../src/config/SAMD21_IOT/user.h</itemPath>
-        </logicalFolder>
-      </logicalFolder>
-      <logicalFolder name="credentials_storage"
-                     displayName="credentials_storage"
-                     projectFiles="true">
-        <itemPath>../src/credentials_storage/credentials_storage.h</itemPath>
-      </logicalFolder>
-      <logicalFolder name="cryptoauthlib"
-                     displayName="cryptoauthlib"
-                     projectFiles="true">
+      <logicalFolder name="platform" displayName="platform" projectFiles="true">
         <logicalFolder name="config" displayName="config" projectFiles="true">
-          <itemPath>../src/cryptoauthlib/config/cryptoauthlib_config.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="lib" displayName="lib" projectFiles="true">
-          <logicalFolder name="atcacert" displayName="atcacert" projectFiles="true">
-            <itemPath>../src/cryptoauthlib/lib/atcacert/atcacert.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/atcacert/atcacert_client.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/atcacert/atcacert_date.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/atcacert/atcacert_def.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/atcacert/atcacert_der.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/atcacert/atcacert_host_hw.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/atcacert/atcacert_host_sw.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/atcacert/atcacert_pem.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="basic" displayName="basic" projectFiles="true">
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_helpers.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="crypto" displayName="crypto" projectFiles="true">
-            <logicalFolder name="hashes" displayName="hashes" projectFiles="true">
-              <itemPath>../src/cryptoauthlib/lib/crypto/hashes/sha1_routines.h</itemPath>
-              <itemPath>../src/cryptoauthlib/lib/crypto/hashes/sha2_routines.h</itemPath>
+          <logicalFolder name="SAMD21_WG_IOT"
+                         displayName="SAMD21_WG_IOT"
+                         projectFiles="true">
+            <logicalFolder name="bsp" displayName="bsp" projectFiles="true">
+              <itemPath>platform/config/SAMD21_WG_IOT/bsp/bsp.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/cryptoauthlib/lib/crypto/atca_crypto_sw.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/crypto/atca_crypto_sw_ecdsa.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/crypto/atca_crypto_sw_rand.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/crypto/atca_crypto_sw_sha1.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/crypto/atca_crypto_sw_sha2.h</itemPath>
+            <logicalFolder name="driver" displayName="driver" projectFiles="true">
+              <logicalFolder name="i2c" displayName="i2c" projectFiles="true">
+                <logicalFolder name="src" displayName="src" projectFiles="true">
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/i2c/src/drv_i2c_local.h</itemPath>
+                </logicalFolder>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/i2c/drv_i2c.h</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/i2c/drv_i2c_definitions.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="spi" displayName="spi" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/spi/drv_spi.h</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/spi/drv_spi_definitions.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="winc" displayName="winc" projectFiles="true">
+                <logicalFolder name="dev" displayName="dev" projectFiles="true">
+                  <logicalFolder name="gpio" displayName="gpio" projectFiles="true">
+                  </logicalFolder>
+                  <logicalFolder name="spi" displayName="spi" projectFiles="true">
+                  </logicalFolder>
+                </logicalFolder>
+                <logicalFolder name="drv" displayName="drv" projectFiles="true">
+                  <logicalFolder name="common" displayName="common" projectFiles="true">
+                  </logicalFolder>
+                  <logicalFolder name="driver" displayName="driver" projectFiles="true">
+                  </logicalFolder>
+                  <logicalFolder name="socket" displayName="socket" projectFiles="true">
+                  </logicalFolder>
+                  <logicalFolder name="spi_flash" displayName="spi_flash" projectFiles="true">
+                  </logicalFolder>
+                </logicalFolder>
+                <logicalFolder name="include" displayName="include" projectFiles="true">
+                  <logicalFolder name="dev" displayName="dev" projectFiles="true">
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/dev/wdrv_winc_gpio.h</itemPath>
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/dev/wdrv_winc_spi.h</itemPath>
+                  </logicalFolder>
+                  <logicalFolder name="drv" displayName="drv" projectFiles="true">
+                    <logicalFolder name="bsp" displayName="bsp" projectFiles="true">
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/bsp/nm_bsp.h</itemPath>
+                    </logicalFolder>
+                    <logicalFolder name="common" displayName="common" projectFiles="true">
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/common/nm_common.h</itemPath>
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/common/nm_debug.h</itemPath>
+                    </logicalFolder>
+                    <logicalFolder name="driver" displayName="driver" projectFiles="true">
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/driver/ecc_types.h</itemPath>
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/driver/m2m_hif.h</itemPath>
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/driver/m2m_ota.h</itemPath>
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/driver/m2m_periph.h</itemPath>
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/driver/m2m_ssl.h</itemPath>
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/driver/m2m_types.h</itemPath>
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/driver/m2m_wifi.h</itemPath>
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/driver/nmasic.h</itemPath>
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/driver/nmbus.h</itemPath>
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/driver/nmdrv.h</itemPath>
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/driver/nmspi.h</itemPath>
+                    </logicalFolder>
+                    <logicalFolder name="socket" displayName="socket" projectFiles="true">
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/socket/m2m_socket_host_if.h</itemPath>
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/socket/netinet_in.h</itemPath>
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/socket/socket.h</itemPath>
+                    </logicalFolder>
+                    <logicalFolder name="spi_flash" displayName="spi_flash" projectFiles="true">
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/spi_flash/flexible_flash.h</itemPath>
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/spi_flash/spi_flash.h</itemPath>
+                      <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/drv/spi_flash/spi_flash_map.h</itemPath>
+                    </logicalFolder>
+                  </logicalFolder>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_api.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_assoc.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_authctx.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_bssctx.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_bssfind.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_client_api.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_common.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_custie.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_debug.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_host_file.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_httpprovctx.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_nvm.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_powersave.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_socket.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_softap.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_ssl.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_sta.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_systime.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/include/wdrv_winc_wps.h</itemPath>
+                </logicalFolder>
+                <logicalFolder name="osal" displayName="osal" projectFiles="true">
+                </logicalFolder>
+              </logicalFolder>
+              <itemPath>platform/config/SAMD21_WG_IOT/driver/driver.h</itemPath>
+              <itemPath>platform/config/SAMD21_WG_IOT/driver/driver_common.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="osal" displayName="osal" projectFiles="true">
+              <itemPath>platform/config/SAMD21_WG_IOT/osal/osal.h</itemPath>
+              <itemPath>platform/config/SAMD21_WG_IOT/osal/osal_definitions.h</itemPath>
+              <itemPath>platform/config/SAMD21_WG_IOT/osal/osal_impl_basic.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="peripheral" displayName="peripheral" projectFiles="true">
+              <logicalFolder name="adc" displayName="adc" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/adc/plib_adc.h</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/adc/plib_adc_common.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="clock" displayName="clock" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/clock/plib_clock.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="dmac" displayName="dmac" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/dmac/plib_dmac.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="eic" displayName="eic" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/eic/plib_eic.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="evsys" displayName="evsys" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/evsys/plib_evsys.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="nvic" displayName="nvic" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/nvic/plib_nvic.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="nvmctrl" displayName="nvmctrl" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/nvmctrl/plib_nvmctrl.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="port" displayName="port" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/port/plib_port.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="rtc" displayName="rtc" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/rtc/plib_rtc.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="sercom" displayName="sercom" projectFiles="true">
+                <logicalFolder name="i2c_master" displayName="i2c_master" projectFiles="true">
+                  <itemPath>platform/config/SAMD21_WG_IOT/peripheral/sercom/i2c_master/plib_sercom3_i2c_master.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/peripheral/sercom/i2c_master/plib_sercom_i2c_master_common.h</itemPath>
+                </logicalFolder>
+                <logicalFolder name="i2cm" displayName="i2cm" projectFiles="true">
+                  <itemPath>platform/config/SAMD21_WG_IOT/peripheral/sercom/i2cm/plib_sercom3_i2c.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/peripheral/sercom/i2cm/plib_sercom_i2c_master.h</itemPath>
+                </logicalFolder>
+                <logicalFolder name="spi_master" displayName="spi_master" projectFiles="true">
+                  <itemPath>platform/config/SAMD21_WG_IOT/peripheral/sercom/spi_master/plib_sercom4_spi_master.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/peripheral/sercom/spi_master/plib_sercom_spi_master_common.h</itemPath>
+                </logicalFolder>
+                <logicalFolder name="spim" displayName="spim" projectFiles="true">
+                  <itemPath>platform/config/SAMD21_WG_IOT/peripheral/sercom/spim/plib_sercom4_spi.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/peripheral/sercom/spim/plib_sercom_spi_common.h</itemPath>
+                </logicalFolder>
+                <logicalFolder name="usart" displayName="usart" projectFiles="true">
+                  <itemPath>platform/config/SAMD21_WG_IOT/peripheral/sercom/usart/plib_sercom5_usart.h</itemPath>
+                  <itemPath>platform/config/SAMD21_WG_IOT/peripheral/sercom/usart/plib_sercom_usart_common.h</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+              <logicalFolder name="tc" displayName="tc" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/tc/plib_tc3.h</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/tc/plib_tc4.h</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/tc/plib_tc_common.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="SAMD21_WG_IOT.mhc"
+                           displayName="SAMD21_WG_IOT.mhc"
+                           projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="stdio" displayName="stdio" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="system" displayName="system" projectFiles="true">
+              <logicalFolder name="command" displayName="command" projectFiles="true">
+                <logicalFolder name="src" displayName="src" projectFiles="true">
+                </logicalFolder>
+                <itemPath>platform/config/SAMD21_WG_IOT/system/command/sys_command.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="console" displayName="console" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/system/console/sys_console.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="debug" displayName="debug" projectFiles="true">
+                <logicalFolder name="src" displayName="src" projectFiles="true">
+                  <itemPath>platform/config/SAMD21_WG_IOT/system/debug/src/sys_debug_local.h</itemPath>
+                </logicalFolder>
+                <itemPath>platform/config/SAMD21_WG_IOT/system/debug/sys_debug.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="dma" displayName="dma" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/system/dma/sys_dma.h</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/system/dma/sys_dma_mapping.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="int" displayName="int" projectFiles="true">
+                <logicalFolder name="src" displayName="src" projectFiles="true">
+                </logicalFolder>
+                <itemPath>platform/config/SAMD21_WG_IOT/system/int/sys_int.h</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/system/int/sys_int_mapping.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="ports" displayName="ports" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/system/ports/sys_ports.h</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/system/ports/sys_ports_mapping.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="time" displayName="time" projectFiles="true">
+                <logicalFolder name="src" displayName="src" projectFiles="true">
+                  <itemPath>platform/config/SAMD21_WG_IOT/system/time/src/sys_time_local.h</itemPath>
+                </logicalFolder>
+                <itemPath>platform/config/SAMD21_WG_IOT/system/time/sys_time.h</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/system/time/sys_time_definitions.h</itemPath>
+              </logicalFolder>
+              <itemPath>platform/config/SAMD21_WG_IOT/system/system.h</itemPath>
+              <itemPath>platform/config/SAMD21_WG_IOT/system/system_common.h</itemPath>
+              <itemPath>platform/config/SAMD21_WG_IOT/system/system_module.h</itemPath>
+            </logicalFolder>
+            <itemPath>platform/config/SAMD21_WG_IOT/configuration.h</itemPath>
+            <itemPath>platform/config/SAMD21_WG_IOT/definitions.h</itemPath>
+            <itemPath>platform/config/SAMD21_WG_IOT/device.h</itemPath>
+            <itemPath>platform/config/SAMD21_WG_IOT/device_cache.h</itemPath>
+            <itemPath>platform/config/SAMD21_WG_IOT/toolchain_specifics.h</itemPath>
+            <itemPath>platform/config/SAMD21_WG_IOT/user.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="hal" displayName="hal" projectFiles="true">
-            <itemPath>../src/cryptoauthlib/lib/hal/atca_hal.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/hal/atca_start_config.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/hal/atca_start_iface.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/hal/hal_i2c.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="host" displayName="host" projectFiles="true">
-            <itemPath>../src/cryptoauthlib/lib/host/atca_host.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="jwt" displayName="jwt" projectFiles="true">
-            <itemPath>../src/cryptoauthlib/lib/jwt/atca_jwt.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="tls" displayName="tls" projectFiles="true">
-            <itemPath>../src/cryptoauthlib/lib/tls/atcatls.h</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/tls/atcatls_cfg.h</itemPath>
-          </logicalFolder>
-          <itemPath>../src/cryptoauthlib/lib/atca_bool.h</itemPath>
-          <itemPath>../src/cryptoauthlib/lib/atca_cfgs.h</itemPath>
-          <itemPath>../src/cryptoauthlib/lib/atca_command.h</itemPath>
-          <itemPath>../src/cryptoauthlib/lib/atca_compiler.h</itemPath>
-          <itemPath>../src/cryptoauthlib/lib/atca_device.h</itemPath>
-          <itemPath>../src/cryptoauthlib/lib/atca_devtypes.h</itemPath>
-          <itemPath>../src/cryptoauthlib/lib/atca_execution.h</itemPath>
-          <itemPath>../src/cryptoauthlib/lib/atca_iface.h</itemPath>
-          <itemPath>../src/cryptoauthlib/lib/atca_status.h</itemPath>
-          <itemPath>../src/cryptoauthlib/lib/cryptoauthlib.h</itemPath>
         </logicalFolder>
-      </logicalFolder>
-      <logicalFolder name="iot_config" displayName="iot_config" projectFiles="true">
-        <itemPath>../src/iot_config/cloud_config.h</itemPath>
-        <itemPath>../src/iot_config/IoT_Sensor_Node_config.h</itemPath>
-        <itemPath>../src/iot_config/mqtt_config.h</itemPath>
-      </logicalFolder>
-      <logicalFolder name="mqtt" displayName="mqtt" projectFiles="true">
-        <logicalFolder name="mqtt_comm_bsd"
-                       displayName="mqtt_comm_bsd"
+        <logicalFolder name="credentials_storage"
+                       displayName="credentials_storage"
                        projectFiles="true">
-          <itemPath>../src/mqtt/mqtt_comm_bsd/mqtt_comm_layer.h</itemPath>
+          <itemPath>platform/credentials_storage/credentials_storage.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="mqtt_core" displayName="mqtt_core" projectFiles="true">
-          <itemPath>../src/mqtt/mqtt_core/mqtt_core.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="mqtt_exchange_buffer"
-                       displayName="mqtt_exchange_buffer"
+        <logicalFolder name="cryptoauthlib"
+                       displayName="cryptoauthlib"
                        projectFiles="true">
-          <itemPath>../src/mqtt/mqtt_exchange_buffer/mqtt_exchange_buffer.h</itemPath>
-        </logicalFolder>
-        <itemPath>../src/mqtt/mqtt_packetTransfer_interface.h</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f3" displayName="osal" projectFiles="true">
-        <itemPath>../src/config/SAMD21_IOT/osal/osal.h</itemPath>
-        <itemPath>../src/config/SAMD21_IOT/osal/osal_definitions.h</itemPath>
-        <itemPath>../src/config/SAMD21_IOT/osal/osal_impl_basic.h</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f2" displayName="packs" projectFiles="true">
-        <logicalFolder name="f1" displayName="ATSAMD21G18A_DFP" projectFiles="true">
-          <logicalFolder name="f1" displayName="component" projectFiles="true">
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/ac.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/adc.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/dac.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/dmac.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/dsu.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/eic.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/evsys.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/gclk.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/hmatrixb.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/i2s.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/mtb.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/nvmctrl.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/pac.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/pm.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/port.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/ptc.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/rtc.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/sercom.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/sysctrl.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/tc.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/tcc.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/usb.h</itemPath>
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/component/wdt.h</itemPath>
+          <logicalFolder name="config" displayName="config" projectFiles="true">
+            <itemPath>platform/cryptoauthlib/config/cryptoauthlib_config.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="pio" projectFiles="true">
-            <itemPath>../src/packs/ATSAMD21G18A_DFP/pio/samd21g18a.h</itemPath>
+          <logicalFolder name="lib" displayName="lib" projectFiles="true">
+            <logicalFolder name="atcacert" displayName="atcacert" projectFiles="true">
+              <itemPath>platform/cryptoauthlib/lib/atcacert/atcacert.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/atcacert/atcacert_client.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/atcacert/atcacert_date.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/atcacert/atcacert_def.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/atcacert/atcacert_der.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/atcacert/atcacert_host_hw.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/atcacert/atcacert_host_sw.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/atcacert/atcacert_pem.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="basic" displayName="basic" projectFiles="true">
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_helpers.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="crypto" displayName="crypto" projectFiles="true">
+              <logicalFolder name="hashes" displayName="hashes" projectFiles="true">
+                <itemPath>platform/cryptoauthlib/lib/crypto/hashes/sha1_routines.h</itemPath>
+                <itemPath>platform/cryptoauthlib/lib/crypto/hashes/sha2_routines.h</itemPath>
+              </logicalFolder>
+              <itemPath>platform/cryptoauthlib/lib/crypto/atca_crypto_sw.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/crypto/atca_crypto_sw_ecdsa.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/crypto/atca_crypto_sw_rand.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/crypto/atca_crypto_sw_sha1.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/crypto/atca_crypto_sw_sha2.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="hal" displayName="hal" projectFiles="true">
+              <itemPath>platform/cryptoauthlib/lib/hal/atca_hal.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/hal/atca_start_config.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/hal/atca_start_iface.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/hal/hal_i2c.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="host" displayName="host" projectFiles="true">
+              <itemPath>platform/cryptoauthlib/lib/host/atca_host.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="jwt" displayName="jwt" projectFiles="true">
+              <itemPath>platform/cryptoauthlib/lib/jwt/atca_jwt.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="tls" displayName="tls" projectFiles="true">
+              <itemPath>platform/cryptoauthlib/lib/tls/atcatls.h</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/tls/atcatls_cfg.h</itemPath>
+            </logicalFolder>
+            <itemPath>platform/cryptoauthlib/lib/atca_bool.h</itemPath>
+            <itemPath>platform/cryptoauthlib/lib/atca_cfgs.h</itemPath>
+            <itemPath>platform/cryptoauthlib/lib/atca_command.h</itemPath>
+            <itemPath>platform/cryptoauthlib/lib/atca_compiler.h</itemPath>
+            <itemPath>platform/cryptoauthlib/lib/atca_device.h</itemPath>
+            <itemPath>platform/cryptoauthlib/lib/atca_devtypes.h</itemPath>
+            <itemPath>platform/cryptoauthlib/lib/atca_execution.h</itemPath>
+            <itemPath>platform/cryptoauthlib/lib/atca_iface.h</itemPath>
+            <itemPath>platform/cryptoauthlib/lib/atca_status.h</itemPath>
+            <itemPath>platform/cryptoauthlib/lib/cryptoauthlib.h</itemPath>
           </logicalFolder>
-          <itemPath>../src/packs/ATSAMD21G18A_DFP/device.h</itemPath>
-          <itemPath>../src/packs/ATSAMD21G18A_DFP/atsamd21g18a_compat.h</itemPath>
-          <itemPath>../src/packs/ATSAMD21G18A_DFP/atsamd21g18a.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="f2" displayName="CMSIS" projectFiles="true">
-          <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
-            <logicalFolder name="f1" displayName="Core" projectFiles="true">
-              <logicalFolder name="f1" displayName="Include" projectFiles="true">
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm0plus.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
+        <logicalFolder name="iot_config" displayName="iot_config" projectFiles="true">
+          <itemPath>platform/iot_config/cloud_config.h</itemPath>
+          <itemPath>platform/iot_config/IoT_Sensor_Node_config.h</itemPath>
+          <itemPath>platform/iot_config/mqtt_config.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="mqtt" displayName="mqtt" projectFiles="true">
+          <logicalFolder name="mqtt_comm_bsd"
+                         displayName="mqtt_comm_bsd"
+                         projectFiles="true">
+            <itemPath>platform/mqtt/mqtt_comm_bsd/mqtt_comm_layer.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="mqtt_core" displayName="mqtt_core" projectFiles="true">
+            <itemPath>platform/mqtt/mqtt_core/mqtt_core.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="mqtt_exchange_buffer"
+                         displayName="mqtt_exchange_buffer"
+                         projectFiles="true">
+            <itemPath>platform/mqtt/mqtt_exchange_buffer/mqtt_exchange_buffer.h</itemPath>
+          </logicalFolder>
+          <itemPath>platform/mqtt/mqtt_packetTransfer_interface.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="packs" displayName="packs" projectFiles="true">
+          <logicalFolder name="ATSAMD21G18A_DFP"
+                         displayName="ATSAMD21G18A_DFP"
+                         projectFiles="true">
+            <logicalFolder name="component" displayName="component" projectFiles="true">
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/ac.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/adc.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/dac.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/dmac.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/dsu.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/eic.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/evsys.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/gclk.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/hmatrixb.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/i2s.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/mtb.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/nvmctrl.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/pac.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/pm.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/port.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/ptc.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/rtc.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/sercom.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/sysctrl.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/tc.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/tcc.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/usb.h</itemPath>
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/component/wdt.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="pio" displayName="pio" projectFiles="true">
+              <itemPath>platform/packs/ATSAMD21G18A_DFP/pio/samd21g18a.h</itemPath>
+            </logicalFolder>
+            <itemPath>platform/packs/ATSAMD21G18A_DFP/atsamd21g18a.h</itemPath>
+            <itemPath>platform/packs/ATSAMD21G18A_DFP/atsamd21g18a_compat.h</itemPath>
+            <itemPath>platform/packs/ATSAMD21G18A_DFP/device.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="CMSIS" displayName="CMSIS" projectFiles="true">
+            <logicalFolder name="CMSIS" displayName="CMSIS" projectFiles="true">
+              <logicalFolder name="Core" displayName="Core" projectFiles="true">
+                <logicalFolder name="Include" displayName="Include" projectFiles="true">
+                  <itemPath>platform/packs/CMSIS/CMSIS/Core/Include/cachel1_armv7.h</itemPath>
+                  <itemPath>platform/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
+                  <itemPath>platform/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
+                  <itemPath>platform/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
+                  <itemPath>platform/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
+                  <itemPath>platform/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
+                  <itemPath>platform/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
+                  <itemPath>platform/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
+                  <itemPath>platform/packs/CMSIS/CMSIS/Core/Include/core_cm0plus.h</itemPath>
+                  <itemPath>platform/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
+                  <itemPath>platform/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+              <logicalFolder name="DSP" displayName="DSP" projectFiles="true">
+                <logicalFolder name="Include" displayName="Include" projectFiles="true">
+                  <itemPath>platform/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
+                  <itemPath>platform/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
+                  <itemPath>platform/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
+                </logicalFolder>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
         </logicalFolder>
-      </logicalFolder>
-      <logicalFolder name="services" displayName="services" projectFiles="true">
-        <logicalFolder name="iot" displayName="iot" projectFiles="true">
-          <logicalFolder name="cloud" displayName="cloud" projectFiles="true">
-            <logicalFolder name="bsd_adapter" displayName="bsd_adapter" projectFiles="true">
-              <itemPath>../src/services/iot/cloud/bsd_adapter/bsdWINC.h</itemPath>
+        <logicalFolder name="services" displayName="services" projectFiles="true">
+          <logicalFolder name="iot" displayName="iot" projectFiles="true">
+            <logicalFolder name="cloud" displayName="cloud" projectFiles="true">
+              <logicalFolder name="bsd_adapter" displayName="bsd_adapter" projectFiles="true">
+                <itemPath>platform/services/iot/cloud/bsd_adapter/bsdWINC.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="crypto_client"
+                             displayName="crypto_client"
+                             projectFiles="true">
+                <itemPath>platform/services/iot/cloud/crypto_client/cryptoauthlib_main.h</itemPath>
+                <itemPath>platform/services/iot/cloud/crypto_client/crypto_client.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="mqtt_packetPopulation"
+                             displayName="mqtt_packetPopulation"
+                             projectFiles="true">
+                <itemPath>platform/services/iot/cloud/mqtt_packetPopulation/mqtt_packetPopulate.h</itemPath>
+              </logicalFolder>
+              <itemPath>platform/services/iot/cloud/cloud_service.h</itemPath>
+              <itemPath>platform/services/iot/cloud/wifi_service.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="crypto_client"
-                           displayName="crypto_client"
-                           projectFiles="true">
-              <itemPath>../src/services/iot/cloud/crypto_client/cryptoauthlib_main.h</itemPath>
-              <itemPath>../src/services/iot/cloud/crypto_client/crypto_client.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="mqtt_packetPopulation"
-                           displayName="mqtt_packetPopulation"
-                           projectFiles="true">
-              <itemPath>../src/mqtt_packetPopulation/mqtt_iothub_packetPopulate.h</itemPath>
-              <itemPath>../src/mqtt_packetPopulation/mqtt_iotprovisioning_packetPopulate.h</itemPath>
-              <itemPath>../src/mqtt_packetPopulation/mqtt_packetPopulate.h</itemPath>
-            </logicalFolder>
-            <itemPath>../src/services/iot/cloud/cloud_service.h</itemPath>
-            <itemPath>../src/services/iot/cloud/wifi_service.h</itemPath>
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/debug_print.h</itemPath>
-      <itemPath>../src/led.h</itemPath>
-      <itemPath>../src/app.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -385,305 +453,306 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="f2" displayName="azure-sdk-for-c" projectFiles="true">
-        <logicalFolder name="f1" displayName="SDK" projectFiles="true">
-          <logicalFolder name="f1" displayName="src" projectFiles="true">
-            <logicalFolder name="f1" displayName="azure" projectFiles="true">
-              <logicalFolder name="f1" displayName="core" projectFiles="true">
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_precondition.c</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_span.c</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_span_private.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_log.c</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_json_private.h</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_json_reader.c</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_json_token.c</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/core/az_json_writer.c</itemPath>
+      <logicalFolder name="f1" displayName="platform" projectFiles="true">
+        <logicalFolder name="config" displayName="config" projectFiles="true">
+          <logicalFolder name="SAMD21_WG_IOT"
+                         displayName="SAMD21_WG_IOT"
+                         projectFiles="true">
+            <logicalFolder name="driver" displayName="driver" projectFiles="true">
+              <logicalFolder name="spi" displayName="spi" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/spi/src/drv_spi.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/spi/src/drv_spi_local.h</itemPath>
               </logicalFolder>
-              <logicalFolder name="f2" displayName="iot" projectFiles="true">
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_common.c</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_hub_client.c</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_hub_client_c2d.c</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_hub_client_methods.c</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_hub_client_sas.c</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_hub_client_telemetry.c</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_hub_client_twin.c</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_provisioning_client.c</itemPath>
-                <itemPath>../src/azure-sdk-for-c/sdk/src/azure/iot/az_iot_provisioning_client_sas.c</itemPath>
+              <logicalFolder name="winc" displayName="winc" projectFiles="true">
+                <logicalFolder name="dev" displayName="dev" projectFiles="true">
+                  <logicalFolder name="gpio" displayName="gpio" projectFiles="true">
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/dev/gpio/wdrv_winc_eint.c</itemPath>
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/dev/gpio/wdrv_winc_gpio.c</itemPath>
+                  </logicalFolder>
+                  <logicalFolder name="spi" displayName="spi" projectFiles="true">
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/dev/spi/wdrv_winc_spi.c</itemPath>
+                  </logicalFolder>
+                </logicalFolder>
+                <logicalFolder name="drv" displayName="drv" projectFiles="true">
+                  <logicalFolder name="common" displayName="common" projectFiles="true">
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/drv/common/nm_common.c</itemPath>
+                  </logicalFolder>
+                  <logicalFolder name="driver" displayName="driver" projectFiles="true">
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/drv/driver/m2m_hif.c</itemPath>
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/drv/driver/m2m_ota.c</itemPath>
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/drv/driver/m2m_periph.c</itemPath>
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/drv/driver/m2m_ssl.c</itemPath>
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/drv/driver/m2m_wifi.c</itemPath>
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/drv/driver/nmasic.c</itemPath>
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/drv/driver/nmbus.c</itemPath>
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/drv/driver/nmdrv.c</itemPath>
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/drv/driver/nmspi.c</itemPath>
+                  </logicalFolder>
+                  <logicalFolder name="socket" displayName="socket" projectFiles="true">
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/drv/socket/inet_addr.c</itemPath>
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/drv/socket/inet_ntop.c</itemPath>
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/drv/socket/socket.c</itemPath>
+                  </logicalFolder>
+                  <logicalFolder name="spi_flash" displayName="spi_flash" projectFiles="true">
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/drv/spi_flash/flexible_flash.c</itemPath>
+                    <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/drv/spi_flash/spi_flash.c</itemPath>
+                  </logicalFolder>
+                </logicalFolder>
+                <logicalFolder name="osal" displayName="osal" projectFiles="true">
+                  <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/osal/wdrv_winc_osal.c</itemPath>
+                </logicalFolder>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc_assoc.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc_authctx.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc_bssctx.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc_bssfind.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc_custie.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc_host_file.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc_httpprovctx.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc_nvm.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc_powersave.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc_socket.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc_softap.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc_ssl.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc_sta.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc_systime.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/driver/winc/wdrv_winc_wps.c</itemPath>
               </logicalFolder>
             </logicalFolder>
+            <logicalFolder name="peripheral" displayName="peripheral" projectFiles="true">
+              <logicalFolder name="adc" displayName="adc" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/adc/plib_adc.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="clock" displayName="clock" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/clock/plib_clock.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="dmac" displayName="dmac" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/dmac/plib_dmac.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="eic" displayName="eic" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/eic/plib_eic.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="evsys" displayName="evsys" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/evsys/plib_evsys.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="nvic" displayName="nvic" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/nvic/plib_nvic.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="nvmctrl" displayName="nvmctrl" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/nvmctrl/plib_nvmctrl.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="port" displayName="port" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/port/plib_port.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="rtc" displayName="rtc" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/rtc/plib_rtc_clock.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="sercom" displayName="sercom" projectFiles="true">
+                <logicalFolder name="i2c_master" displayName="i2c_master" projectFiles="true">
+                  <itemPath>platform/config/SAMD21_WG_IOT/peripheral/sercom/i2c_master/plib_sercom3_i2c_master.c</itemPath>
+                </logicalFolder>
+                <logicalFolder name="spim" displayName="spim" projectFiles="true">
+                  <itemPath>platform/config/SAMD21_WG_IOT/peripheral/sercom/spim/plib_sercom4_spi.c</itemPath>
+                </logicalFolder>
+                <logicalFolder name="usart" displayName="usart" projectFiles="true">
+                  <itemPath>platform/config/SAMD21_WG_IOT/peripheral/sercom/usart/plib_sercom5_usart.c</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+              <logicalFolder name="tc" displayName="tc" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/peripheral/tc/plib_tc3.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="stdio" displayName="stdio" projectFiles="true">
+              <itemPath>platform/config/SAMD21_WG_IOT/stdio/xc32_monitor.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="system" displayName="system" projectFiles="true">
+              <logicalFolder name="command" displayName="command" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/system/command/src/sys_command.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="console" displayName="console" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/system/console/src/sys_console.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/system/console/src/sys_console_uart.c</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/system/console/src/sys_console_local.h</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/system/console/src/sys_console_uart.h</itemPath>
+                <itemPath>platform/config/SAMD21_WG_IOT/system/console/src/sys_console_uart_definitions.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="dma" displayName="dma" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/system/dma/sys_dma.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="int" displayName="int" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/system/int/src/sys_int.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="time" displayName="time" projectFiles="true">
+                <itemPath>platform/config/SAMD21_WG_IOT/system/time/src/sys_time.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+            <itemPath>platform/config/SAMD21_WG_IOT/exceptions.c</itemPath>
+            <itemPath>platform/config/SAMD21_WG_IOT/initialization.c</itemPath>
+            <itemPath>platform/config/SAMD21_WG_IOT/interrupts.c</itemPath>
+            <itemPath>platform/config/SAMD21_WG_IOT/libc_syscalls.c</itemPath>
+            <itemPath>platform/config/SAMD21_WG_IOT/startup_xc32.c</itemPath>
+            <itemPath>platform/config/SAMD21_WG_IOT/tasks.c</itemPath>
           </logicalFolder>
         </logicalFolder>
-      </logicalFolder>
-      <logicalFolder name="f1" displayName="config" projectFiles="true">
-        <logicalFolder name="f1" displayName="SAMD21_IOT" projectFiles="true">
-          <logicalFolder name="f2" displayName="driver" projectFiles="true">
-            <logicalFolder name="f2" displayName="spi" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/driver/spi/src/drv_spi.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/spi/src/drv_spi_local.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f1" displayName="winc" projectFiles="true">
-              <logicalFolder name="f1" displayName="dev" projectFiles="true">
-                <logicalFolder name="f1" displayName="gpio" projectFiles="true">
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/dev/gpio/wdrv_winc_eint.c</itemPath>
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/dev/gpio/wdrv_winc_gpio.c</itemPath>
-                </logicalFolder>
-                <logicalFolder name="f2" displayName="spi" projectFiles="true">
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/dev/spi/wdrv_winc_spi.c</itemPath>
-                </logicalFolder>
-              </logicalFolder>
-              <logicalFolder name="f3" displayName="drv" projectFiles="true">
-                <logicalFolder name="f1" displayName="common" projectFiles="true">
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/drv/common/nm_common.c</itemPath>
-                </logicalFolder>
-                <logicalFolder name="f2" displayName="driver" projectFiles="true">
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/drv/driver/m2m_hif.c</itemPath>
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/drv/driver/m2m_periph.c</itemPath>
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/drv/driver/m2m_wifi.c</itemPath>
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/drv/driver/nmasic.c</itemPath>
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/drv/driver/nmbus.c</itemPath>
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/drv/driver/nmdrv.c</itemPath>
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/drv/driver/nmspi.c</itemPath>
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/drv/driver/m2m_ota.c</itemPath>
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/drv/driver/m2m_ssl.c</itemPath>
-                </logicalFolder>
-                <logicalFolder name="f4" displayName="socket" projectFiles="true">
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/drv/socket/socket.c</itemPath>
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/drv/socket/inet_ntop.c</itemPath>
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/drv/socket/inet_addr.c</itemPath>
-                </logicalFolder>
-                <logicalFolder name="f3" displayName="spi_flash" projectFiles="true">
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/drv/spi_flash/spi_flash.c</itemPath>
-                  <itemPath>../src/config/SAMD21_IOT/driver/winc/drv/spi_flash/flexible_flash.c</itemPath>
-                </logicalFolder>
-              </logicalFolder>
-              <logicalFolder name="f2" displayName="osal" projectFiles="true">
-                <itemPath>../src/config/SAMD21_IOT/driver/winc/osal/wdrv_winc_osal.c</itemPath>
-              </logicalFolder>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc_assoc.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc_authctx.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc_bssctx.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc_bssfind.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc_custie.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc_host_file.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc_httpprovctx.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc_nvm.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc_powersave.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc_socket.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc_softap.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc_ssl.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc_sta.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc_systime.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/driver/winc/wdrv_winc_wps.c</itemPath>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f8" displayName="adc" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/adc/plib_adc.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f5" displayName="clock" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/clock/plib_clock.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f7" displayName="dmac" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/dmac/plib_dmac.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f9" displayName="eic" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/eic/plib_eic.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f3" displayName="evsys" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/evsys/plib_evsys.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f6" displayName="nvic" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/nvic/plib_nvic.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="nvmctrl" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/nvmctrl/plib_nvmctrl.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f4" displayName="port" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/port/plib_port.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f10" displayName="rtc" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/rtc/plib_rtc_clock.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f1" displayName="sercom" projectFiles="true">
-              <logicalFolder name="f1" displayName="i2c_master" projectFiles="true">
-                <itemPath>../src/config/SAMD21_IOT/peripheral/sercom/i2c_master/plib_sercom3_i2c_master.c</itemPath>
-              </logicalFolder>
-              <logicalFolder name="f3" displayName="spim" projectFiles="true">
-                <itemPath>../src/config/SAMD21_IOT/peripheral/sercom/spim/plib_sercom4_spi.c</itemPath>
-              </logicalFolder>
-              <logicalFolder name="f2" displayName="usart" projectFiles="true">
-                <itemPath>../src/config/SAMD21_IOT/peripheral/sercom/usart/plib_sercom5_usart.c</itemPath>
-              </logicalFolder>
-            </logicalFolder>
-            <logicalFolder name="f11" displayName="tc" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/peripheral/tc/plib_tc3.c</itemPath>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="f4" displayName="stdio" projectFiles="true">
-            <itemPath>../src/config/SAMD21_IOT/stdio/xc32_monitor.c</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f3" displayName="system" projectFiles="true">
-            <logicalFolder name="f1" displayName="command" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/system/command/src/sys_command.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f3" displayName="console" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/system/console/src/sys_console.c</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/system/console/src/sys_console_local.h</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/system/console/src/sys_console_uart.h</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/system/console/src/sys_console_uart_definitions.h</itemPath>
-              <itemPath>../src/config/SAMD21_IOT/system/console/src/sys_console_uart.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f5" displayName="dma" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/system/dma/sys_dma.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f4" displayName="int" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/system/int/src/sys_int.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="time" projectFiles="true">
-              <itemPath>../src/config/SAMD21_IOT/system/time/src/sys_time.c</itemPath>
-            </logicalFolder>
-          </logicalFolder>
-          <itemPath>../src/config/SAMD21_IOT/initialization.c</itemPath>
-          <itemPath>../src/config/SAMD21_IOT/interrupts.c</itemPath>
-          <itemPath>../src/config/SAMD21_IOT/exceptions.c</itemPath>
-          <itemPath>../src/config/SAMD21_IOT/startup_xc32.c</itemPath>
-          <itemPath>../src/config/SAMD21_IOT/libc_syscalls.c</itemPath>
-          <itemPath>../src/config/SAMD21_IOT/tasks.c</itemPath>
-        </logicalFolder>
-      </logicalFolder>
-      <logicalFolder name="credentials_storage"
-                     displayName="credentials_storage"
-                     projectFiles="true">
-        <itemPath>../src/credentials_storage/credentials_storage.c</itemPath>
-      </logicalFolder>
-      <logicalFolder name="cryptoauthlib"
-                     displayName="cryptoauthlib"
-                     projectFiles="true">
-        <logicalFolder name="lib" displayName="lib" projectFiles="true">
-          <logicalFolder name="atcacert" displayName="atcacert" projectFiles="true">
-            <itemPath>../src/cryptoauthlib/lib/atcacert/atcacert_client.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/atcacert/atcacert_date.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/atcacert/atcacert_def.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/atcacert/atcacert_der.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/atcacert/atcacert_host_hw.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/atcacert/atcacert_host_sw.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/atcacert/atcacert_pem.c</itemPath>
-          </logicalFolder>
-          <logicalFolder name="basic" displayName="basic" projectFiles="true">
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_aes.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_checkmac.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_counter.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_derivekey.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_ecdh.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_gendig.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_genkey.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_hmac.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_info.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_kdf.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_lock.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_mac.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_nonce.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_privwrite.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_random.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_read.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_secureboot.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_selftest.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_sha.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_sign.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_updateextra.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_verify.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_basic_write.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/basic/atca_helpers.c</itemPath>
-          </logicalFolder>
-          <logicalFolder name="crypto" displayName="crypto" projectFiles="true">
-            <logicalFolder name="hashes" displayName="hashes" projectFiles="true">
-              <itemPath>../src/cryptoauthlib/lib/crypto/hashes/sha1_routines.c</itemPath>
-              <itemPath>../src/cryptoauthlib/lib/crypto/hashes/sha2_routines.c</itemPath>
-            </logicalFolder>
-            <itemPath>../src/cryptoauthlib/lib/crypto/atca_crypto_sw_ecdsa.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/crypto/atca_crypto_sw_rand.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/crypto/atca_crypto_sw_sha1.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/crypto/atca_crypto_sw_sha2.c</itemPath>
-          </logicalFolder>
-          <logicalFolder name="hal" displayName="hal" projectFiles="true">
-            <itemPath>../src/cryptoauthlib/lib/hal/atca_hal.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/hal/hal_i2c.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/hal/hal_timer.c</itemPath>
-          </logicalFolder>
-          <logicalFolder name="host" displayName="host" projectFiles="true">
-            <itemPath>../src/cryptoauthlib/lib/host/atca_host.c</itemPath>
-          </logicalFolder>
-          <logicalFolder name="jwt" displayName="jwt" projectFiles="true">
-            <itemPath>../src/cryptoauthlib/lib/jwt/atca_jwt.c</itemPath>
-          </logicalFolder>
-          <logicalFolder name="tls" displayName="tls" projectFiles="true">
-            <itemPath>../src/cryptoauthlib/lib/tls/atcatls.c</itemPath>
-            <itemPath>../src/cryptoauthlib/lib/tls/atcatls_cfg.c</itemPath>
-          </logicalFolder>
-          <itemPath>../src/cryptoauthlib/lib/atca_cfgs.c</itemPath>
-          <itemPath>../src/cryptoauthlib/lib/atca_command.c</itemPath>
-          <itemPath>../src/cryptoauthlib/lib/atca_device.c</itemPath>
-          <itemPath>../src/cryptoauthlib/lib/atca_execution.c</itemPath>
-          <itemPath>../src/cryptoauthlib/lib/atca_iface.c</itemPath>
-        </logicalFolder>
-      </logicalFolder>
-      <logicalFolder name="mqtt" displayName="mqtt" projectFiles="true">
-        <logicalFolder name="mqtt_comm_bsd"
-                       displayName="mqtt_comm_bsd"
+        <logicalFolder name="credentials_storage"
+                       displayName="credentials_storage"
                        projectFiles="true">
-          <itemPath>../src/mqtt/mqtt_comm_bsd/mqtt_comm_layer.c</itemPath>
+          <itemPath>platform/credentials_storage/credentials_storage.c</itemPath>
         </logicalFolder>
-        <logicalFolder name="mqtt_core" displayName="mqtt_core" projectFiles="true">
-          <itemPath>../src/mqtt/mqtt_core/mqtt_core.c</itemPath>
-        </logicalFolder>
-        <logicalFolder name="mqtt_exchange_buffer"
-                       displayName="mqtt_exchange_buffer"
+        <logicalFolder name="cryptoauthlib"
+                       displayName="cryptoauthlib"
                        projectFiles="true">
-          <itemPath>../src/mqtt/mqtt_exchange_buffer/mqtt_exchange_buffer.c</itemPath>
-        </logicalFolder>
-        <itemPath>../src/mqtt/mqtt_packetTransfer_interface.c</itemPath>
-      </logicalFolder>
-      <logicalFolder name="services" displayName="services" projectFiles="true">
-        <logicalFolder name="iot" displayName="iot" projectFiles="true">
-          <logicalFolder name="cloud" displayName="cloud" projectFiles="true">
-            <logicalFolder name="bsd_adapter" displayName="bsd_adapter" projectFiles="true">
-              <itemPath>../src/services/iot/cloud/bsd_adapter/bsdWINC.c</itemPath>
+          <logicalFolder name="lib" displayName="lib" projectFiles="true">
+            <logicalFolder name="atcacert" displayName="atcacert" projectFiles="true">
+              <itemPath>platform/cryptoauthlib/lib/atcacert/atcacert_client.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/atcacert/atcacert_date.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/atcacert/atcacert_def.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/atcacert/atcacert_der.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/atcacert/atcacert_host_hw.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/atcacert/atcacert_host_sw.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/atcacert/atcacert_pem.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="crypto_client"
-                           displayName="crypto_client"
-                           projectFiles="true">
-              <itemPath>../src/services/iot/cloud/crypto_client/cryptoauthlib_main.c</itemPath>
-              <itemPath>../src/services/iot/cloud/crypto_client/crypto_client.c</itemPath>
+            <logicalFolder name="basic" displayName="basic" projectFiles="true">
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_aes.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_checkmac.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_counter.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_derivekey.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_ecdh.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_gendig.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_genkey.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_hmac.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_info.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_kdf.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_lock.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_mac.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_nonce.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_privwrite.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_random.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_read.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_secureboot.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_selftest.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_sha.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_sign.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_updateextra.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_verify.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_basic_write.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/basic/atca_helpers.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="mqtt_packetPopulation"
-                           displayName="mqtt_packetPopulation"
-                           projectFiles="true">
-              <itemPath>../src/mqtt_packetPopulation/mqtt_iothub_packetPopulate.c</itemPath>
-              <itemPath>../src/mqtt_packetPopulation/mqtt_iotprovisioning_packetPopulate.c</itemPath>
-              <itemPath>../src/mqtt_packetPopulation/mqtt_packetPopulate.c</itemPath>
+            <logicalFolder name="crypto" displayName="crypto" projectFiles="true">
+              <logicalFolder name="hashes" displayName="hashes" projectFiles="true">
+                <itemPath>platform/cryptoauthlib/lib/crypto/hashes/sha1_routines.c</itemPath>
+                <itemPath>platform/cryptoauthlib/lib/crypto/hashes/sha2_routines.c</itemPath>
+              </logicalFolder>
+              <itemPath>platform/cryptoauthlib/lib/crypto/atca_crypto_sw_ecdsa.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/crypto/atca_crypto_sw_rand.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/crypto/atca_crypto_sw_sha1.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/crypto/atca_crypto_sw_sha2.c</itemPath>
             </logicalFolder>
-            <itemPath>../src/services/iot/cloud/cloud_service.c</itemPath>
-            <itemPath>../src/services/iot/cloud/wifi_service.c</itemPath>
+            <logicalFolder name="hal" displayName="hal" projectFiles="true">
+              <itemPath>platform/cryptoauthlib/lib/hal/atca_hal.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/hal/hal_i2c.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/hal/hal_timer.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="host" displayName="host" projectFiles="true">
+              <itemPath>platform/cryptoauthlib/lib/host/atca_host.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="jwt" displayName="jwt" projectFiles="true">
+              <itemPath>platform/cryptoauthlib/lib/jwt/atca_jwt.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="tls" displayName="tls" projectFiles="true">
+              <itemPath>platform/cryptoauthlib/lib/tls/atcatls.c</itemPath>
+              <itemPath>platform/cryptoauthlib/lib/tls/atcatls_cfg.c</itemPath>
+            </logicalFolder>
+            <itemPath>platform/cryptoauthlib/lib/atca_cfgs.c</itemPath>
+            <itemPath>platform/cryptoauthlib/lib/atca_command.c</itemPath>
+            <itemPath>platform/cryptoauthlib/lib/atca_device.c</itemPath>
+            <itemPath>platform/cryptoauthlib/lib/atca_execution.c</itemPath>
+            <itemPath>platform/cryptoauthlib/lib/atca_iface.c</itemPath>
           </logicalFolder>
         </logicalFolder>
+        <logicalFolder name="iot_config" displayName="iot_config" projectFiles="true">
+        </logicalFolder>
+        <logicalFolder name="mqtt" displayName="mqtt" projectFiles="true">
+          <logicalFolder name="mqtt_comm_bsd"
+                         displayName="mqtt_comm_bsd"
+                         projectFiles="true">
+            <itemPath>platform/mqtt/mqtt_comm_bsd/mqtt_comm_layer.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="mqtt_core" displayName="mqtt_core" projectFiles="true">
+            <itemPath>platform/mqtt/mqtt_core/mqtt_core.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="mqtt_exchange_buffer"
+                         displayName="mqtt_exchange_buffer"
+                         projectFiles="true">
+            <itemPath>platform/mqtt/mqtt_exchange_buffer/mqtt_exchange_buffer.c</itemPath>
+          </logicalFolder>
+          <itemPath>platform/mqtt/mqtt_packetTransfer_interface.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="packs" displayName="packs" projectFiles="true">
+          <logicalFolder name="ATSAMD21G18A_DFP"
+                         displayName="ATSAMD21G18A_DFP"
+                         projectFiles="true">
+            <logicalFolder name="component" displayName="component" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="pio" displayName="pio" projectFiles="true">
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="CMSIS" displayName="CMSIS" projectFiles="true">
+            <logicalFolder name="CMSIS" displayName="CMSIS" projectFiles="true">
+              <logicalFolder name="Core" displayName="Core" projectFiles="true">
+                <logicalFolder name="Include" displayName="Include" projectFiles="true">
+                </logicalFolder>
+              </logicalFolder>
+              <logicalFolder name="DSP" displayName="DSP" projectFiles="true">
+                <logicalFolder name="Include" displayName="Include" projectFiles="true">
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="services" displayName="services" projectFiles="true">
+          <logicalFolder name="iot" displayName="iot" projectFiles="true">
+            <logicalFolder name="cloud" displayName="cloud" projectFiles="true">
+              <logicalFolder name="bsd_adapter" displayName="bsd_adapter" projectFiles="true">
+                <itemPath>platform/services/iot/cloud/bsd_adapter/bsdWINC.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="crypto_client"
+                             displayName="crypto_client"
+                             projectFiles="true">
+                <itemPath>platform/services/iot/cloud/crypto_client/cryptoauthlib_main.c</itemPath>
+                <itemPath>platform/services/iot/cloud/crypto_client/crypto_client.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="mqtt_packetPopulation"
+                             displayName="mqtt_packetPopulation"
+                             projectFiles="true">
+                <itemPath>platform/services/iot/cloud/mqtt_packetPopulation/mqtt_packetPopulate.c</itemPath>
+              </logicalFolder>
+              <itemPath>platform/services/iot/cloud/cloud_service.c</itemPath>
+              <itemPath>platform/services/iot/cloud/wifi_service.c</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+        <itemPath>platform/app.c</itemPath>
+        <itemPath>platform/app.h</itemPath>
+        <itemPath>platform/debug_print.c</itemPath>
+        <itemPath>platform/debug_print.h</itemPath>
+        <itemPath>platform/led.c</itemPath>
+        <itemPath>platform/led.h</itemPath>
+        <itemPath>platform/main.c</itemPath>
       </logicalFolder>
-      <itemPath>../src/debug_print.c</itemPath>
-      <itemPath>../src/main.c</itemPath>
-      <itemPath>../src/app.c</itemPath>
-      <itemPath>../src/led.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
-      <itemPath>../src/config/SAMD21_IOT/harmony.prj</itemPath>
-      <itemPath>../src/config/SAMD21_IOT/SAMD21_IOT.xml</itemPath>
+      <itemPath>platform/config/SAMD21_WG_IOT/SAMD21_WG_IOT.xml</itemPath>
+      <itemPath>platform/config/SAMD21_WG_IOT/harmony.prj</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>../src</Elem>
+    <Elem>platform</Elem>
+    <Elem>azure-sdk-for-c/sdk/inc</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -695,12 +764,12 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>nEdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.41</languageToolchainVersion>
+        <languageToolchainVersion>2.50</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
         <pack name="SAMD21_DFP" vendor="Microchip" version="3.3.98"/>
+        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>
@@ -761,7 +830,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/SAMD21_IOT/driver/winc/include/;../src/config/SAMD21_IOT/driver/winc/include/dev;../src/config/SAMD21_IOT/driver/winc/include/drv/bsp;../src/config/SAMD21_IOT/driver/winc/include/drv/bsp/include;../src/config/SAMD21_IOT/driver/winc/include/drv/common;../src/config/SAMD21_IOT/driver/winc/include/drv/driver;../src/config/SAMD21_IOT/driver/winc/include/drv/socket;../src/config/SAMD21_IOT/driver/winc/include/drv/spi_flash;../src;../src/config/SAMD21_IOT;../src/packs/ATSAMD21G18A_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/"/>
+                  value="platform\config\SAMD21_WG_IOT\driver\winc\include;platform\config\SAMD21_WG_IOT\driver\winc\include\dev;platform\config\SAMD21_WG_IOT\driver\winc\include\drv\bsp;platform\config\SAMD21_WG_IOT\driver\winc\include\drv\common;platform\config\SAMD21_WG_IOT\driver\winc\include\drv\driver;platform\config\SAMD21_WG_IOT\driver\winc\include\drv\socket;platform\config\SAMD21_WG_IOT\driver\winc\include\drv\spi_flash;platform;platform\config\SAMD21_WG_IOT;platform\packs\ATSAMD21G18A_DFP;platform\packs\CMSIS\CMSIS\Core\Include;platform\packs\CMSIS"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -875,8 +944,7 @@
         <property key="use-indirect-calls" value="false"/>
       </C32CPP>
       <C32Global>
-        <property key="common-include-directories"
-                  value="..\src\azure-sdk-for-c\sdk\inc"/>
+        <property key="common-include-directories" value="azure-sdk-for-c\sdk\inc"/>
         <property key="gp-relative-option" value=""/>
         <property key="legacy-libc" value="false"/>
         <property key="mdtcm" value=""/>
@@ -1436,8 +1504,6 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-3ffff"/>
         <property key="poweroptions.powerenable" value="false"/>
-        <property key="programmerToGoFilePath"
-                  value="C:/work/azure-samples/Microchip-SAM-IoT-Wx/AzureIotPnpDps.X/debug/SAMD21_IOT/AzureIotPnpDps_ptg"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preservedataflash.ranges"
