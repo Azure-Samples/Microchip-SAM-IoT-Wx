@@ -1,0 +1,3 @@
+[submodule "AzureIotPnpDps.X/azure-sdk-for-c"]
+	path = AzureIotPnpDps.X/azure-sdk-for-c
+	url = https://github.com/Azure/azure-sdk-for-c.git
