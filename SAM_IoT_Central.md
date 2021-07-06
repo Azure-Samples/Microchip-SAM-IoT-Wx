@@ -167,7 +167,7 @@ IoT Central allows you to create an application dashboard to monitor the telemet
 
     <img src=".//media/image93.png" style="width:5.in;height:2.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-## Connecting your Device to the Dashboard
+## Connect your Device to the Dashboard for Data Visualization
 
 1. Navigate to the left-hand vertical toolbar and click on the `Dashboards` icon
 
@@ -204,7 +204,11 @@ IoT Central allows you to create an application dashboard to monitor the telemet
 
     <img src=".//media/image107.png" style="width:5.in;height:2.58982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-## Expanding the Dashboard
+8. To access your IoT Central application(s) in the future, go to [Azure IoT Central](https://apps.azureiotcentral.com) and click on `My apps`
+
+    <img src=".//media/image108.png" style="width:5.in;height:1.98982in" alt="A screenshot of a cell phone Description automatically generated" />
+
+## Expand the Dashboard with Additional Tiles
 
 To create additional tiles for your IoT Central dashboard, refer to [Configure the IoT Central application dashboard](https://docs.microsoft.com/en-us/azure/iot-central/core/howto-add-tiles-to-your-dashboard). The below screen captures show additional possibilities of dashboard components that can highlight the telemetry data and properties facilitated by the `Plug and Play` interface.  Note that multiple devices can be selected for each tile to allow groups of devices to be visualized within a single tile. 
 
