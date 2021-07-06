@@ -49,10 +49,6 @@ static const az_span led_green_property_name_span  = AZ_SPAN_LITERAL_FROM_STR("l
 static const az_span led_yellow_property_name_span = AZ_SPAN_LITERAL_FROM_STR("led_y");
 static const az_span led_red_property_name_span    = AZ_SPAN_LITERAL_FROM_STR("led_r");
 
-static const az_span led_on_string_span    = AZ_SPAN_LITERAL_FROM_STR("On");
-static const az_span led_off_string_span   = AZ_SPAN_LITERAL_FROM_STR("Off");
-static const az_span led_blink_string_span = AZ_SPAN_LITERAL_FROM_STR("Blink");
-
 // Command
 static const az_span command_name_reboot_span          = AZ_SPAN_LITERAL_FROM_STR("reboot");
 static const az_span command_reboot_delay_payload_span = AZ_SPAN_LITERAL_FROM_STR("delay");
@@ -954,30 +950,13 @@ az_result send_reported_property(
     // Example with String Enum
     if (twin_properties->flag.isInitialGet || twin_properties->reported_led_red != LED_NO_CHANGE)
     {
-        az_span red_led_value_span;
-
-        switch (twin_properties->reported_led_red)
-        {
-            case 1:
-                red_led_value_span = led_on_string_span;
-                break;
-
-            case 2:
-                red_led_value_span = led_off_string_span;
-                break;
-
-            case 3:
-                red_led_value_span = led_blink_string_span;
-                break;
-        }
-
         if (az_result_failed(
-                rc = append_jason_property_string(
+                rc = append_json_property_int32(
                     &jw,
                     led_red_property_name_span,
-                    red_led_value_span)))
+                    twin_properties->reported_led_red)))
         {
-            debug_printError("AZURE: Unable to add property for Red LED, return code  0x%08x", rc);
+            debug_printError("AZURE: Unable to add property for Blue LED, return code  0x%08x", rc);
             return rc;
         }
     }
