@@ -1,0 +1,6 @@
+{
+	"files.associations": {
+		"mqtt_packetpopulate.h": "c",
+		"iot_sensor_node_config.h": "c"
+	}
+}
