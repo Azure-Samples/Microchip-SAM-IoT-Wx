@@ -25,12 +25,19 @@
 #include <ctype.h>
 #include "mqtt_packetPopulate.h"
 #include "iot_config/cloud_config.h"
+#include "iot_config/IoT_Sensor_Node_config.h"
 
 char* hub_hostname = CFG_MQTT_HUB_HOST;
 
 uint8_t           device_id_buffer[128 + 1];   // Maximum number of characters in a device ID = 128
 az_span           device_id_span;
+
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
 az_iot_pnp_client pnp_client;
+#else
+az_iot_hub_client iothub_client;
+#endif
+
 /*
 * MQTT User Name for DPS
 * {idScope}/registrations/{registration_id}/api-version=2019-03-31

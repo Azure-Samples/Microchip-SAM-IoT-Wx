@@ -70,12 +70,11 @@ typedef union
 {
     struct
     {
-        unsigned short version_found : 1;
-        unsigned short isInitialGet : 1;
-        unsigned short max_temp_updated : 1;
-        unsigned short telemetry_interval_found : 1;
-        unsigned short yellow_led_found : 1;
-        unsigned short reserved : 11;
+        uint16_t version_found : 1;
+        uint16_t is_initial_get : 1;
+        uint16_t telemetry_interval_found : 1;
+        uint16_t yellow_led_found : 1;
+        uint16_t reserved : 12;
     };
     unsigned short AsUSHORT;
 } twin_update_flag_t;
@@ -143,7 +142,12 @@ az_result send_reported_property(
 
 az_result process_direct_method_command(
     uint8_t*                           payload,
-    az_iot_pnp_client_command_request* command_request);
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
+    az_iot_pnp_client_command_request* command_request
+#else
+    az_iot_hub_client_method_request* method_request
+#endif
+    );
 
 az_result process_device_twin_property(
     uint8_t*           topic,
@@ -152,7 +156,4 @@ az_result process_device_twin_property(
 
 void update_leds(twin_properties_t* twin_properties);
 
-OSAL_RESULT MUTEX_Lock(
-    OSAL_MUTEX_HANDLE_TYPE* mutexID,
-    uint16_t                waitMS);
 #endif

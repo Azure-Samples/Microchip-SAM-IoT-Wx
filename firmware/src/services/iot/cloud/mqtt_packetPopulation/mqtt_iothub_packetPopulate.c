@@ -56,7 +56,12 @@ extern void APP_ReceivedFromCloud_twin(uint8_t* topic, uint8_t* payload);
 extern void APP_ReceivedFromCloud_patch(uint8_t* topic, uint8_t* payload);
 
 extern const az_span     device_model_id_span;
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
 extern az_iot_pnp_client pnp_client;
+#else
+extern az_iot_hub_client iothub_client;
+#endif
+
 extern az_span           device_id_span;
 extern char              mqtt_username_buffer[203 + 1];
 
@@ -151,39 +156,63 @@ void MQTT_CLIENT_iothub_connect(char* device_id)
     az_result     rc;
     size_t        mqtt_connect_username_len;
     const az_span hub_hostname_span    = az_span_create_from_str(hub_hostname);
-    const az_span device_id_span_local = az_span_create_from_str(device_id);
     device_id_span                     = AZ_SPAN_FROM_BUFFER(device_id_buffer);
 
     debug_printInfo("  HUB: Sending MQTT CONNECT to '%s'", hub_hostname);
 
     LED_SetCloud(LED_INDICATOR_PENDING);
 
-#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
+    const az_span device_id_span_local = az_span_create_from_str(device_id);
+
     az_span_copy(device_id_span, device_id_span_local);
 
     device_id_span = az_span_slice(device_id_span, 0, az_span_size(device_id_span_local));
-#else
-    device_id_span = NULL;
-#endif
+
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
 
     rc = az_iot_pnp_client_init(&pnp_client,
                                 hub_hostname_span,
                                 device_id_span,
                                 device_model_id_span,
                                 NULL);
+#else
+    rc = az_iot_hub_client_init(&iothub_client,
+                                hub_hostname_span,
+                                device_id_span,
+                                NULL);
+
+#endif
+
     if (az_result_failed(rc))
     {
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
         debug_printError("  HUB: az_iot_pnp_client_init() failed. rc = 0x%x", rc);
+#else
+        debug_printError("  HUB: az_iot_hub_client_init() failed. rc = 0x%x", rc);
+#endif
         return;
     }
 
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
     rc = az_iot_pnp_client_get_user_name(&pnp_client,
                                          mqtt_username_buffer,
                                          sizeof(mqtt_username_buffer),
                                          &mqtt_connect_username_len);
+#else
+    rc = az_iot_hub_client_get_user_name(&iothub_client,
+                                         mqtt_username_buffer,
+                                         sizeof(mqtt_username_buffer),
+                                         &mqtt_connect_username_len);
+#endif
+
     if (az_result_failed(rc))
     {
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
         debug_printError("  HUB: az_iot_pnp_client_get_user_name() failed. rc = 0x%x", rc);
+#else
+        debug_printError("  HUB: az_iot_hub_client_get_user_name() failed. rc = 0x%x", rc);
+#endif
+
         return;
     }
 
@@ -250,15 +279,28 @@ void MQTT_CLIENT_iothub_connected()
 
     MQTT_Set_Puback_callback(MQTT_CLIENT_iothub_puback_callback);
 
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
     az_result rc = az_iot_pnp_client_property_document_get_publish_topic(&pnp_client,
                                                                          twin_request_id_span,
                                                                          mqtt_get_twin_topic_buffer,
                                                                          sizeof(mqtt_get_twin_topic_buffer),
                                                                          NULL);
+#else
+    az_result rc = az_iot_hub_client_twin_document_get_publish_topic(&iothub_client,
+                                                                     twin_request_id_span,
+                                                                     mqtt_get_twin_topic_buffer,
+                                                                     sizeof(mqtt_get_twin_topic_buffer),
+                                                                     NULL);
+#endif
+
 
     if (az_result_failed(rc))
     {
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
         debug_printError("  HUB: az_iot_pnp_client_property_document_get_publish_topic failed. rc = 0x%x", rc);
+#else
+        debug_printError("  HUB: az_iot_hub_client_twin_document_get_publish_topic failed. rc = 0x%x", rc);
+#endif
         return;
     }
 
