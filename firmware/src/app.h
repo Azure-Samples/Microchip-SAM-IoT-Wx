@@ -207,15 +207,15 @@ typedef union
     uint16_t allBits;
     struct
     {
-        unsigned haveAPConnection : 1;
-        unsigned haveIpAddress : 1;
-        unsigned haveHostIp : 1;
-        unsigned haveSocketConnection : 1;
-        unsigned haveMqttConnection : 1;
-        unsigned amDisconnecting : 1;
-        unsigned haveERROR : 1;
-        unsigned cloudInitPending : 1;
-        unsigned : 8;
+        uint16_t haveAPConnection : 1;
+        uint16_t haveIpAddress : 1;
+        uint16_t haveHostIp : 1;
+        uint16_t haveSocketConnection : 1;
+        uint16_t haveMqttConnection : 1;
+        uint16_t amDisconnecting : 1;
+        uint16_t haveERROR : 1;
+        uint16_t cloudInitPending : 1;
+        uint16_t : 8;
     };
 } shared_networking_params_t;
 

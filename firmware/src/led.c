@@ -99,8 +99,8 @@ void LED_test(void)
 
 void LED_init(void)
 {
-    led_status.change_flag.AsUSHORT = 0;
-    led_status.state_flag.AsUSHORT  = 0;
+    led_status.change_flag.as_uint16 = LED_FLAG_EMPTY;
+    led_status.state_flag.as_uint16  = LED_FLAG_EMPTY;
     led_status.state_flag.blue      = LED_STATE_OFF;
     LED_BLUE_SetHigh_EX();
 

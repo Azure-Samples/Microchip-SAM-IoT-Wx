@@ -20,7 +20,7 @@
 #include "azure/core/az_span.h"
 
 #ifdef CFG_MQTT_PROVISIONING_HOST
-#define HALF_SECOND 500L
+#define HALF_SECOND_MS 500L
 
 pf_MQTT_CLIENT pf_mqtt_iotprovisioning_client = {
     MQTT_CLIENT_iotprovisioning_publish,
@@ -290,7 +290,7 @@ void MQTT_CLIENT_iotprovisioning_connected()
 
             // keep retrying connecting to DPS
             dps_retry_counter      = 0;
-            dps_retry_timer_handle = SYS_TIME_CallbackRegisterMS(dps_retry_task, 0, HALF_SECOND, SYS_TIME_PERIODIC);
+            dps_retry_timer_handle = SYS_TIME_CallbackRegisterMS(dps_retry_task, 0, HALF_SECOND_MS, SYS_TIME_PERIODIC);
         }
     }
 

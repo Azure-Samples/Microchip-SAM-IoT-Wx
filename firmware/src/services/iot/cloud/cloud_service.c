@@ -64,14 +64,12 @@ static int8_t  connectMQTTSocket(void);
 static void    connectMQTT();
 static uint8_t reInit(void);
 
-// bool isResetting      = false;
 bool sendSubscribe = true;
-#define CLOUD_TASK_INTERVAL      500L
-#define CLOUD_MQTT_TIMEOUT_COUNT 30000L   // 10 seconds max allowed to establish a connection
-#define MQTT_CONN_AGE_TIMEOUT    3600L    // 3600 seconds = 60minutes
-#define CLOUD_RESET_TIMEOUT      2000L    // 2 seconds
-#define DNS_RETRY_COUNT          10000L / CLOUD_TASK_INTERVAL
-#define WIFI_CONNECT_TIMEOUT     5000L   // 5 seconds
+#define CLOUD_TASK_INTERVAL_MS      500L
+#define CLOUD_MQTT_TIMEOUT_COUNT_MS 30000L   // 30 seconds max allowed to establish a connection
+#define CLOUD_RESET_TIMEOUT_MS      2000L    // 2 seconds
+#define DNS_RETRY_COUNT_MS          10000L / CLOUD_TASK_INTERVAL_MS
+#define WIFI_CONNECT_TIMEOUT_MS     5000L   // 5 seconds
 
 SYS_TIME_HANDLE cloudResetTaskHandle  = SYS_TIME_HANDLE_INVALID;
 SYS_TIME_HANDLE mqttTimeoutTaskHandle = SYS_TIME_HANDLE_INVALID;
@@ -294,7 +292,8 @@ static int8_t connectMQTTSocket(void)
 //
 static void connectMQTT()
 {
-    time_t    currentTime;   // = time(NULL);
+    time_t currentTime;
+
     struct tm sys_time;
 
     RTC_RTCCTimeGet(&sys_time);
@@ -309,7 +308,7 @@ static void connectMQTT()
 
     waitingForMQTT = true;
     debug_printInfo("CLOUD: Starting MQTT Timeout");
-    mqttTimeoutTaskHandle = SYS_TIME_CallbackRegisterMS(mqttTimeoutTaskcb, 0, CLOUD_MQTT_TIMEOUT_COUNT, SYS_TIME_SINGLE);
+    mqttTimeoutTaskHandle = SYS_TIME_CallbackRegisterMS(mqttTimeoutTaskcb, 0, CLOUD_MQTT_TIMEOUT_COUNT_MS, SYS_TIME_SINGLE);
 
     // MQTT SUBSCRIBE packet will be sent after the MQTT connection is established.
     sendSubscribe = true;
@@ -355,15 +354,6 @@ void CLOUD_task(void)
     mqttContext*  mqttConnnectionInfo = MQTT_GetClientConnectionInfo();
     socketState_t socketState         = BSD_GetSocketState(*mqttConnnectionInfo->tcpClientSocket);
 
-    // typedef enum
-    // {
-    // 	NOT_A_SOCKET = 0,           // This is not a socket
-    // 	SOCKET_CLOSED,              // Socket closed
-    // 	SOCKET_IN_PROGRESS,         // The TCP listen or initiate a connection
-    // 	SOCKET_CONNECTED,           // The TCP is in established state user can send/receive data
-    // 	SOCKET_CLOSING              // The user initiate the closing procedure for this socket
-    // } socketState_t;
-
     switch (socketState)
     {
         case NOT_A_SOCKET:   // 0
@@ -374,8 +364,8 @@ void CLOUD_task(void)
                 {
                     shared_networking_params.cloudInitPending = 1;
                     // Start initialization
-                    debug_printInfo("CLOUD: Cloud Reset timer start with %d ms", CLOUD_RESET_TIMEOUT);
-                    cloudResetTaskHandle = SYS_TIME_CallbackRegisterMS(cloudResetTaskcb, 0, CLOUD_RESET_TIMEOUT, SYS_TIME_SINGLE);
+                    debug_printInfo("CLOUD: Cloud Reset timer start with %d ms", CLOUD_RESET_TIMEOUT_MS);
+                    cloudResetTaskHandle = SYS_TIME_CallbackRegisterMS(cloudResetTaskcb, 0, CLOUD_RESET_TIMEOUT_MS, SYS_TIME_SINGLE);
                 }
             }
             else if (shared_networking_params.haveAPConnection == 0)
@@ -408,7 +398,7 @@ void CLOUD_task(void)
                     }
                     else
                     {
-                        dnsRetryCount = DNS_RETRY_COUNT;
+                        dnsRetryCount = DNS_RETRY_COUNT_MS;
                     }
                 }
             }
@@ -454,14 +444,6 @@ void CLOUD_task(void)
         {
 
             mqttCurrentState mqttState = MQTT_GetConnectionState();
-
-            // typedef enum
-            // {
-            //     DISCONNECTED   = 0,
-            //     CONNECTING     = 1,
-            //     WAITFORCONNACK = 2,
-            //     CONNECTED      = 3
-            // } mqttCurrentState;
 
             // Socket is connected.
             if (mqttState == DISCONNECTED)
@@ -599,8 +581,8 @@ static uint8_t reInit(void)
         return false;
     }
 
-    debug_printInfo("CLOUD: WiFi Connect timer start with %d ms", WIFI_CONNECT_TIMEOUT);
-    wifiTimeoutTaskHandle                     = SYS_TIME_CallbackRegisterMS(wifiTimeoutTaskcb, 0, WIFI_CONNECT_TIMEOUT, SYS_TIME_SINGLE);
+    debug_printInfo("CLOUD: WiFi Connect timer start with %d ms", WIFI_CONNECT_TIMEOUT_MS);
+    wifiTimeoutTaskHandle                     = SYS_TIME_CallbackRegisterMS(wifiTimeoutTaskcb, 0, WIFI_CONNECT_TIMEOUT_MS, SYS_TIME_SINGLE);
     shared_networking_params.cloudInitPending = 0;
 
     return true;

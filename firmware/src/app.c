@@ -149,7 +149,7 @@ static SYS_TIME_HANDLE App_CloudTaskHandle     = SYS_TIME_HANDLE_INVALID;
 volatile bool          App_CloudTaskTmrExpired = false;
 
 static time_t     previousTransmissionTime;
-volatile uint32_t telemetryInterval = CFG_DEFAULT_TELEMETRY_INTERVAL;
+volatile uint32_t telemetryInterval = CFG_DEFAULT_TELEMETRY_INTERVAL_SEC;
 
 volatile bool iothubConnected = false;
 
@@ -623,7 +623,7 @@ void APP_ReceivedFromCloud_patch(uint8_t* topic, uint8_t* payload)
 
     init_twin_data(&twin_properties);
 
-    twin_properties.flag.isInitialGet = 0;
+    twin_properties.flag.is_initial_get = 0;
 
     debug_printInfo("  APP: %s() Payload %s", __FUNCTION__, payload);
 
@@ -673,7 +673,7 @@ void APP_ReceivedFromCloud_twin(uint8_t* topic, uint8_t* payload)
     }
     else
     {
-        if (twin_properties.flag.isInitialGet)
+        if (twin_properties.flag.is_initial_get)
         {
             iothubConnected = true;
         }

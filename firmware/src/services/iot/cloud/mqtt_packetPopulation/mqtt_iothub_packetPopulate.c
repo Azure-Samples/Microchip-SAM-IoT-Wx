@@ -1,5 +1,5 @@
 /*
-	\file   mqtt_iothub_packetParameters.c
+	\file   mqtt_iothub_packetPopulate.c
 
 	\brief  MQTT Packet Parameters source file.
 
@@ -65,7 +65,6 @@ extern az_iot_hub_client iothub_client;
 extern az_span           device_id_span;
 extern char              mqtt_username_buffer[203 + 1];
 
-//static const az_span twin_request_id_span = AZ_SPAN_LITERAL_FROM_STR("initial_get");
 static char mqtt_get_twin_topic_buffer[64];
 
 static volatile uint16_t packet_identifier;
@@ -98,8 +97,6 @@ void MQTT_CLIENT_iothub_publish(uint8_t* topic, uint8_t* payload, uint16_t paylo
         qos_value = 1;
         packet_id = ++packet_identifier;
     }
-
-    //debug_printGood("  HUB: PUBLISH with ID %d", packet_identifier);
 
     mqttPublishPacket cloudPublishPacket;
     // Fixed header

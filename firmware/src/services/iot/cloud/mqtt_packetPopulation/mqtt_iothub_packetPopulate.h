@@ -1,5 +1,5 @@
 /*
-    \file   mqtt_hub_packetPopulate.h
+    \file   mqtt_iothub_packetPopulate.h
 
     \brief  MQTT Packet Populate header file.
 

@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// SPDX-License-Identifier: MIT
+
 #include "azutil.h"
 
 #ifdef IOT_PLUG_AND_PLAY_MODEL_ID
@@ -7,7 +10,7 @@ extern az_iot_hub_client iothub_client;
 #endif
 extern volatile uint32_t telemetryInterval;
 
-// used by led.c to communicate LED states changes
+// used by led.c to communicate LED state changes
 extern led_status_t led_status;
 
 extern uint16_t packet_identifier;
@@ -70,12 +73,12 @@ static SYS_TIME_HANDLE reboot_task_handle = SYS_TIME_HANDLE_INVALID;
 **********************************************/
 void init_twin_data(twin_properties_t* twin_properties)
 {
-    twin_properties->flag.AsUSHORT      = 0;
+    twin_properties->flag.as_uint16     = LED_FLAG_EMPTY;
     twin_properties->version_num        = 0;
-    twin_properties->desired_led_yellow = LED_NO_CHANGE;
-    twin_properties->reported_led_red   = LED_NO_CHANGE;
-    twin_properties->reported_led_blue  = LED_NO_CHANGE;
-    twin_properties->reported_led_green = LED_NO_CHANGE;
+    twin_properties->desired_led_yellow = LED_TWIN_NO_CHANGE;
+    twin_properties->reported_led_red   = LED_TWIN_NO_CHANGE;
+    twin_properties->reported_led_blue  = LED_TWIN_NO_CHANGE;
+    twin_properties->reported_led_green = LED_TWIN_NO_CHANGE;
 }
 
 /**************************************
@@ -92,7 +95,7 @@ az_result start_json_object(
 }
 
 /**********************************************
-* Start JSON_BUILDER for JSON Document
+* End JSON_BUILDER for JSON Document
 * This adds "}" to the JSON
 **********************************************/
 az_result end_json_object(
@@ -120,7 +123,7 @@ az_result append_json_property_int32(
 * Add a JSON key-value pair with string data
 * e.g. "property_name" : "property_val (string)"
 **********************************************/
-az_result append_jason_property_string(
+az_result append_json_property_string(
     az_json_writer* jw,
     az_span         property_name_span,
     az_span         property_val_span)
@@ -192,7 +195,7 @@ static az_result build_command_error_response_payload(
 
     // Build the command response payload with error status
     RETURN_ERR_IF_FAILED(start_json_object(&jw, response_span));
-    RETURN_ERR_IF_FAILED(append_jason_property_string(&jw, command_status_span, status_string_span));
+    RETURN_ERR_IF_FAILED(append_json_property_string(&jw, command_status_span, status_string_span));
     RETURN_ERR_IF_FAILED(end_json_object(&jw));
     *response_payload_span = az_json_writer_get_bytes_used_in_destination(&jw);
     return AZ_OK;
@@ -218,7 +221,7 @@ static az_result build_command_resp_payload(
 
     // Build the command response payload
     RETURN_ERR_IF_FAILED(start_json_object(&jw, response_span));
-    RETURN_ERR_IF_FAILED(append_jason_property_string(&jw, command_status_span, command_resp_success_span));
+    RETURN_ERR_IF_FAILED(append_json_property_string(&jw, command_status_span, command_resp_success_span));
     RETURN_ERR_IF_FAILED(append_json_property_int32(&jw, command_reboot_delay_payload_span, reboot_delay));
     RETURN_ERR_IF_FAILED(end_json_object(&jw));
     *response_payload_span = az_json_writer_get_bytes_used_in_destination(&jw);
@@ -243,7 +246,7 @@ static az_result append_button_press_telemetry(
 {
     RETURN_ERR_IF_FAILED(az_json_writer_append_property_name(jw, event_name_button_event_span));
     RETURN_ERR_IF_FAILED(az_json_writer_append_begin_object(jw));
-    RETURN_ERR_IF_FAILED(append_jason_property_string(jw, event_name_button_name_span, button_name_span));
+    RETURN_ERR_IF_FAILED(append_json_property_string(jw, event_name_button_name_span, button_name_span));
     RETURN_ERR_IF_FAILED(append_json_property_int32(jw, event_name_press_count_span, press_count));
     RETURN_ERR_IF_FAILED(az_json_writer_append_end_object(jw));
     return AZ_OK;
@@ -264,7 +267,7 @@ void check_button_status(void)
     bool sw1_pressed = button_press_data.flag.sw1 == 1 ? true : false;
 
     // clear the flags
-    button_press_data.flag.AsUSHORT = 0;
+    button_press_data.flag.as_uint16 = LED_FLAG_EMPTY;
 
     if (!sw0_pressed && !sw1_pressed)
     {
@@ -273,13 +276,13 @@ void check_button_status(void)
 
     RETURN_IF_FAILED(start_json_object(&jw, button_event_payload_span));
 
-    if (sw0_pressed == true)
+    if (sw0_pressed)
     {
         debug_printInfo("AZURE: Button SW0 Count %lu", button_press_data.sw0_press_count);
         RETURN_IF_FAILED(append_button_press_telemetry(&jw, event_name_button_sw0_span, button_press_data.sw0_press_count));
     }
 
-    if (sw1_pressed == true)
+    if (sw1_pressed)
     {
         debug_printInfo("AZURE: Button SW1 Count %lu", button_press_data.sw1_press_count);
         RETURN_IF_FAILED(append_button_press_telemetry(&jw, event_name_button_sw1_span, button_press_data.sw1_press_count));
@@ -302,7 +305,7 @@ void check_button_status(void)
         sizeof(pnp_telemetry_topic_buffer),
         NULL);
 
-    if (!az_result_failed(rc))
+    if (az_result_succeeded(rc))
     {
         CLOUD_publishData((uint8_t*)pnp_telemetry_topic_buffer,
                           az_span_ptr(button_event_payload_span),
@@ -340,7 +343,7 @@ az_result send_telemetry_message(void)
                                                        sizeof(pnp_telemetry_topic_buffer),
                                                        NULL);
 
-    if (!az_result_failed(rc))
+    if (az_result_succeeded(rc))
     {
         CLOUD_publishData((uint8_t*)pnp_telemetry_topic_buffer,
                           az_span_ptr(telemetry_payload_span),
@@ -359,7 +362,7 @@ void check_led_status(twin_properties_t* twin_properties)
     twin_properties_t* twin_properties_ptr;
     twin_properties_t  twin_properties_local;
 
-    bool b_force_sync = false;   // force LED status synchronization if this request is coming from Twin Get
+    bool force_sync = false;   // force LED status synchronization if this request is coming from Twin Get
 
     if (twin_properties == NULL)
     {
@@ -373,72 +376,72 @@ void check_led_status(twin_properties_t* twin_properties)
         twin_properties_ptr = twin_properties;
     }
 
-    if (led_status.change_flag.AsUSHORT == 0 && twin_properties_ptr->flag.isInitialGet == 0)
+    if (led_status.change_flag.as_uint16 == LED_FLAG_EMPTY && twin_properties_ptr->flag.is_initial_get == 0)
     {
         // no changes, nothing to update
         return;
     }
 
-    debug_printInfo("AZURE: %s() LED Status 0x%x", __func__, led_status.change_flag.AsUSHORT);
+    debug_printInfo("AZURE: %s() LED Status 0x%x", __func__, led_status.change_flag.as_uint16);
 
     // if this is from Get Twin, update according to Desired Property
-    b_force_sync = twin_properties_ptr->flag.isInitialGet == 1 ? true : false;
+    force_sync = twin_properties_ptr->flag.is_initial_get == 1 ? true : false;
 
-    if (led_status.change_flag.AsUSHORT != 0 || b_force_sync)
+    if (led_status.change_flag.as_uint16 != LED_FLAG_EMPTY || force_sync)
     {
-        if (led_status.change_flag.blue == 1 || b_force_sync)
+        if (led_status.change_flag.blue == 1 || force_sync)
         {
             if ((led_status.state_flag.blue & (LED_STATE_BLINK_SLOW | LED_STATE_BLINK_FAST)) != 0)
             {
-                twin_properties_ptr->reported_led_blue = 3;
+                twin_properties_ptr->reported_led_blue = LED_TWIN_BLINK;
             }
             else if (led_status.state_flag.blue == LED_STATE_HOLD)
             {
-                twin_properties_ptr->reported_led_blue = 1;
+                twin_properties_ptr->reported_led_blue = LED_TWIN_ON;
             }
             else
             {
-                twin_properties_ptr->reported_led_blue = 2;
+                twin_properties_ptr->reported_led_blue = LED_TWIN_OFF;
             }
         }
 
-        if (led_status.change_flag.green == 1 || b_force_sync)
+        if (led_status.change_flag.green == 1 || force_sync)
         {
             if ((led_status.state_flag.green & (LED_STATE_BLINK_SLOW | LED_STATE_BLINK_FAST)) != 0)
             {
-                twin_properties_ptr->reported_led_green = 3;
+                twin_properties_ptr->reported_led_green = LED_TWIN_BLINK;
             }
             else if (led_status.state_flag.green == LED_STATE_HOLD)
             {
-                twin_properties_ptr->reported_led_green = 1;
+                twin_properties_ptr->reported_led_green = LED_TWIN_ON;
             }
             else
             {
-                twin_properties_ptr->reported_led_green = 2;
+                twin_properties_ptr->reported_led_green = LED_TWIN_OFF;
             }
         }
 
-        if (led_status.change_flag.red == 1 || b_force_sync)
+        if (led_status.change_flag.red == 1 || force_sync)
         {
             if ((led_status.state_flag.red & (LED_STATE_BLINK_SLOW | LED_STATE_BLINK_FAST)) != 0)
             {
-                twin_properties_ptr->reported_led_red = 3;
+                twin_properties_ptr->reported_led_red = LED_TWIN_BLINK;
             }
             else if (led_status.state_flag.red == LED_STATE_HOLD)
             {
-                twin_properties_ptr->reported_led_red = 1;
+                twin_properties_ptr->reported_led_red = LED_TWIN_ON;
             }
             else
             {
-                twin_properties_ptr->reported_led_red = 2;
+                twin_properties_ptr->reported_led_red = LED_TWIN_OFF;
             }
         }
 
         // clear flags
-        led_status.change_flag.AsUSHORT = 0;
+        led_status.change_flag.as_uint16 = LED_FLAG_EMPTY;
 
         // if this is from Get Twin, Device Twin code path will update reported properties
-        if (!b_force_sync)
+        if (!force_sync)
         {
             send_reported_property(twin_properties_ptr);
         }
@@ -454,24 +457,24 @@ void update_leds(
 {
     // If desired properties are not set, send current LED states.
     // Otherwise, set LED state based on Desired property
-    if (twin_properties->flag.yellow_led_found == 1 && twin_properties->desired_led_yellow != LED_NO_CHANGE)
+    if (twin_properties->flag.yellow_led_found == 1 && twin_properties->desired_led_yellow != LED_TWIN_NO_CHANGE)
     {
-        if (twin_properties->desired_led_yellow == 1)
+        if (twin_properties->desired_led_yellow == LED_TWIN_ON)
         {
             LED_SetYellow(LED_STATE_HOLD);
         }
-        else if (twin_properties->desired_led_yellow == 2)
+        else if (twin_properties->desired_led_yellow == LED_TWIN_OFF)
         {
             LED_SetYellow(LED_STATE_OFF);
         }
-        else if (twin_properties->desired_led_yellow == 3)
+        else if (twin_properties->desired_led_yellow == LED_TWIN_BLINK)
         {
             LED_SetYellow(LED_STATE_BLINK_FAST);
         }
     }
 
     // If this is Twin Get, populate LED states for Red, Blue, Green LEDs
-    if (twin_properties->flag.isInitialGet == 1)
+    if (twin_properties->flag.is_initial_get == 1)
     {
         check_led_status(twin_properties);
     }
@@ -533,7 +536,7 @@ static az_result process_reboot_command(
     az_result      ret              = AZ_OK;
     char           reboot_delay[32] = {0};
     az_json_reader jr;
-    *out_response_status = AZ_HTTP_STATUS_CODE_INTERNAL_SERVER_ERROR;
+    *out_response_status = AZ_IOT_STATUS_SERVER_ERROR;
 
     debug_printInfo("AZURE: %s() : Payload %s", __func__, az_span_ptr(payload_span));
 
@@ -656,10 +659,10 @@ az_result process_direct_method_command(
             {
                 // if response is empty, payload was not in the right format.
                 if (az_result_failed(rc = build_command_error_response_payload(command_resp_span,
-                                                                               command_resp_erro_processing_span,
+                                                                               command_resp_error_processing_span,
                                                                                &command_resp_span)))
                 {
-                    debug_printError("AZURE: Fail build error response. (0x%08x)", rc);
+                    debug_printError("AZURE: Failed to build error response. (0x%08x)", rc);
                 }
             }
         }
@@ -678,7 +681,7 @@ az_result process_direct_method_command(
                                                                        command_resp_not_supported_span,
                                                                        &command_resp_span)))
         {
-            debug_printError("AZURE: Fail build error response. (0x%08x)", rc);
+            debug_printError("AZURE: Failed to build error response. (0x%08x)", rc);
         }
     }
 
@@ -693,12 +696,6 @@ az_result process_direct_method_command(
 
     return rc;
 }
-// typedef enum
-// {
-//   AZ_IOT_HUB_CLIENT_TWIN_RESPONSE_TYPE_GET = 1,
-//   AZ_IOT_HUB_CLIENT_TWIN_RESPONSE_TYPE_DESIRED_PROPERTIES = 2,
-//   AZ_IOT_HUB_CLIENT_TWIN_RESPONSE_TYPE_REPORTED_PROPERTIES = 3,
-// } az_iot_hub_client_twin_response_type;
 
 #ifndef IOT_PLUG_AND_PLAY_MODEL_ID
 // from az_iot_pnp_client_property.c
@@ -779,7 +776,7 @@ static az_result get_twin_desired(
 #endif
 /**********************************************
 * Parse Desired Property (Writable Property)
-* Respond by updating Reported Property with IoT Plug and Play convention
+* Respond by updating Writable Property with IoT Plug and Play convention
 * https://docs.microsoft.com/en-us/azure/iot-pnp/concepts-convention#writable-properties
 * e.g.
 * "reported": {
@@ -841,11 +838,11 @@ az_result process_device_twin_property(
         if (az_span_is_content_equal_ignoring_case(property_response.request_id, twin_request_id_span))
         {
             debug_printInfo("AZURE: INITIAL GET Received");
-            twin_properties->flag.isInitialGet = 1;
+            twin_properties->flag.is_initial_get = 1;
         }
         else
         {
-            debug_printWarn("AZURE: Property GET Received");
+            debug_printInfo("AZURE: Property GET Received");
         }
     }
 #ifdef IOT_PLUG_AND_PLAY_MODEL_ID
@@ -1015,21 +1012,21 @@ az_result process_device_twin_property(
     return rc;
 }
 
-int32_t get_led_value(unsigned short led_flag)
+int32_t get_led_value(uint16_t led_flag)
 {
     int32_t led_property_value;
 
     if ((led_flag & (LED_STATE_BLINK_SLOW | LED_STATE_BLINK_FAST)) != 0)
     {
-        led_property_value = 3;   // blink
+        led_property_value = LED_TWIN_BLINK;
     }
     else if (led_flag == LED_STATE_HOLD)
     {
-        led_property_value = 1;   // on
+        led_property_value = LED_TWIN_ON;
     }
     else
     {
-        led_property_value = 2;   // off
+        led_property_value = LED_TWIN_OFF;
     }
 
     return led_property_value;
@@ -1064,21 +1061,21 @@ az_result send_reported_property(
     az_span        identifier_span;
     int32_t        led_property_value;
 
-    if (twin_properties->flag.AsUSHORT == 0)
+    if (twin_properties->flag.as_uint16 == 0)
     {
         // Nothing to do.
-        // debug_printGood("AZURE: No property update");
+        debug_printTrace("AZURE: No property update");
         return AZ_OK;
     }
 
-    // debug_printGood("AZURE: Sending Property flag 0x%x", twin_properties->flag.AsUSHORT);
+    debug_printTrace("AZURE: Sending Property flag 0x%x", twin_properties->flag.as_uint16);
 
-    // Clear buffer and initialize JSON Payload.	This creates "{"
+    // Clear buffer and initialize JSON Payload. This creates "{"
     memset(pnp_property_payload_buffer, 0, sizeof(pnp_property_payload_buffer));
     az_span payload_span = AZ_SPAN_FROM_BUFFER(pnp_property_payload_buffer);
 
     rc = start_json_object(&jw, payload_span);
-    RETURN_ERR_WITH_MESSAGE_IF_FAILED(rc, "AZURE:Unable to initialize json_builder for property PATCH");
+    RETURN_ERR_WITH_MESSAGE_IF_FAILED(rc, "AZURE:Unable to initialize json writer for property PATCH");
 
     if (twin_properties->flag.telemetry_interval_found)
     {
@@ -1088,7 +1085,7 @@ az_result send_reported_property(
                     &jw,
                     property_telemetry_interval_span,
                     telemetryInterval,
-                    AZ_HTTP_STATUS_CODE_OK,
+                    AZ_IOT_STATUS_OK,
                     twin_properties->version_num,
                     AZ_SPAN_FROM_STR("Success"))))
 #else
@@ -1102,7 +1099,7 @@ az_result send_reported_property(
             return rc;
         }
     }
-    else if (twin_properties->flag.isInitialGet)
+    else if (twin_properties->flag.is_initial_get)
     {
         if (az_result_failed(
 
@@ -1111,7 +1108,7 @@ az_result send_reported_property(
                     &jw,
                     property_telemetry_interval_span,
                     telemetryInterval,
-                    AZ_HTTP_STATUS_CODE_OK,
+                    AZ_IOT_STATUS_OK,
                     1,
                     AZ_SPAN_FROM_STR("Success"))))
 #else
@@ -1127,7 +1124,7 @@ az_result send_reported_property(
     }
     // Add Yellow LED to the reported property
     // Example with integer Enum
-    if (twin_properties->desired_led_yellow != LED_NO_CHANGE)
+    if (twin_properties->desired_led_yellow != LED_TWIN_NO_CHANGE)
     {
         led_property_value = get_led_value(led_status.state_flag.yellow);
 
@@ -1137,7 +1134,7 @@ az_result send_reported_property(
                     &jw,
                     led_yellow_property_name_span,
                     led_property_value,
-                    AZ_HTTP_STATUS_CODE_OK,
+                    AZ_IOT_STATUS_OK,
                     twin_properties->version_num,
                     AZ_SPAN_FROM_STR("Success"))))
 #else
@@ -1151,7 +1148,7 @@ az_result send_reported_property(
             return rc;
         }
     }
-    else if (twin_properties->flag.isInitialGet)
+    else if (twin_properties->flag.is_initial_get)
     {
         led_property_value = get_led_value(led_status.state_flag.yellow);
 
@@ -1162,7 +1159,7 @@ az_result send_reported_property(
                     &jw,
                     led_yellow_property_name_span,
                     led_property_value,
-                    AZ_HTTP_STATUS_CODE_OK,
+                    AZ_IOT_STATUS_OK,
                     1,
                     AZ_SPAN_FROM_STR("Success"))))
 #else
@@ -1172,14 +1169,14 @@ az_result send_reported_property(
                     led_property_value)))
 #endif
         {
-            debug_printError("AZURE: Unable to add property for telemetry interval, return code 0x%08x", rc);
+            debug_printError("AZURE: Unable to add property for Yellow LED, return code 0x%08x", rc);
             return rc;
         }
     }
 
     // Add Red LED
     // Example with String Enum
-    if (twin_properties->flag.isInitialGet || twin_properties->reported_led_red != LED_NO_CHANGE)
+    if (twin_properties->flag.is_initial_get || twin_properties->reported_led_red != LED_TWIN_NO_CHANGE)
     {
         if (az_result_failed(
                 rc = append_json_property_int32(
@@ -1187,13 +1184,13 @@ az_result send_reported_property(
                     led_red_property_name_span,
                     twin_properties->reported_led_red)))
         {
-            debug_printError("AZURE: Unable to add property for Blue LED, return code  0x%08x", rc);
+            debug_printError("AZURE: Unable to add property for Red LED, return code  0x%08x", rc);
             return rc;
         }
     }
 
     // Add Blue LED
-    if (twin_properties->flag.isInitialGet || twin_properties->reported_led_blue != LED_NO_CHANGE)
+    if (twin_properties->flag.is_initial_get || twin_properties->reported_led_blue != LED_TWIN_NO_CHANGE)
     {
         if (az_result_failed(
                 rc = append_json_property_int32(
@@ -1207,7 +1204,7 @@ az_result send_reported_property(
     }
 
     // Add Green LED
-    if (twin_properties->flag.isInitialGet || twin_properties->reported_led_green != LED_NO_CHANGE)
+    if (twin_properties->flag.is_initial_get || twin_properties->reported_led_green != LED_TWIN_NO_CHANGE)
     {
         if (az_result_failed(
                 rc = append_json_property_int32(

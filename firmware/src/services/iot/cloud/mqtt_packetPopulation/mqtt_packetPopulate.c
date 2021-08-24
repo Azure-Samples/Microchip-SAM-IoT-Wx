@@ -1,5 +1,5 @@
 /*
-    \file   mqtt_packetParameters.c
+    \file   mqtt_packetPopulate.c
     \brief  MQTT Packet Parameters source file.
     (c) 2018 Microchip Technology Inc. and its subsidiaries.
     Subject to your compliance with these terms, you may use Microchip software and any

@@ -1,9 +1,7 @@
 #ifndef IOT_SENSOR_NODE_CONFIG_H
 #define IOT_SENSOR_NODE_CONFIG_H
 
-#define CFG_DEFAULT_TELEMETRY_INTERVAL 10
-
-#define CFG_TIMEOUT 5000
+#define CFG_DEFAULT_TELEMETRY_INTERVAL_SEC 10
 
 #define IOT_DEBUG_PRINT 1
 
@@ -16,6 +14,6 @@
 #define CFG_LED_DEBUG 0
 
 // Comment out or remove IOT_PLUG_AND_PLAY_MODEL_ID to run as non-IoT Plug and Play client
-#define IOT_PLUG_AND_PLAY_MODEL_ID "dtmi:com:Microchip:SAM_IoT_WM;1"
+//#define IOT_PLUG_AND_PLAY_MODEL_ID "dtmi:com:Microchip:SAM_IoT_WM;1"
 
 #endif   // IOT_SENSOR_NODE_CONFIG_H
