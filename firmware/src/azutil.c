@@ -26,10 +26,10 @@ static uint32_t request_id_int = 0;
 static char     request_id_buffer[16];
 
 // IoT Plug and Play properties
-
-//static const az_span twin_desired_name = AZ_SPAN_LITERAL_FROM_STR("desired");
-
-static const az_span empty_payload_span = AZ_SPAN_LITERAL_FROM_STR("\"\"");
+#ifndef IOT_PLUG_AND_PLAY_MODEL_ID
+static const az_span iot_hub_property_desired         = AZ_SPAN_LITERAL_FROM_STR("desired");
+static const az_span iot_hub_property_desired_version = AZ_SPAN_LITERAL_FROM_STR("$version");
+#endif
 
 static const az_span telemetry_name_temperature_span = AZ_SPAN_LITERAL_FROM_STR("temperature");
 static const az_span telemetry_name_light_span       = AZ_SPAN_LITERAL_FROM_STR("light");
@@ -54,15 +54,14 @@ static const az_span led_yellow_property_name_span = AZ_SPAN_LITERAL_FROM_STR("l
 static const az_span led_red_property_name_span    = AZ_SPAN_LITERAL_FROM_STR("led_r");
 
 // Command
-static const az_span command_name_reboot_span          = AZ_SPAN_LITERAL_FROM_STR("reboot");
-static const az_span command_reboot_delay_payload_span = AZ_SPAN_LITERAL_FROM_STR("delay");
-static const az_span command_status_span               = AZ_SPAN_LITERAL_FROM_STR("status");
-static const az_span command_resp_success_span         = AZ_SPAN_LITERAL_FROM_STR("Success");
-static const az_span command_resp_missing_payload_span = AZ_SPAN_LITERAL_FROM_STR("Delay time not found. Specify 'delay' in period format (PT5S for 5 sec)");
-static const az_span command_resp_empty_payload_span   = AZ_SPAN_LITERAL_FROM_STR("Delay time is empty. Specify 'delay' in period format (PT5S for 5 sec)");
-static const az_span command_resp_bad_payload_span     = AZ_SPAN_LITERAL_FROM_STR("Delay time in wrong format. Specify 'delay' in period format (PT5S for 5 sec)");
-static const az_span command_resp_erro_processing_span = AZ_SPAN_LITERAL_FROM_STR("Error processing command");
-static const az_span command_resp_not_supported_span   = AZ_SPAN_LITERAL_FROM_STR("{\"Status\":\"Unsupported Command\"}");
+static const az_span command_name_reboot_span           = AZ_SPAN_LITERAL_FROM_STR("reboot");
+static const az_span command_reboot_delay_payload_span  = AZ_SPAN_LITERAL_FROM_STR("delay");
+static const az_span command_status_span                = AZ_SPAN_LITERAL_FROM_STR("status");
+static const az_span command_resp_success_span          = AZ_SPAN_LITERAL_FROM_STR("Success");
+static const az_span command_resp_empty_payload_span    = AZ_SPAN_LITERAL_FROM_STR("Delay time is empty. Specify 'delay' in period format (PT5S for 5 sec)");
+static const az_span command_resp_bad_payload_span      = AZ_SPAN_LITERAL_FROM_STR("Delay time in wrong format. Specify 'delay' in period format (PT5S for 5 sec)");
+static const az_span command_resp_error_processing_span = AZ_SPAN_LITERAL_FROM_STR("Error processing command");
+static const az_span command_resp_not_supported_span    = AZ_SPAN_LITERAL_FROM_STR("{\"Status\":\"Unsupported Command\"}");
 
 static SYS_TIME_HANDLE reboot_task_handle = SYS_TIME_HANDLE_INVALID;
 
@@ -538,99 +537,82 @@ static az_result process_reboot_command(
 
     debug_printInfo("AZURE: %s() : Payload %s", __func__, az_span_ptr(payload_span));
 
-    if (az_span_size(payload_span) == 0 ||
-        (az_span_size(payload_span) == 2 && az_span_is_content_equal(empty_payload_span, payload_span)))
+    RETURN_ERR_IF_FAILED(az_json_reader_init(&jr, payload_span, NULL));
+
+    while (jr.token.kind != AZ_JSON_TOKEN_END_OBJECT)
     {
-
-        ret = build_command_error_response_payload(response_span,
-                                                   command_resp_missing_payload_span,
-                                                   out_response_span);
-
-        *out_response_status = AZ_HTTP_STATUS_CODE_BAD_REQUEST;
-    }
-    else
-    {
-        RETURN_ERR_IF_FAILED(az_json_reader_init(&jr, payload_span, NULL));
-
-        while (jr.token.kind != AZ_JSON_TOKEN_END_OBJECT)
+        if (jr.token.kind == AZ_JSON_TOKEN_PROPERTY_NAME)
         {
-            if (jr.token.kind == AZ_JSON_TOKEN_PROPERTY_NAME)
+            if (az_json_token_is_text_equal(&jr.token, command_reboot_delay_payload_span))
             {
-                if (az_json_token_is_text_equal(&jr.token, command_reboot_delay_payload_span))
+                debug_printInfo("AZURE: Found 'delay'");
+                if (az_result_failed(ret = az_json_reader_next_token(&jr)))
                 {
-                    debug_printInfo("AZURE: Found 'delay'");
-                    if (az_result_failed(ret = az_json_reader_next_token(&jr)))
-                    {
-                        debug_printError("AZURE: Error getting next token");
-                        break;
-                    }
-                    else if (az_result_failed(ret = az_json_token_get_string(&jr.token, reboot_delay, sizeof(reboot_delay), NULL)))
-                    {
-                        debug_printError("AZURE: Error getting string");
-                        break;
-                    }
-
+                    debug_printError("AZURE: Error getting next token");
                     break;
                 }
-            }
-            else if (jr.token.kind == AZ_JSON_TOKEN_STRING)
-            {
-                if (az_result_failed(ret = az_json_token_get_string(&jr.token, reboot_delay, sizeof(reboot_delay), NULL)))
+                else if (az_result_failed(ret = az_json_token_get_string(&jr.token, reboot_delay, sizeof(reboot_delay), NULL)))
                 {
                     debug_printError("AZURE: Error getting string");
                     break;
                 }
-                break;
-            }
 
-            if (az_result_failed(ret = az_json_reader_next_token(&jr)))
-            {
-                debug_printError("AZURE: Error getting next token");
                 break;
             }
         }
-
-        if (strlen(reboot_delay) == 0)
+        else if (jr.token.kind == AZ_JSON_TOKEN_STRING)
         {
-            debug_printError("AZURE: Reboot Delay not found");
-
-            ret = build_command_error_response_payload(response_span,
-                                                       command_resp_empty_payload_span,
-                                                       out_response_span);
-
-            *out_response_status = AZ_HTTP_STATUS_CODE_BAD_REQUEST;
+            RETURN_ERR_IF_FAILED(az_json_token_get_string(&jr.token, reboot_delay, sizeof(reboot_delay), NULL));
+            break;
         }
-        else if (reboot_delay[0] != 'P' || reboot_delay[1] != 'T' || reboot_delay[strlen(reboot_delay) - 1] != 'S')
+
+        if (az_result_failed(ret = az_json_reader_next_token(&jr)))
         {
-            debug_printError("AZURE: Reboot Delay wrong format");
-
-            ret = build_command_error_response_payload(response_span,
-                                                       command_resp_bad_payload_span,
-                                                       out_response_span);
-
-            *out_response_status = AZ_HTTP_STATUS_CODE_BAD_REQUEST;
+            debug_printError("AZURE: Error getting next token");
+            break;
         }
-        else
+    }
+
+    if (strlen(reboot_delay) == 0)
+    {
+        debug_printError("AZURE: Reboot Delay not found");
+
+        ret = build_command_error_response_payload(response_span,
+                                                   command_resp_empty_payload_span,
+                                                   out_response_span);
+
+        *out_response_status = AZ_IOT_STATUS_BAD_REQUEST;
+    }
+    else if (reboot_delay[0] != 'P' || reboot_delay[1] != 'T' || reboot_delay[strlen(reboot_delay) - 1] != 'S')
+    {
+        debug_printError("AZURE: Reboot Delay wrong format");
+
+        ret = build_command_error_response_payload(response_span,
+                                                   command_resp_bad_payload_span,
+                                                   out_response_span);
+
+        *out_response_status = AZ_IOT_STATUS_BAD_REQUEST;
+    }
+    else
+    {
+        int reboot_delay_seconds = atoi((const char*)&reboot_delay[2]);
+
+        RETURN_ERR_IF_FAILED(build_command_resp_payload(response_span,
+                                                        reboot_delay_seconds,
+                                                        out_response_span));
+
+        *out_response_status = AZ_IOT_STATUS_ACCEPTED;
+
+        debug_printInfo("AZURE: Scheduling reboot in %d sec", reboot_delay_seconds);
+
+        reboot_task_handle = SYS_TIME_CallbackRegisterMS(reboot_task_callback,
+                                                         0,
+                                                         reboot_delay_seconds * 1000,
+                                                         SYS_TIME_SINGLE);
+
+        if (reboot_task_handle == SYS_TIME_HANDLE_INVALID)
         {
-            int reboot_delay_seconds = atoi((const char*)&reboot_delay[2]);
-
-            RETURN_ERR_IF_FAILED(build_command_resp_payload(response_span,
-                                                            reboot_delay_seconds,
-                                                            out_response_span));
-
-            *out_response_status = AZ_HTTP_STATUS_CODE_ACCEPTED;
-
-            debug_printInfo("AZURE: Scheduling reboot in %d sec", reboot_delay_seconds);
-
-            reboot_task_handle = SYS_TIME_CallbackRegisterMS(reboot_task_callback,
-                                                             0,
-                                                             reboot_delay_seconds * 1000,
-                                                             SYS_TIME_SINGLE);
-
-            if (reboot_task_handle == SYS_TIME_HANDLE_INVALID)
-            {
-                debug_printError("AZURE: Failed to schedule reboot timer");
-            }
+            debug_printError("AZURE: Failed to schedule reboot timer");
         }
     }
 
@@ -722,35 +704,32 @@ az_result process_direct_method_command(
 // from az_iot_pnp_client_property.c
 az_result json_child_token_move(az_json_reader* ref_jr, az_span property_name)
 {
-  do
-  {
-    if ((ref_jr->token.kind == AZ_JSON_TOKEN_PROPERTY_NAME)
-        && az_json_token_is_text_equal(&(ref_jr->token), property_name))
+    do
     {
-      RETURN_ERR_IF_FAILED(az_json_reader_next_token(ref_jr));
+        if ((ref_jr->token.kind == AZ_JSON_TOKEN_PROPERTY_NAME) && az_json_token_is_text_equal(&(ref_jr->token), property_name))
+        {
+            RETURN_ERR_IF_FAILED(az_json_reader_next_token(ref_jr));
 
-      return AZ_OK;
-    }
-    else if (ref_jr->token.kind == AZ_JSON_TOKEN_BEGIN_OBJECT)
-    {
-      if (az_result_failed(az_json_reader_skip_children(ref_jr)))
-      {
-        return AZ_ERROR_UNEXPECTED_CHAR;
-      }
-    }
-    else if (ref_jr->token.kind == AZ_JSON_TOKEN_END_OBJECT)
-    {
-      return AZ_ERROR_ITEM_NOT_FOUND;
-    }
-  } while (az_result_succeeded(az_json_reader_next_token(ref_jr)));
+            return AZ_OK;
+        }
+        else if (ref_jr->token.kind == AZ_JSON_TOKEN_BEGIN_OBJECT)
+        {
+            if (az_result_failed(az_json_reader_skip_children(ref_jr)))
+            {
+                return AZ_ERROR_UNEXPECTED_CHAR;
+            }
+        }
+        else if (ref_jr->token.kind == AZ_JSON_TOKEN_END_OBJECT)
+        {
+            return AZ_ERROR_ITEM_NOT_FOUND;
+        }
+    } while (az_result_succeeded(az_json_reader_next_token(ref_jr)));
 
-  return AZ_ERROR_ITEM_NOT_FOUND;
+    return AZ_ERROR_ITEM_NOT_FOUND;
 }
 
-const az_span iot_hub_property_desired = AZ_SPAN_LITERAL_FROM_STR("desired");
-const az_span iot_hub_property_desired_version = AZ_SPAN_LITERAL_FROM_STR("$version");
 
-AZ_NODISCARD az_result get_twin_version(
+static az_result get_twin_version(
     az_json_reader*                      ref_json_reader,
     az_iot_hub_client_twin_response_type response_type,
     int32_t*                             out_version)
