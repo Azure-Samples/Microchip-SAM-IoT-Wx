@@ -755,6 +755,27 @@ static az_result get_twin_version(
     return AZ_OK;
 }
 
+static az_result get_twin_desired(
+    az_json_reader*                      ref_json_reader,
+    az_iot_hub_client_twin_response_type response_type)
+{
+    RETURN_ERR_IF_FAILED(az_json_reader_next_token(ref_json_reader));
+
+    if (ref_json_reader->token.kind != AZ_JSON_TOKEN_BEGIN_OBJECT)
+    {
+        return AZ_ERROR_UNEXPECTED_CHAR;
+    }
+
+    RETURN_ERR_IF_FAILED(az_json_reader_next_token(ref_json_reader));
+
+    if (response_type == AZ_IOT_HUB_CLIENT_TWIN_RESPONSE_TYPE_GET)
+    {
+        RETURN_ERR_IF_FAILED(json_child_token_move(ref_json_reader, iot_hub_property_desired));
+    }
+
+    return AZ_OK;
+}
+
 #endif
 /**********************************************
 * Parse Desired Property (Writable Property)
@@ -777,6 +798,7 @@ az_result process_device_twin_property(
     az_result rc;
     az_span   property_topic_span;
     az_span   payload_span;
+
 #ifdef IOT_PLUG_AND_PLAY_MODEL_ID
     az_span component_name_span;
 
@@ -864,9 +886,10 @@ az_result process_device_twin_property(
     rc = az_json_reader_init(&jr,
                              payload_span,
                              NULL);
-    RETURN_ERR_WITH_MESSAGE_IF_FAILED(rc, "az_json_reader_init failed");
+    RETURN_ERR_WITH_MESSAGE_IF_FAILED(rc, "az_json_reader_init() for get version failed");
 
 #ifdef IOT_PLUG_AND_PLAY_MODEL_ID
+
     rc = az_iot_pnp_client_property_get_property_version(&pnp_client,
                                                          &jr,
                                                          property_response.response_type,
@@ -882,22 +905,72 @@ az_result process_device_twin_property(
 
     RETURN_ERR_WITH_MESSAGE_IF_FAILED(rc, "get_twin_version() failed");
     twin_properties->flag.version_found = 1;
-#endif
 
+#endif
 
     rc = az_json_reader_init(&jr,
                              payload_span,
                              NULL);
-    RETURN_ERR_WITH_MESSAGE_IF_FAILED(rc, "az_json_reader_init failed");
+    RETURN_ERR_WITH_MESSAGE_IF_FAILED(rc, "az_json_reader_init() failed");
 
 #ifdef IOT_PLUG_AND_PLAY_MODEL_ID
-    if (az_result_succeeded(az_iot_pnp_client_property_get_next_component_property(
-            &pnp_client,
-            &jr,
-            property_response.response_type,
-            &component_name_span)))
+    while (az_result_succeeded(az_iot_pnp_client_property_get_next_component_property(
+        &pnp_client,
+        &jr,
+        property_response.response_type,
+        &component_name_span)))
     {
-#endif
+        if (az_json_token_is_text_equal(&jr.token, property_telemetry_interval_span))
+        {
+            uint32_t data;
+            // found writable property to adjust telemetry interval
+            RETURN_ERR_IF_FAILED(az_json_reader_next_token(&jr));
+            RETURN_ERR_IF_FAILED(az_json_token_get_uint32(&jr.token, &data));
+            twin_properties->flag.telemetry_interval_found = 1;
+            telemetryInterval                              = data;
+        }
+        else if (az_json_token_is_text_equal(&jr.token, led_yellow_property_name_span))
+        {
+            // found writable property to control Yellow LED
+            RETURN_ERR_IF_FAILED(az_json_reader_next_token(&jr));
+            RETURN_ERR_IF_FAILED(az_json_token_get_int32(&jr.token,
+                                                         &twin_properties->desired_led_yellow));
+            twin_properties->flag.yellow_led_found = 1;
+        }
+        else
+        {
+            char   buffer[32];
+            size_t spanSize = (size_t)az_span_size(jr.token.slice);
+            size_t size     = sizeof(buffer) < spanSize ? sizeof(buffer) : spanSize;
+            snprintf(buffer, size, "%s", az_span_ptr(jr.token.slice));
+
+            debug_printWarn("AZURE: Received unknown property '%s'", buffer);
+        }
+        RETURN_ERR_IF_FAILED(az_json_reader_next_token(&jr));
+    }
+#else
+
+    if (twin_properties->flag.is_initial_get == 1)
+    {
+        get_twin_desired(&jr, property_response.response_type);
+    }
+    else
+    {
+        RETURN_ERR_WITH_MESSAGE_IF_FAILED((az_json_reader_next_token(&jr)), "az_json_reader_next_token() failed.");
+    }
+
+    if (jr.token.kind != AZ_JSON_TOKEN_BEGIN_OBJECT)
+    {
+        debug_printError(
+            "`%.*s` property was not in the expected format. Token Kind %d",
+            az_span_ptr(jr.token.slice),
+            jr.token.kind);
+        rc = AZ_ERROR_JSON_INVALID_STATE;
+    }
+    else
+    {
+        RETURN_ERR_WITH_MESSAGE_IF_FAILED((az_json_reader_next_token(&jr)), "az_json_reader_next_token() failed.");
+
         while (jr.token.kind != AZ_JSON_TOKEN_END_OBJECT)
         {
             if (jr.token.kind == AZ_JSON_TOKEN_PROPERTY_NAME)
@@ -911,7 +984,6 @@ az_result process_device_twin_property(
                     twin_properties->flag.telemetry_interval_found = 1;
                     telemetryInterval                              = data;
                 }
-
                 else if (az_json_token_is_text_equal(&jr.token, led_yellow_property_name_span))
                 {
                     // found writable property to control Yellow LED
@@ -920,12 +992,26 @@ az_result process_device_twin_property(
                                                                  &twin_properties->desired_led_yellow));
                     twin_properties->flag.yellow_led_found = 1;
                 }
+                else if (az_json_token_is_text_equal(&jr.token, iot_hub_property_desired_version))
+                {
+                    RETURN_ERR_IF_FAILED(az_json_reader_next_token(&jr));
+                }
+                else
+                {
+                    char   buffer[32];
+                    size_t spanSize = (size_t)az_span_size(jr.token.slice) + 1;
+                    size_t size     = sizeof(buffer) < spanSize ? sizeof(buffer) : spanSize;
+                    snprintf(buffer, size, "%s", az_span_ptr(jr.token.slice));
+
+                    debug_printWarn("AZURE: Received unknown property '%s'", buffer);
+                    RETURN_ERR_IF_FAILED(az_json_reader_next_token(&jr));
+                }
+                RETURN_ERR_WITH_MESSAGE_IF_FAILED((az_json_reader_next_token(&jr)), "az_json_reader_next_token() failed.");
             }
-            RETURN_ERR_IF_FAILED(az_json_reader_next_token(&jr));
         }
-#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
     }
 #endif
+
     return rc;
 }
 
