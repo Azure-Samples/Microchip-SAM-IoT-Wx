@@ -159,4 +159,4 @@ az_result process_device_twin_property(
 
 void update_leds(twin_properties_t* twin_properties);
 
-#endif
+#endif // _AZUTIL_H
