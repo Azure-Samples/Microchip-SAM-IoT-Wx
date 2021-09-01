@@ -20,7 +20,7 @@
 #include "azure/core/az_span.h"
 
 #ifdef CFG_MQTT_PROVISIONING_HOST
-#define HALF_SECOND 500L
+#define HALF_SECOND_MS 500L
 
 pf_MQTT_CLIENT pf_mqtt_iotprovisioning_client = {
     MQTT_CLIENT_iotprovisioning_publish,
@@ -241,8 +241,11 @@ void MQTT_CLIENT_iotprovisioning_connected()
     bool      bRet = false;   // assume failure
     az_result rc;
 
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
     debug_printGood("  DPS: MQTT Connected.  Announcing DTMI '%s'", az_span_ptr(device_model_id_span));
-
+#else
+    debug_printGood("  DPS: MQTT Connected.");
+#endif
     if (az_result_failed(rc = az_iot_provisioning_client_register_get_publish_topic(&provisioning_client,
                                                                                     mqtt_dps_topic_buffer,
                                                                                     sizeof(mqtt_dps_topic_buffer),
@@ -279,11 +282,15 @@ void MQTT_CLIENT_iotprovisioning_connected()
         }
         else
         {
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
             debug_printInfo("  DPS: Sending MQTT PUBLISH payload '%s'", az_span_ptr(register_payload_span));
+#else
+            debug_printInfo("  DPS: Sending MQTT PUBLISH");
+#endif
 
             // keep retrying connecting to DPS
             dps_retry_counter      = 0;
-            dps_retry_timer_handle = SYS_TIME_CallbackRegisterMS(dps_retry_task, 0, HALF_SECOND, SYS_TIME_PERIODIC);
+            dps_retry_timer_handle = SYS_TIME_CallbackRegisterMS(dps_retry_task, 0, HALF_SECOND_MS, SYS_TIME_PERIODIC);
         }
     }
 

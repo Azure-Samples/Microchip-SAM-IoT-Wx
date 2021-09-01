@@ -50,6 +50,8 @@
 #define LED_BLUE_Toggle_EX()   LED_WIFI_GPIO_PA21_Toggle()
 #define LED_RED_Toggle_EX()    LED_ERR_GPIO_PA25_Toggle()
 
+#define LED_FLAG_EMPTY 0
+
 typedef enum
 {
     LED_BLUE,
@@ -62,26 +64,26 @@ typedef union
 {
     struct
     {
-        unsigned short red : 1;
-        unsigned short green : 1;
-        unsigned short blue : 1;
-        unsigned short yellow : 1;
-        unsigned short reserved : 12;
+        uint16_t red : 1;
+        uint16_t green : 1;
+        uint16_t blue : 1;
+        uint16_t yellow : 1;
+        uint16_t reserved : 12;
     };
-    unsigned short AsUSHORT;
+    uint16_t as_uint16;
 } led_change_t;
 
 typedef union
 {
     struct
     {
-        unsigned short red : 3;
-        unsigned short green : 3;
-        unsigned short blue : 3;
-        unsigned short yellow : 3;
-        unsigned short reserved : 6;
+        uint16_t red : 3;
+        uint16_t green : 3;
+        uint16_t blue : 3;
+        uint16_t yellow : 3;
+        uint16_t reserved : 6;
     };
-    unsigned short AsUSHORT;
+    uint16_t as_uint16;
 } led_state_t;
 
 typedef struct led

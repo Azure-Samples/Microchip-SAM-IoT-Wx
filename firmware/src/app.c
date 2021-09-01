@@ -149,14 +149,19 @@ static SYS_TIME_HANDLE App_CloudTaskHandle     = SYS_TIME_HANDLE_INVALID;
 volatile bool          App_CloudTaskTmrExpired = false;
 
 static time_t     previousTransmissionTime;
-volatile uint32_t telemetryInterval = CFG_DEFAULT_TELEMETRY_INTERVAL;
+volatile uint32_t telemetryInterval = CFG_DEFAULT_TELEMETRY_INTERVAL_SEC;
 
 volatile bool iothubConnected = false;
 
 extern pf_MQTT_CLIENT    pf_mqtt_iotprovisioning_client;
 extern pf_MQTT_CLIENT    pf_mqtt_iothub_client;
 extern void              sys_cmd_init();
+
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
 extern az_iot_pnp_client pnp_client;
+#else
+extern az_iot_hub_client iothub_client;
+#endif
 
 // *****************************************************************************
 /* Application Data
@@ -181,7 +186,9 @@ APP_DATA appData;
 // is described in the corresponding DTMI. Should you choose to program your own PnP capable device,
 // the functionality would need to match the DTMI and you would need to update the below 'model_id'.
 // Please see the sample README for more information on this DTMI.
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
 const az_span device_model_id_span = AZ_SPAN_LITERAL_FROM_STR(IOT_PLUG_AND_PLAY_MODEL_ID);
+#endif
 
 // *****************************************************************************
 // *****************************************************************************
@@ -561,7 +568,11 @@ static void APP_DataTask(void)
 void APP_ReceivedFromCloud_methods(uint8_t* topic, uint8_t* payload)
 {
     az_result                         rc;
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
     az_iot_pnp_client_command_request command_request;
+#else
+    az_iot_hub_client_method_request method_request;
+#endif
 
     debug_printInfo("  APP: %s() Topic %s Payload %s", __FUNCTION__, topic, payload);
 
@@ -573,15 +584,28 @@ void APP_ReceivedFromCloud_methods(uint8_t* topic, uint8_t* payload)
 
     az_span command_topic_span = az_span_create(topic, strlen((char*)topic));
 
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
     rc = az_iot_pnp_client_commands_parse_received_topic(&pnp_client, command_topic_span, &command_request);
+#else
+    rc = az_iot_hub_client_methods_parse_received_topic(&iothub_client, command_topic_span, &method_request);
+#endif
 
     if (az_result_succeeded(rc))
     {
-        //   debug_printInfo("  APP: Command Topic  : %s", az_span_ptr(command_topic_span));
-        //   debug_printInfo("  APP: Command Name   : %s", az_span_ptr(command_request.command_name));
-        //   debug_printInfo("  APP: Command Payload: %s", (char*)payload);
+        debug_printTrace("  APP: Command Topic  : %s", az_span_ptr(command_topic_span));
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
+        debug_printTrace("  APP: Command Name   : %s", az_span_ptr(command_request.command_name));
+#else
+        debug_printTrace("  APP: Method Name   : %s", az_span_ptr(method_request.name));
+#endif
+        debug_printTrace("  APP: Command Payload: %s", (char*)payload);
 
+#ifdef IOT_PLUG_AND_PLAY_MODEL_ID
         process_direct_method_command(payload, &command_request);
+#else
+        process_direct_method_command(payload, &method_request);
+#endif
+
     }
     else
     {
@@ -599,7 +623,7 @@ void APP_ReceivedFromCloud_patch(uint8_t* topic, uint8_t* payload)
 
     init_twin_data(&twin_properties);
 
-    twin_properties.flag.isInitialGet = 0;
+    twin_properties.flag.is_initial_get = 0;
 
     debug_printInfo("  APP: %s() Payload %s", __FUNCTION__, payload);
 
@@ -649,7 +673,7 @@ void APP_ReceivedFromCloud_twin(uint8_t* topic, uint8_t* payload)
     }
     else
     {
-        if (twin_properties.flag.isInitialGet)
+        if (twin_properties.flag.is_initial_get)
         {
             iothubConnected = true;
         }
