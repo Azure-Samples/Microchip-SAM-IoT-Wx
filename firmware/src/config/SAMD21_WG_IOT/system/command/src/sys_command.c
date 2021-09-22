@@ -293,6 +293,7 @@ bool SYS_CMD_ADDGRP(const SYS_CMD_DESCRIPTOR* pCmdTbl, int nCmds, const char* gr
         if (_usrCmdTbl[i].pCmd == 0)
         {   // empty slot
             emptyIx = i;
+            break;
         }
         else if (_usrCmdTbl[i].pCmd == pCmdTbl)
         {   // already have this group; sanity check against the group name
