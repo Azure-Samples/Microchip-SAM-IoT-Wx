@@ -95,6 +95,8 @@ When you sign up, an Azure subscription is created by default. An Azure subscrip
 
 Sign up for a free Azure account for evaluation purposes by following the process outlined in the [Microsoft Azure online tutorial](https://docs.microsoft.com/en-us/learn/modules/create-an-azure-account/). It is highly recommended to go through the entire section of the tutorial so that you fully understand what billing and support plans are available and how they all work.
 
+Should you encounter any issues with your account or subscription, [submit a technical support ticket](https://azure.microsoft.com/en-us/support/options/).
+
 ## Program the SAM-IoT WG Development Board
 
 ### 1. Installing the Development Tools
