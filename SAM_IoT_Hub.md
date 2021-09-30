@@ -148,7 +148,7 @@ can assign to &gt; leave the rest as their existing defaults &gt; hit
 
     <img src=".//media/image44.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-7. In the terminal emulator window, set the debug messaging level to 0 to temporarily disable the output messages. Use the `debug <level>` command by manually typing it into the Command Line Interface (CLI).  The complete command must be followed by hitting `[RETURN]`
+7. In the terminal emulator window, set the debug messaging level to 0 to temporarily disable the output messages. Use the `debug <level>` command by manually typing it into the Command Line Interface (CLI).  The complete command must be followed by hitting `[RETURN]`.
     ```bash
     >debug 0
     ```
