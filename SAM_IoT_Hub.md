@@ -153,7 +153,7 @@ can assign to &gt; leave the rest as their existing defaults &gt; hit
     >debug 0
     ```
 
-8. Configure the SAM-IoT board's internal Wi-Fi settings with your wireless router’s SSID and password using the `wifi` command by manually typing it into the Command Line Interface (CLI).  The complete command must be followed by hitting `[RETURN]` (there cannot be any spaces used in the SSID or password)
+8. Configure the SAM-IoT board's internal Wi-Fi settings with your wireless router’s SSID and password using the `wifi` command by manually typing it into the Command Line Interface (CLI).  The complete command must be followed by hitting `[RETURN]` (there cannot be any spaces used in the SSID or password).
     ```bash
     >wifi <NETWORK_SSID>,<PASSWORD>,<SECURITY_OPTION[1=Open|2=WPA|3=WEP]>
     ```
