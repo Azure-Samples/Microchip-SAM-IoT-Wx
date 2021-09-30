@@ -58,7 +58,7 @@ The web UI lets you quickly connect devices, monitor device conditions, create r
     ```bash
     >wifi MyWirelessRouter,MyRoutersPassword,2
     ```
-9. At the CLI prompt, type in the command `reset` and hit `[RETURN]` to restart the host application.  The Blue LED should eventually stay solidly ON to signify that the SAM-IoT board has successfully connected to the wireless router
+9. At the CLI prompt, type in the command `reset` and hit `[RETURN]` to restart the host application.  The Blue LED should eventually stay solidly ON to signify that the SAM-IoT board has successfully connected to the wireless router.
     ```bash
     >reset
     ```
