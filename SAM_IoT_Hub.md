@@ -162,7 +162,7 @@ can assign to &gt; leave the rest as their existing defaults &gt; hit
     >wifi MyWirelessRouter,MyRoutersPassword,2
     ```
 
-9. Look up the ID Scope corresponding to your DPS in the Microsoft Azure Portal.  This value is displayed in a web browser when clicking on `Overview` on the DPS resource page (the DPS should have been created earlier using a web page interface on the Azure Portal).  The ID Scope is programmed/saved into the SAM-IoT board in the next step using a CLI command (allowing you to change the ID Scope for the board without having to reprogram the MCU's application firmware)
+9. Look up the ID Scope corresponding to your DPS in the Microsoft Azure Portal.  This value is displayed in a web browser when clicking on `Overview` on the DPS resource page (the DPS should have been created earlier using a web page interface on the Azure Portal).  The ID Scope is programmed/saved into the SAM-IoT board in the next step using a CLI command (allowing you to change the ID Scope for the board without having to reprogram the MCU's application firmware).
 
     <img src=".//media/image23.png" style="width:6.5.in;height:1.43506in" alt="A screenshot of a cell phone Description automatically generated" />
 
