@@ -153,7 +153,7 @@ can assign to &gt; leave the rest as their existing defaults &gt; hit
     >debug 0
     ```
 
-8. Configure the SAM-IoT board's internal Wi-Fi settings with your wireless router’s SSID and password using the `wifi` command by manually typing it into the Command Line Interface (CLI).  The complete command must be followed by hitting `[RETURN]` (there cannot be any spaces used in the SSID or password)
+8. Configure the SAM-IoT board's internal Wi-Fi settings with your wireless router’s SSID and password using the `wifi` command by manually typing it into the Command Line Interface (CLI).  The complete command must be followed by hitting `[RETURN]` (there cannot be any spaces used in the SSID or password).
     ```bash
     >wifi <NETWORK_SSID>,<PASSWORD>,<SECURITY_OPTION[1=Open|2=WPA|3=WEP]>
     ```
@@ -162,11 +162,11 @@ can assign to &gt; leave the rest as their existing defaults &gt; hit
     >wifi MyWirelessRouter,MyRoutersPassword,2
     ```
 
-9. Look up the ID Scope corresponding to your DPS in the Microsoft Azure Portal.  This value is displayed in a web browser when clicking on `Overview` on the DPS resource page (the DPS should have been created earlier using a web page interface on the Azure Portal).  The ID Scope is programmed/saved into the SAM-IoT board in the next step using a CLI command (allowing you to change the ID Scope for the board without having to reprogram the MCU's application firmware)
+9. Look up the ID Scope corresponding to your DPS in the Microsoft Azure Portal.  This value is displayed in a web browser when clicking on `Overview` on the DPS resource page (the DPS should have been created earlier using a web page interface on the Azure Portal).  The ID Scope is programmed/saved into the SAM-IoT board in the next step using a CLI command (allowing you to change the ID Scope for the board without having to reprogram the MCU's application firmware).
 
     <img src=".//media/image23.png" style="width:6.5.in;height:1.43506in" alt="A screenshot of a cell phone Description automatically generated" />
 
-10. In the terminal emulator window, confirm that `local echo` is **disabled** in the terminal settings. Hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character). At the CLI prompt, type in the command `idscope <MY_ID_SCOPE>` to set the ID Scope (which gets saved in the ATECC608A secure element on the SAM-IoT board) and then hit `[RETURN]`. To confirm it was set correctly, the ID Scope can be read out from the board by issuing the `idscope` command (i.e. without specifying an ID Scope value as the parameter on the command line)
+10. In the terminal emulator window, confirm that `local echo` is **disabled** in the terminal settings. Hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character). At the CLI prompt, type in the command `idscope <MY_ID_SCOPE>` to set the ID Scope (which gets saved in the ATECC608A secure element on the SAM-IoT board) and then hit `[RETURN]`. To confirm it was set correctly, the ID Scope can be read out from the board by issuing the `idscope` command (i.e. without specifying an ID Scope value as the parameter on the command line).
 
     <img src=".//media/image46.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
