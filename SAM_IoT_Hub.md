@@ -129,34 +129,14 @@ can assign to &gt; leave the rest as their existing defaults &gt; hit
 
     <img src=".//media/image41.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-4. Modify `AzureIotPnPDps/Source Files/app.c` with your
-    wireless router’s SSID and password (keeping the surrounding quotation marks for each); for example
+4. Verify the project properties are set correctly before building the
+   project
 
-    ```c
-    #define APP_CFG_MAIN_WLAN_SSID "MY_WIFI_AP_SSID"
-    #define APP_CFG_MAIN_WLAN_PSK  "MY_WIFI_AP_PSWD"
-    ```
+    - Connect the board to PC, then make sure `CURIOSITY` device shows up as a disk drive in a `File Explorer` window
 
-    > [!TIP]  
-    > You may also configure the WiFi SSID and password stored in the board using the `wifi` command via the Command Line Interface (CLI); e.g.
-    ```bash
-    wifi <MY_WIFI_AP_SSID>,<MY_WIFI_AP_PSWD>,2
-    ```
+    - Right-click the project `AzureIotPnPDps` &gt; select `Properties` &gt; select "SAMD21-IoT WG-SN" for `Connected Hardware Tool` &gt; select the latest `SAMD21_DFP` version &gt; select the latest XC32 version for `Compiler Toolchain`. If any changes were made in the project properties window, the `Apply` button should become enabled.  Make sure to hit the `Apply` button before hitting `OK`
 
-5. Verify the project properties are set correctly before building the
-   project:
-
-    - With the board connected to the PC, verify that the `CURIOSITY` device shows up as a disk drive in a File Explorer window
-
-    - Right-click the project `AzureIotPnPDps` &gt; select `Properties` &gt; Verify
-    that all Configuration settings are at least the minimum versions as
-    shown in the below screenshot (and that your SAM-IoT board is
-    selected as the Connected Hardware Tool). If any changes were made in the project properties window,
-    make sure to hit the `Apply` button before hitting `OK`.
-
-        <img src=".//media/image26.png" style="width:5.88652in;height:2.68981in" alt="A screenshot of a social media post Description automatically generated" />
-
-6. Build the project and set up a Command Line Interface (CLI) to the board:
+5. Build the project and set up a Command Line Interface (CLI) to the board:
 
     - Open a serial terminal (e.g. PuTTY, TeraTerm, etc.) and connect to the COM port corresponding to your board at 9600 baud (e.g. open PuTTY Configuration window &gt; choose `session` &gt; choose `Serial` &gt; Enter the right `COMx` port). You can find the COM info by opening your PC’s Device Manager &gt; expand `Ports(COM & LPT)` &gt; take note of `Curiosity Virtual COM Port`. 
 
@@ -164,23 +144,40 @@ can assign to &gt; leave the rest as their existing defaults &gt; hit
 
     - Right-click the `AzureIotPnPDps` project and select `Make and Program Device`.  This operation will automatically clean and build the project before attempting to program the target device. After the `BUILD SUCCESSFUL` message appears in the Output window, the application HEX file will be programmed onto the SAM-IoT board. Once programming has finished, the board will automatically reset and start running its application code.
 
-7. Launch a terminal emulator window and connect to the COM port corresponding to the SAM-IoT board at `9600` baud (**disable** local echo for the terminal settings for best results). Hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character). Type `help` and then hit `[RETURN]` to get the list of available commands for the Command Line Interface (CLI).  The Command Line Interface allows you to send simple ASCII-string commands to set or get the user-configurable operating parameters of the application while it is running.  The CLI prompt is simply the `>` character
+6. Launch a terminal emulator window and connect to the COM port corresponding to the SAM-IoT board at `9600` baud (**disable** local echo for the terminal settings for best results). Hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character). Type `help` and then hit `[RETURN]` to get the list of available commands for the CLI.  The Command Line Interface allows you to send simple ASCII-string commands to set or get the user-configurable operating parameters of the application while it is running.  The CLI prompt is simply the `>` character
 
     <img src=".//media/image44.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-8. Look up the ID Scope corresponding to your DPS in the Microsoft Azure Portal.  This value is displayed in a web browser when clicking on `Overview` on the DPS resource page (the DPS should have been created earlier using a web page interface on the Azure Portal).  The ID Scope is programmed/saved into the SAM-IoT board in the next step using a CLI command (allowing you to change the ID Scope for the board without having to reprogram the MCU's application firmware)
+7. In the terminal emulator window, set the debug messaging level to 0 to temporarily disable the output messages. Use the `debug <level>` command by manually typing it into the CLI.  The complete command must be followed by hitting `[RETURN]`
+    ```bash
+    >debug 0
+    ```
+
+8. Configure the SAM-IoT board's internal Wi-Fi settings with your wireless router’s SSID and password using the `wifi` command by manually typing it into the Command Line Interface (CLI).  The complete command must be followed by hitting `[RETURN]` (there cannot be any spaces used in the SSID or password).
+    ```bash
+    >wifi <NETWORK_SSID>,<PASSWORD>,<SECURITY_OPTION[1=Open|2=WPA|3=WEP]>
+    ```
+    For example, if the SSID of the router is "MyWirelessRouter" and the WPA key is "MyRoutersPassword", the exact command to type into the CLI (followed by `[RETURN]`) would be:
+    ```bash
+    >wifi MyWirelessRouter,MyRoutersPassword,2
+    ```
+
+9. Look up the ID Scope corresponding to your DPS in the Microsoft Azure Portal.  This value is displayed in a web browser when clicking on `Overview` on the DPS resource page (the DPS should have been created earlier using a web page interface on the Azure Portal).  The ID Scope is programmed/saved into the SAM-IoT board in the next step using a CLI command (allowing you to change the ID Scope for the board without having to reprogram the MCU's application firmware).
 
     <img src=".//media/image23.png" style="width:6.5.in;height:1.43506in" alt="A screenshot of a cell phone Description automatically generated" />
 
-9. In the terminal emulator window, confirm that `local echo` is **disabled** in the terminal settings. Hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character). At the CLI prompt, type in the command `idscope <MY_ID_SCOPE>` to set the ID Scope (which gets saved in the ATECC608A secure element on the SAM-IoT board) and then hit `[RETURN]`.  To confirm it was set correctly, the ID Scope can be read out from the board by issuing the `idscope` command (i.e. without specifying an ID Scope value as the parameter on the command line)
+10. In the terminal emulator window, confirm that `local echo` is **disabled** in the terminal settings. Hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character). At the CLI prompt, type in the command `idscope <MY_ID_SCOPE>` to set the ID Scope (which gets saved in the ATECC608A secure element on the SAM-IoT board) and then hit `[RETURN]`. To confirm it was set correctly, the ID Scope can be read out from the board by issuing the `idscope` command (i.e. without specifying an ID Scope value as the parameter on the command line).
 
     <img src=".//media/image46.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-10. At the CLI prompt, type in the command `reset` and hit `[ENTER]` to restart the application using the updated ID Scope to establish a connection to your DPS.
+11. At the CLI prompt, type in the command `reset` and hit `[RETURN]` to restart the host application using the updated ID Scope to establish a connection to your DPS
+    ```bash
+    >reset
+    ```
+    
+12.	Wait for the SAM-IoT board to connect to your DPS and stabilize (it could take a few minutes); eventually the Blue and Green LEDs should both stay constantly on (which signifies a successful & stable connection to DPS).  If the Red LED comes on and stays lit, then something was incorrectly programmed (e.g. application firmware, Wi-Fi credentials, ID Scope).  If the Blue LED is not constantly on, then there is an issue with connecting to your wireless access point.
 
-11.	Wait for the SAM-IoT board to connect to your DPS and stabilize (it could take a few minutes); eventually the Blue and Green LEDs should both stay constantly on (which signifies a successful & stable connection to DPS).  If the Red LED comes on and stays lit, then something was incorrectly programmed (e.g. application firmware, Wi-Fi credentials, ID Scope).  If the Blue LED is not constantly on, then there is an issue with connecting to your wireless access point.
-
-12. To enable the “full” debug messaging output to the terminal emulator window, execute the command `debug 4` on the Command Line Interface (CLI).  To completely disable the debug messages at any time, execute the command `debug 0` (debug levels range from 0 to 4).  The CLI is always active, even while debug messages are being continuously displayed on the terminal window.
+13. To enable the “full” debug messaging output to the terminal emulator window, execute the command `debug 4` on the Command Line Interface (CLI).  To completely disable the debug messages at any time, execute the command `debug 0` (debug levels range from 0 to 4).  The CLI is always active, even while debug messages are being continuously displayed on the terminal window.
 
 ### **Verify the SAM-IoT Device Registration to Azure IoT Hub**
 

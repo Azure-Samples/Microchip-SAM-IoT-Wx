@@ -82,15 +82,12 @@ void sys_cmd_init()
 {
     int ix;
 
-    const SYS_CMD_DESCRIPTOR* pDcpt = _iotCmdTbl;
-
     for (ix = 0; ix < sizeof(_iotCmdTbl) / sizeof(*_iotCmdTbl); ix++)
     {
         SYS_CMD_ADDGRP(&_iotCmdTbl[ix],
-                       sizeof(_iotCmdTbl) / sizeof(*_iotCmdTbl),
-                       pDcpt->cmdStr,
-                       pDcpt->cmdDescr);
-        pDcpt++;
+                       1,
+                       _iotCmdTbl[ix].cmdStr,
+                       _iotCmdTbl[ix].cmdDescr);
     }
 }
 
