@@ -144,11 +144,11 @@ can assign to &gt; leave the rest as their existing defaults &gt; hit
 
     - Right-click the `AzureIotPnPDps` project and select `Make and Program Device`.  This operation will automatically clean and build the project before attempting to program the target device. After the `BUILD SUCCESSFUL` message appears in the Output window, the application HEX file will be programmed onto the SAM-IoT board. Once programming has finished, the board will automatically reset and start running its application code.
 
-6. Launch a terminal emulator window and connect to the COM port corresponding to the SAM-IoT board at `9600` baud (**disable** local echo for the terminal settings for best results). Hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character). Type `help` and then hit `[RETURN]` to get the list of available commands for the Command Line Interface (CLI).  The Command Line Interface allows you to send simple ASCII-string commands to set or get the user-configurable operating parameters of the application while it is running.  The CLI prompt is simply the `>` character
+6. Launch a terminal emulator window and connect to the COM port corresponding to the SAM-IoT board at `9600` baud (**disable** local echo for the terminal settings for best results). Hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character). Type `help` and then hit `[RETURN]` to get the list of available commands for the CLI.  The Command Line Interface allows you to send simple ASCII-string commands to set or get the user-configurable operating parameters of the application while it is running.  The CLI prompt is simply the `>` character
 
     <img src=".//media/image44.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-7. In the terminal emulator window, set the debug messaging level to 0 to temporarily disable the output messages. Use the `debug <level>` command by manually typing it into the Command Line Interface (CLI).  The complete command must be followed by hitting `[RETURN]`
+7. In the terminal emulator window, set the debug messaging level to 0 to temporarily disable the output messages. Use the `debug <level>` command by manually typing it into the CLI.  The complete command must be followed by hitting `[RETURN]`
     ```bash
     >debug 0
     ```
