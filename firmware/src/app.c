@@ -127,6 +127,7 @@ void iot_provisioning_completed(void);
 ATCA_STATUS appCryptoClientSerialNumber;
 char*       attDeviceID;
 char        attDeviceID_buf[25] = "BAAAAADD1DBAAADD1D";
+char        deviceIpAddress[16] = {0};
 
 shared_networking_params_t shared_networking_params;
 
@@ -156,6 +157,7 @@ volatile bool iothubConnected = false;
 extern pf_MQTT_CLIENT    pf_mqtt_iotprovisioning_client;
 extern pf_MQTT_CLIENT    pf_mqtt_iothub_client;
 extern void              sys_cmd_init();
+extern userdata_status_t userdata_status;
 
 #ifdef IOT_PLUG_AND_PLAY_MODEL_ID
 extern az_iot_pnp_client pnp_client;
@@ -300,6 +302,8 @@ void APP_Initialize(void)
     EIC_InterruptEnable(EIC_PIN_0);
     EIC_CallbackRegister(EIC_PIN_1, (EIC_CALLBACK)APP_SW1_Handler, 0);
     EIC_InterruptEnable(EIC_PIN_1);
+
+    userdata_status.as_uint8 = 0;
 }
 
 static void APP_ConnectNotifyCb(DRV_HANDLE handle, WDRV_WINC_CONN_STATE currentState, WDRV_WINC_CONN_ERROR errorCode)
@@ -338,17 +342,19 @@ static void APP_GetTimeNotifyCb(DRV_HANDLE handle, uint32_t timeUTC)
 
 static void APP_DHCPAddressEventCb(DRV_HANDLE handle, uint32_t ipAddress)
 {
-
     LED_SetWiFi(LED_INDICATOR_SUCCESS);
 
-    debug_printGood("  APP: DHCP IP Address %lu.%lu.%lu.%lu",
-                    (0x0FF & (ipAddress)),
-                    (0x0FF & (ipAddress >> 8)),
-                    (0x0FF & (ipAddress >> 16)),
-                    (0x0FF & (ipAddress >> 24)));
+    sprintf(deviceIpAddress, "%lu.%lu.%lu.%lu", 
+                        (0x0FF & (ipAddress)),
+                        (0x0FF & (ipAddress >> 8)),
+                        (0x0FF & (ipAddress >> 16)),
+                        (0x0FF & (ipAddress >> 24)));
+
+    debug_printGood("  APP: DHCP IP Address %s", deviceIpAddress);
 
     shared_networking_params.haveIpAddress = 1;
     shared_networking_params.haveERROR     = 0;
+    shared_networking_params.reported      = 0;
 }
 
 static void APP_ProvisionRespCb(DRV_HANDLE handle, WDRV_WINC_SSID* targetSSID,
@@ -522,6 +528,41 @@ static void APP_DataTask(void)
         }
 
         check_button_status();
+
+        if (shared_networking_params.reported == 0)
+        {
+            twin_properties_t twin_properties;
+
+            init_twin_data(&twin_properties);
+
+            twin_properties.flag.ip_address_updated = 1;
+            strcpy(twin_properties.ip_address, deviceIpAddress);
+
+            if (az_result_succeeded(send_reported_property(&twin_properties)))
+            {
+                shared_networking_params.reported = 1;
+            }
+            else
+            {
+                debug_printError("  APP: Failed to report IP Address property");
+            }
+        }
+
+        if (userdata_status.as_uint8 != 0)
+        {
+            uint8_t i;
+            // received user data via UART
+            // update reported property
+            for (i = 0; i < 8; i++)
+            {
+                uint8_t tmp = userdata_status.as_uint8;
+                if (tmp & (1 << i))
+                {
+                    debug_printInfo("  APP: User Data Slot %d changed", i + 1);
+                }
+            }
+            userdata_status.as_uint8 = 0;
+        }
     }
     else
     {

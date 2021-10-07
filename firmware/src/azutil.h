@@ -76,11 +76,36 @@ typedef union
 {
     struct
     {
+        uint8_t slot_1 : 1;
+        uint8_t slot_2 : 1;
+        uint8_t slot_3 : 1;
+        uint8_t slot_4 : 1;
+        uint8_t slot_5 : 1;
+        uint8_t slot_6 : 1;
+        uint8_t slot_7 : 1;
+        uint8_t slot_8 : 1;
+    };
+    uint8_t as_uint8;
+} userdata_status_t;
+
+typedef union
+{
+    struct
+    {
         uint16_t version_found : 1;
         uint16_t is_initial_get : 1;
         uint16_t telemetry_interval_found : 1;
         uint16_t yellow_led_found : 1;
-        uint16_t reserved : 12;
+        uint16_t ip_address_updated : 1;
+        uint16_t slot_1 : 1;
+        uint16_t slot_2 : 1;
+        uint16_t slot_3 : 1;
+        uint16_t slot_4 : 1;
+        uint16_t slot_5 : 1;
+        uint16_t slot_6 : 1;
+        uint16_t slot_7 : 1;
+        uint16_t slot_8 : 1;
+        uint16_t reserved : 3;
     };
     uint16_t as_uint16;
 } twin_update_flag_t;
@@ -93,6 +118,7 @@ typedef struct
     int8_t             reported_led_red;
     int8_t             reported_led_blue;
     int8_t             reported_led_green;
+    char               ip_address[16];
 } twin_properties_t;
 
 typedef union

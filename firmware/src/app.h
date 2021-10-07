@@ -215,7 +215,8 @@ typedef union
         uint16_t amDisconnecting : 1;
         uint16_t haveERROR : 1;
         uint16_t cloudInitPending : 1;
-        uint16_t : 8;
+        uint16_t reported : 1;
+        uint16_t : 7;
     };
 } shared_networking_params_t;
 

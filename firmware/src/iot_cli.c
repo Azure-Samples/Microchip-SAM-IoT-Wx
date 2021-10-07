@@ -45,6 +45,7 @@
 #include "debug_print.h"
 #include "m2m_wifi.h"
 #include "services/iot/cloud/mqtt_packetPopulation/mqtt_iotprovisioning_packetPopulate.h"
+#include "azutil.h"
 
 #define MAX_PUB_KEY_LEN  200
 #define WIFI_PARAMS_OPEN 1
@@ -63,11 +64,15 @@ static void get_cli_version(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void get_firmware_version(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void get_set_debug_level(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void get_set_dps_idscope(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void get_set_userdata(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+
+extern userdata_status_t userdata_status;
 
 #define LINE_TERM "\r\n"
 
 static const SYS_CMD_DESCRIPTOR _iotCmdTbl[] =
     {
+        {"userdata", get_set_userdata, ": Get and Set userdata slots //Usage: userdata [r/w] [slot number] [data]"},
         {"idscope", get_set_dps_idscope, ": Get and Set Azure DPS ID Scope //Usage: idscope [ID Scope]"},
         {"reconnect", reconnect_cmd, ": MQTT Reconnect "},
         {"wifi", set_wifi_auth, ": Set Wifi credentials //Usage: wifi <ssid>[,<pass>,[authType]] "},
@@ -317,5 +322,152 @@ static void get_set_dps_idscope(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** ar
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "New ID Scope : %s\r\n", atca_id_scope);
     }
 
+    return;
+}
+
+static void get_set_userdata(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    char*     operation;
+    uint8_t   slotNumber;
+    uint8_t   data_slot1_2 = 0;
+    uint16_t  data_slot3_4 = 0;
+    uint32_t  data_slot5_6 = 0;
+    uint64_t  data_slot7_8 = 0;
+    uint64_t  userData;
+
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Get/Set User Data\r\n");
+
+    if (argc < 3)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Error Invalid parameter\r\n");
+    }
+    else if (argc == 3)
+    {
+        // this must be read
+        operation = argv[1];
+
+        if (strcmp(operation, "r") != 0)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Error Invalid parameter\r\n");
+        }
+        else
+        {
+            slotNumber = atoi(argv[2]);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Read from Slot %d\r\n", slotNumber);
+
+            // read from slot and write back to UART
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
+
+            switch (slotNumber)
+            {
+                case 0:
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
+                    break;
+                case 1:
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
+                    break;
+                case 2:
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
+                    break;
+                case 3:
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
+                    break;
+                case 4:
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
+                    break;
+                case 5:
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
+                    break;
+                case 6:
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
+                    break;
+                case 7:
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
+                    break;
+                case 8:
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
+                    break;
+                default:
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Error invalid slot number %d", slotNumber);
+                    break;
+            }
+        }
+    }
+    else if (argc == 4)
+    {
+        // this must be write
+        operation = argv[1];
+
+        if (strcmp(operation, "w") != 0)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Error Invalid parameter\r\n");
+        }
+        else
+        {
+
+            slotNumber = atoi(argv[2]);
+            userData = strtoull(argv[3], NULL, 16);
+
+            switch (slotNumber)
+            {
+                case 1:
+                case 2:
+
+
+                    if (userData > 0xff)
+                    {
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Error data too big (0x%x) for slot %d\r\n", userData, slotNumber);
+                        break;
+                    }
+
+                    data_slot1_2 = strtoul(argv[3], NULL, 16);
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Write 0x%02X to Slot %d\r\n", data_slot1_2, slotNumber);
+                    break;
+
+                case 3:
+                case 4:
+
+                    if (userData > 0xffff)
+                    {
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Error data too big (0x%x) for slot %d\r\n", userData, slotNumber);
+                        break;
+                    }
+
+                    data_slot3_4 = strtoul(argv[3], NULL, 16);
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Write 0x%04X to Slot %d\r\n", data_slot3_4, slotNumber);
+                    break;
+
+                case 5:
+                case 6:
+
+                    if (userData > 0xffffffff)
+                    {
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Error data too big (0x%x) for slot %d\r\n", userData, slotNumber);
+                        break;
+                    }
+
+                    data_slot5_6 = strtoul(argv[3], NULL, 16);
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Write 0x%08X to Slot %d\r\n", data_slot5_6, slotNumber);
+                    break;
+
+                case 7:
+                case 8:
+
+                    data_slot7_8 = strtoull(argv[3], NULL, 16);
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Write 0x%08x%08x to Slot %d\r\n", (uint32_t)(data_slot7_8 >> 32), (uint32_t)(data_slot7_8 & 0xffffffff), slotNumber);
+                    break;
+
+                default:
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Error invalid slot number %d", slotNumber);
+                    break;
+            }
+
+            userdata_status.as_uint8 = 1 << (slotNumber - 1);
+
+            // do we need ack?
+        }
+    }
     return;
 }
