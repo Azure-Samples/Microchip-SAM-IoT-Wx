@@ -344,6 +344,8 @@ static void APP_DHCPAddressEventCb(DRV_HANDLE handle, uint32_t ipAddress)
 {
     LED_SetWiFi(LED_INDICATOR_SUCCESS);
 
+    memset(deviceIpAddress, 0, sizeof(deviceIpAddress));
+
     sprintf(deviceIpAddress, "%lu.%lu.%lu.%lu", 
                         (0x0FF & (ipAddress)),
                         (0x0FF & (ipAddress >> 8)),
@@ -535,8 +537,8 @@ static void APP_DataTask(void)
 
             init_twin_data(&twin_properties);
 
-            twin_properties.flag.ip_address_updated = 1;
             strcpy(twin_properties.ip_address, deviceIpAddress);
+            twin_properties.flag.ip_address_updated = 1;
 
             if (az_result_succeeded(send_reported_property(&twin_properties)))
             {
@@ -686,8 +688,14 @@ void APP_ReceivedFromCloud_patch(uint8_t* topic, uint8_t* payload)
         {
             debug_printInfo("  APP: Found telemetryInterval value '%d'", telemetryInterval);
         }
+
         update_leds(&twin_properties);
-        send_reported_property(&twin_properties);
+        rc = send_reported_property(&twin_properties);
+
+        if (az_result_failed(rc))
+        {
+            debug_printError("  APP: send_reported_property() failed 0x%08x", rc);
+        }
     }
 }
 
@@ -732,7 +740,12 @@ void APP_ReceivedFromCloud_twin(uint8_t* topic, uint8_t* payload)
         }
 
         update_leds(&twin_properties);
-        send_reported_property(&twin_properties);
+        rc = send_reported_property(&twin_properties);
+
+        if (az_result_failed(rc))
+        {
+            debug_printError("  APP: send_reported_property() failed 0x%08x", rc);
+        }
     }
 
     //debug_printInfo("  APP: << %s() rc = 0x%08x", __FUNCTION__, rc);
@@ -810,16 +823,9 @@ int32_t APP_GetLightSensorValue(void)
 **********************************************/
 void APP_SendToCloud(void)
 {
-    // if (iothubConnected)
+    if (iothubConnected)
     {
         send_telemetry_message();
-        // RETURN_WITH_MESSAGE_IF_FAILED(
-        //     send_telemetry_message(),
-        //     "Failed to send telemetry");
-        // }
-        // else
-        // {
-        //     debug_printWarn("--- Skip Sending");
     }
 }
 

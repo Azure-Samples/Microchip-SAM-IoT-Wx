@@ -96,16 +96,14 @@ typedef union
         uint16_t is_initial_get : 1;
         uint16_t telemetry_interval_found : 1;
         uint16_t yellow_led_found : 1;
+        uint16_t debug_level_found : 1;
         uint16_t ip_address_updated : 1;
-        uint16_t slot_1 : 1;
-        uint16_t slot_2 : 1;
-        uint16_t slot_3 : 1;
-        uint16_t slot_4 : 1;
-        uint16_t slot_5 : 1;
-        uint16_t slot_6 : 1;
-        uint16_t slot_7 : 1;
-        uint16_t slot_8 : 1;
-        uint16_t reserved : 3;
+        uint16_t app_property_1_updated : 1;
+        uint16_t app_property_2_updated : 1;
+        uint16_t app_property_3_found : 1;
+        uint16_t app_property_4_found : 1;
+        uint16_t telemetry_disable_found : 1;
+        uint16_t reserved : 5;
     };
     uint16_t as_uint16;
 } twin_update_flag_t;
@@ -118,7 +116,13 @@ typedef struct
     int8_t             reported_led_red;
     int8_t             reported_led_blue;
     int8_t             reported_led_green;
+    int32_t            debugLevel;
     char               ip_address[16];
+    int32_t            app_property_1;
+    int32_t            app_property_2;
+    int32_t            app_property_3;
+    int32_t            app_property_4;
+    uint32_t           telemetry_disable_flag;
 } twin_properties_t;
 
 typedef union
@@ -184,5 +188,13 @@ az_result process_device_twin_property(
     twin_properties_t* twin_properties);
 
 void update_leds(twin_properties_t* twin_properties);
+
+bool send_telemetry_from_uart(
+    int   cmdIndex,
+    char* data);
+
+bool send_property_from_uart(
+    int   cmdIndex,
+    char* data);
 
 #endif // _AZUTIL_H

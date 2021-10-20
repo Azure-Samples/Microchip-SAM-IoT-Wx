@@ -36,6 +36,7 @@
  * AND BY USING THE SOFTWARE, YOU AGREE TO THESE TERMS. 
 *******************************************************************************************/
 // DOM-IGNORE-END
+#include <errno.h>
 #include "definitions.h"
 #include "mqtt/mqtt_core/mqtt_core.h"
 #include "services/iot/cloud/crypto_client/crypto_client.h"
@@ -64,7 +65,8 @@ static void get_cli_version(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void get_firmware_version(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void get_set_debug_level(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void get_set_dps_idscope(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static void get_set_userdata(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void send_telemetry(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void process_property(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
 extern userdata_status_t userdata_status;
 
@@ -72,7 +74,8 @@ extern userdata_status_t userdata_status;
 
 static const SYS_CMD_DESCRIPTOR _iotCmdTbl[] =
     {
-        {"userdata", get_set_userdata, ": Get and Set userdata slots //Usage: userdata [r/w] [slot number] [data]"},
+        {"property", process_property, ": Send and receive device property from cloud //Usage: property <index>, <data(hex)>"},
+        {"telemetry", send_telemetry, ": Sends data to cloud as telemetry //Usage: telemetry <index>, <data(hex)>"},
         {"idscope", get_set_dps_idscope, ": Get and Set Azure DPS ID Scope //Usage: idscope [ID Scope]"},
         {"reconnect", reconnect_cmd, ": MQTT Reconnect "},
         {"wifi", set_wifi_auth, ": Set Wifi credentials //Usage: wifi <ssid>[,<pass>,[authType]] "},
@@ -198,6 +201,8 @@ static void set_wifi_auth(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
     if (credentials[0] != NULL)
     {
+        // add "-scan" option here
+        // https://github.com/Microchip-MPLAB-Harmony/wireless_apps_winc1500/blob/master/apps/ap_scan/firmware/src/example.c
         if (credentials[1] == NULL && credentials[2] == NULL)
         {
             params = 1;
@@ -325,149 +330,186 @@ static void get_set_dps_idscope(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** ar
     return;
 }
 
-static void get_set_userdata(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void show_send_telemetry_help(SYS_CMD_DEVICE_NODE* pCmdIO)
 {
-    char*     operation;
-    uint8_t   slotNumber;
-    uint8_t   data_slot1_2 = 0;
-    uint16_t  data_slot3_4 = 0;
-    uint32_t  data_slot5_6 = 0;
-    uint64_t  data_slot7_8 = 0;
-    uint64_t  userData;
-
     const void* cmdIoParam = pCmdIO->cmdIoParam;
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Send Telemetry <Index>,<Data>");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  Index | Data (in Hex, except 11) | Example");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  1 ~ 4 | Signed integer in hex.   | telemetry 1,FE");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  5 ~ 6 | Double in hex.           | telemetry 5,F537A021CF015B44");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  7 ~ 8 | Float in hex.            | telemetry 7,418345E1");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  9     | Long in hex.             | telemetry 9,CAFE1234BEEF5678");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  10    | Boolean, true/false.     | telemetry 10,true");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  11    | Up to 1024 characters    | telemetry 11,\"Hello World\"\r\n");
+}
 
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Get/Set User Data\r\n");
+static void send_telemetry(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    char*       chCmdIndex = NULL;
+    char*       chCmdData = NULL;
+    char*       chCmdDelim = ",";
+    long        cmdIndex;
 
-    if (argc < 3)
+    //(*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "send_telemetry argc = %d\r\n", argc);
+
+    if (argc < 2)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Error Invalid parameter\r\n");
+        show_send_telemetry_help(pCmdIO);
+        return;
     }
-    else if (argc == 3)
+    else if (argc == 2)
     {
-        // this must be read
-        operation = argv[1];
-
-        if (strcmp(operation, "r") != 0)
+        if ((chCmdIndex = strtok(argv[1], chCmdDelim)) == NULL)
         {
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Error Invalid parameter\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command parameter\r\n\4");
+            show_send_telemetry_help(pCmdIO);
+        }
+        else if ((chCmdData = strtok(NULL, chCmdDelim)) == NULL)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command parameter\r\n\4");
+            show_send_telemetry_help(pCmdIO);
         }
         else
         {
-            slotNumber = atoi(argv[2]);
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Read from Slot %d\r\n", slotNumber);
+            errno = 0;
+            char* chEnd;
+            cmdIndex = strtol(chCmdIndex, &chEnd, 10);
 
-            // read from slot and write back to UART
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
-
-            switch (slotNumber)
+            if (chCmdIndex == chEnd)
             {
-                case 0:
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
-                    break;
-                case 1:
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
-                    break;
-                case 2:
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
-                    break;
-                case 3:
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
-                    break;
-                case 4:
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
-                    break;
-                case 5:
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
-                    break;
-                case 6:
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
-                    break;
-                case 7:
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
-                    break;
-                case 8:
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Slot %d Data", slotNumber);
-                    break;
-                default:
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Error invalid slot number %d", slotNumber);
-                    break;
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command parameter\r\n\4");
+                show_send_telemetry_help(pCmdIO);
+            }
+            else if (errno == ERANGE)
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command parameter\r\n\4");
+                show_send_telemetry_help(pCmdIO);
+            }
+            else if (cmdIndex < 1 || cmdIndex > 11)
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command index parameter.\r\n\4");
+                show_send_telemetry_help(pCmdIO);
+            }
+            else
+            {
+                //(*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Command Index : %ld\r\n\4", cmdIndex);
+
+                switch (cmdIndex)
+                {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                    case 10:
+                    case 11:
+                    {
+                        //(*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Command Data : %s\r\n\4", chCmdData);
+                        send_telemetry_from_uart(cmdIndex, chCmdData);
+                        break;
+                    }
+                        break;
+                    default:
+                        (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command index parameter.\r\n\4");
+                        show_send_telemetry_help(pCmdIO);
+                        break;
+                }
             }
         }
     }
-    else if (argc == 4)
-    {
-        // this must be write
-        operation = argv[1];
 
-        if (strcmp(operation, "w") != 0)
+    return;
+}
+
+static void show_process_property_help(SYS_CMD_DEVICE_NODE* pCmdIO)
+{
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Update Read Only Property <Index>,<Data>");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  Index | Data (in Hex) | Writable (by Cloud)");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  1 ~ 2 | integer       | false");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  3 ~ 4 | integer       | true");
+}
+
+static void process_property(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    char*       chCmdIndex = NULL;
+    char*       chCmdData = NULL;
+    char*       chCmdDelim = ",";
+    long        cmdIndex;
+
+    if (argc < 2)
+    {
+        show_process_property_help(pCmdIO);
+        return;
+    }
+    else if (argc == 2)
+    {
+        if ((chCmdIndex = strtok(argv[1], chCmdDelim)) == NULL)
         {
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Error Invalid parameter\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command parameter\r\n\4");
+            show_process_property_help(pCmdIO);
+        }
+        else if ((chCmdData = strtok(NULL, chCmdDelim)) == NULL)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command parameter\r\n\4");
+            show_process_property_help(pCmdIO);
         }
         else
         {
+            errno = 0;
+            char* chEnd;
+            cmdIndex = strtol(chCmdIndex, &chEnd, 10);
 
-            slotNumber = atoi(argv[2]);
-            userData = strtoull(argv[3], NULL, 16);
-
-            switch (slotNumber)
+            if (chCmdIndex == chEnd)
             {
-                case 1:
-                case 2:
-
-
-                    if (userData > 0xff)
-                    {
-                        (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Error data too big (0x%x) for slot %d\r\n", userData, slotNumber);
-                        break;
-                    }
-
-                    data_slot1_2 = strtoul(argv[3], NULL, 16);
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Write 0x%02X to Slot %d\r\n", data_slot1_2, slotNumber);
-                    break;
-
-                case 3:
-                case 4:
-
-                    if (userData > 0xffff)
-                    {
-                        (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Error data too big (0x%x) for slot %d\r\n", userData, slotNumber);
-                        break;
-                    }
-
-                    data_slot3_4 = strtoul(argv[3], NULL, 16);
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Write 0x%04X to Slot %d\r\n", data_slot3_4, slotNumber);
-                    break;
-
-                case 5:
-                case 6:
-
-                    if (userData > 0xffffffff)
-                    {
-                        (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Error data too big (0x%x) for slot %d\r\n", userData, slotNumber);
-                        break;
-                    }
-
-                    data_slot5_6 = strtoul(argv[3], NULL, 16);
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Write 0x%08X to Slot %d\r\n", data_slot5_6, slotNumber);
-                    break;
-
-                case 7:
-                case 8:
-
-                    data_slot7_8 = strtoull(argv[3], NULL, 16);
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Write 0x%08x%08x to Slot %d\r\n", (uint32_t)(data_slot7_8 >> 32), (uint32_t)(data_slot7_8 & 0xffffffff), slotNumber);
-                    break;
-
-                default:
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Error invalid slot number %d", slotNumber);
-                    break;
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command parameter\r\n\4");
+                show_process_property_help(pCmdIO);
             }
+            else if (errno == ERANGE)
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command parameter\r\n\4");
+                show_process_property_help(pCmdIO);
+            }
+            else if (cmdIndex < 1 || cmdIndex > 4)
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command index parameter.\r\n\4");
+                show_process_property_help(pCmdIO);
+            }
+            else
+            {
+                //(*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Command Index : %ld\r\n\4", cmdIndex);
 
-            userdata_status.as_uint8 = 1 << (slotNumber - 1);
-
-            // do we need ack?
+                switch (cmdIndex)
+                {
+                    case 1:
+                    case 2:
+                    {
+                        //(*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Command Data : %s\r\n\4", chCmdData);
+                        send_property_from_uart(cmdIndex, chCmdData);
+                        break;
+                    }
+                    case 3:
+                    case 4:
+                    {
+                        //(*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Command Data : %s\r\n\4", chCmdData);
+                        //send_telemetry_from_uart(cmdIndex, chCmdData);
+                        break;
+                    }
+                        break;
+                    default:
+                        (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command index parameter.\r\n\4");
+                        show_process_property_help(pCmdIO);
+                        break;
+                }
+            }
         }
     }
+
     return;
 }
