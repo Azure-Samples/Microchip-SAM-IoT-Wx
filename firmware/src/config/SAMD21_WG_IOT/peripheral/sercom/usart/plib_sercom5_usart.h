@@ -61,7 +61,7 @@
 #endif
 // DOM-IGNORE-END
 
-#define SERCOM5_USART_READ_BUFFER_SIZE      128
+#define SERCOM5_USART_READ_BUFFER_SIZE      (20+1024)/*128*/
 #define SERCOM5_USART_WRITE_BUFFER_SIZE     1024
 
 // *****************************************************************************
