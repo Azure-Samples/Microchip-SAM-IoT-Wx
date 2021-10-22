@@ -34,6 +34,17 @@ static char pnp_property_payload_buffer[1024];
 static char command_topic_buffer[128];
 static char command_resp_buffer[128];
 
+static int payload_num = 1;
+static char telemetry_1k[] =
+"\"start--0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef---end\"";
+
 // Plug and Play Connection Values
 static uint32_t request_id_int = 0;
 static char     request_id_buffer[16];
@@ -498,13 +509,16 @@ az_result send_telemetry_message(void)
                                                        sizeof(pnp_telemetry_topic_buffer),
                                                        NULL);
 
+
     if (az_result_succeeded(rc))
     {
         CLOUD_publishData((uint8_t*)pnp_telemetry_topic_buffer,
-                          az_span_ptr(telemetry_payload_span),
-                          az_span_size(telemetry_payload_span),
-                          1);
+                (uint8_t*)telemetry_1k,
+                sizeof(telemetry_1k) - 1,
+                0);
+        debug_printGood("AZURE: Payload %d of 8", payload_num++);
     }
+
     return rc;
 }
 

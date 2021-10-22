@@ -33,38 +33,24 @@
 #include "../../services/iot/cloud/bsd_adapter/bsdWINC.h"
 #include "debug_print.h"
 
-#define TX_BUFF_SIZE         2048 + 35 + 50 // IoT Hub supports up to 256KB message.  Keep 2k for payload.  35 bytes for CONNECT packet size (mqttConnectPacket) and 50 for topic.
+#define TX_BUFF_SIZE         1200
 #define RX_BUFF_SIZE         2096
 #define USER_LENGTH          0
 #define MQTT_KEEP_ALIVE_TIME 120
 
 static mqttContext mqttConn;
-static uint8_t* mqttTxBuff = NULL;
-static uint8_t* mqttRxBuff = NULL;
+static uint8_t*     mqttTxBuff = NULL;
+static uint8_t     mqttRxBuff[RX_BUFF_SIZE];
 static int8_t      mqqtSocket = -1;
 
 void MQTT_ClientInitialize(void)
 {
     MQTT_initialiseState();
 
-    mqttConn.mqttDataExchangeBuffers.txbuff.start = NULL;
-    mqttConn.mqttDataExchangeBuffers.txbuff.bufferLength = 0;
-
-    mqttConn.mqttDataExchangeBuffers.rxbuff.start = NULL;
-    mqttConn.mqttDataExchangeBuffers.rxbuff.bufferLength = 0;
-
     if (mqttTxBuff == NULL)
     {
-        if ((mqttTxBuff = malloc(TX_BUFF_SIZE)) == NULL)
-        {
-            return;
-        }
-    }
-
-    if (mqttRxBuff == NULL)
-    {
-        mqttRxBuff = malloc(TX_BUFF_SIZE);
-        if ((mqttRxBuff = malloc(TX_BUFF_SIZE)) == NULL)
+        mqttTxBuff = malloc(TX_BUFF_SIZE);
+        if (mqttTxBuff == NULL)
         {
             return;
         }
