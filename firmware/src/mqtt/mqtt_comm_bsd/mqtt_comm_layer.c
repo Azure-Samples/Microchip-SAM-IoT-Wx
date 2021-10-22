@@ -39,8 +39,8 @@
 #define MQTT_KEEP_ALIVE_TIME 120
 
 static mqttContext mqttConn;
-static uint8_t*     mqttTxBuff = NULL;
-static uint8_t     mqttRxBuff[RX_BUFF_SIZE];
+static uint8_t*    mqttTxBuff = NULL;
+static uint8_t*    mqttRxBuff = NULL;
 static int8_t      mqqtSocket = -1;
 
 void MQTT_ClientInitialize(void)
@@ -52,6 +52,16 @@ void MQTT_ClientInitialize(void)
         mqttTxBuff = malloc(TX_BUFF_SIZE);
         if (mqttTxBuff == NULL)
         {
+            return;
+        }
+    }
+
+    if (mqttRxBuff == NULL)
+    {
+        mqttRxBuff = malloc(RX_BUFF_SIZE);
+        if (mqttRxBuff == NULL)
+        {
+            free(mqttTxBuff);
             return;
         }
     }
