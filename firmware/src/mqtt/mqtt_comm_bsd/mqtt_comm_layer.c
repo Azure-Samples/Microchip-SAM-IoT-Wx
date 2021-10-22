@@ -33,14 +33,14 @@
 #include "../../services/iot/cloud/bsd_adapter/bsdWINC.h"
 #include "debug_print.h"
 
-#define TX_BUFF_SIZE         1200
+#define TX_BUFF_SIZE         1024
 #define RX_BUFF_SIZE         2096
 #define USER_LENGTH          0
 #define MQTT_KEEP_ALIVE_TIME 120
 
 static mqttContext mqttConn;
 static uint8_t*    mqttTxBuff = NULL;
-static uint8_t*    mqttRxBuff = NULL;
+static uint8_t    mqttRxBuff[RX_BUFF_SIZE];
 static int8_t      mqqtSocket = -1;
 
 void MQTT_ClientInitialize(void)
@@ -52,19 +52,11 @@ void MQTT_ClientInitialize(void)
         mqttTxBuff = malloc(TX_BUFF_SIZE);
         if (mqttTxBuff == NULL)
         {
+            debug_printError(" MQTT: TX Buffer fail malloc");
             return;
         }
     }
 
-    if (mqttRxBuff == NULL)
-    {
-        mqttRxBuff = malloc(RX_BUFF_SIZE);
-        if (mqttRxBuff == NULL)
-        {
-            free(mqttTxBuff);
-            return;
-        }
-    }
 
     memset(mqttTxBuff, 0, sizeof(TX_BUFF_SIZE));
     memset(mqttRxBuff, 0, sizeof(RX_BUFF_SIZE));

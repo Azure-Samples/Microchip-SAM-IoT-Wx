@@ -29,21 +29,17 @@ static char pnp_uart_telemetry_topic_buffer[128];
 static char pnp_uart_telemetry_payload_buffer[128];
 
 static char pnp_property_topic_buffer[128];
-static char pnp_property_payload_buffer[1024];
+static char pnp_property_payload_buffer[512];
 
 static char command_topic_buffer[128];
 static char command_resp_buffer[128];
 
 static int payload_num = 1;
-static char telemetry_1k[] =
+static char telemetry_512b[] =
 "\"start--0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef---end\"";
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef--end\"";
 
 // Plug and Play Connection Values
 static uint32_t request_id_int = 0;
@@ -513,8 +509,8 @@ az_result send_telemetry_message(void)
     if (az_result_succeeded(rc))
     {
         CLOUD_publishData((uint8_t*)pnp_telemetry_topic_buffer,
-                (uint8_t*)telemetry_1k,
-                sizeof(telemetry_1k) - 1,
+                (uint8_t*)telemetry_512b,
+                sizeof(telemetry_512b) - 1,
                 0);
         debug_printGood("AZURE: Payload %d of 8", payload_num++);
     }
