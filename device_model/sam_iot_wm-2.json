@@ -58,7 +58,7 @@
         {
             "@type": "Telemetry",
             "description": {
-                "en": "Custom Telemetry in integer from Application MCU over UART"
+                "en": "Custom Telemetry in integer from Application MCU"
             },
             "displayName": {
                 "en": "App MCU Telemetry 1 (int)"
@@ -69,7 +69,7 @@
         {
             "@type": "Telemetry",
             "description": {
-                "en": "Custom Telemetry in integer from Application MCU over UART"
+                "en": "Custom Telemetry in integer from Application MCU"
             },
             "displayName": {
                 "en": "App MCU Telemetry 2 (int)"
@@ -80,7 +80,7 @@
         {
             "@type": "Telemetry",
             "description": {
-                "en": "Custom Telemetry in integer from Application MCU over UART"
+                "en": "Custom Telemetry in integer from Application MCU"
             },
             "displayName": {
                 "en": "App MCU Telemetry 3 (int)"
@@ -91,7 +91,7 @@
         {
             "@type": "Telemetry",
             "description": {
-                "en": "Custom Telemetry in integer from Application MCU over UART"
+                "en": "Custom Telemetry in integer from Application MCU"
             },
             "displayName": {
                 "en": "App MCU Telemetry 4 (int)"
@@ -102,7 +102,7 @@
         {
             "@type": "Telemetry",
             "description": {
-                "en": "Custom Telemetry in double from Application MCU over UART"
+                "en": "Custom Telemetry in double from Application MCU"
             },
             "displayName": {
                 "en": "App MCU Telemetry 1 (double)"
@@ -113,7 +113,7 @@
         {
             "@type": "Telemetry",
             "description": {
-                "en": "Custom Telemetry in double from Application MCU over UART"
+                "en": "Custom Telemetry in double from Application MCU"
             },
             "displayName": {
                 "en": "App MCU Telemetry 2 (double)"
@@ -124,7 +124,7 @@
         {
             "@type": "Telemetry",
             "description": {
-                "en": "Custom Telemetry in float from Application MCU over UART"
+                "en": "Custom Telemetry in float from Application MCU"
             },
             "displayName": {
                 "en": "App MCU Telemetry 1 (float)"
@@ -135,7 +135,7 @@
         {
             "@type": "Telemetry",
             "description": {
-                "en": "Custom Telemetry in float from Application MCU over UART"
+                "en": "Custom Telemetry in float from Application MCU"
             },
             "displayName": {
                 "en": "App MCU Telemetry 2 (float)"
@@ -146,7 +146,7 @@
         {
             "@type": "Telemetry",
             "description": {
-                "en": "Custom Telemetry in long from Application MCU over UART"
+                "en": "Custom Telemetry in long from Application MCU"
             },
             "displayName": {
                 "en": "App MCU Telemetry (long)"
@@ -157,7 +157,7 @@
         {
             "@type": "Telemetry",
             "description": {
-                "en": "Custom Telemetry in boolean from Application MCU over UART"
+                "en": "Custom Telemetry in boolean from Application MCU"
             },
             "displayName": {
                 "en": "App MCU Telemetry (boolean)"
@@ -168,12 +168,45 @@
         {
             "@type": "Telemetry",
             "description": {
-                "en": "Custom String Telemetry from Application MCU over UART, up to 1024 characters"
+                "en": "Custom String Telemetry from Application MCU"
             },
             "displayName": {
-                "en": "App MCU Telemetry (String)"
+                "en": "App MCU Telemetry 1 (String)"
             },
-            "name": "telemetry_Str",
+            "name": "telemetry_Str_1",
+            "schema": "string"
+        },
+        {
+            "@type": "Telemetry",
+            "description": {
+                "en": "Custom String Telemetry from Application MCU"
+            },
+            "displayName": {
+                "en": "App MCU Telemetry 2 (String)"
+            },
+            "name": "telemetry_Str_2",
+            "schema": "string"
+        },
+        {
+            "@type": "Telemetry",
+            "description": {
+                "en": "Custom String Telemetry from Application MCU"
+            },
+            "displayName": {
+                "en": "App MCU Telemetry 3 (String)"
+            },
+            "name": "telemetry_Str_3",
+            "schema": "string"
+        },
+        {
+            "@type": "Telemetry",
+            "description": {
+                "en": "Custom String Telemetry from Application MCU"
+            },
+            "displayName": {
+                "en": "App MCU Telemetry 4 (String)"
+            },
+            "name": "telemetry_Str_4",
             "schema": "string"
         },
         {
@@ -253,7 +286,7 @@
                 "en": "IP Address of SAM-IoT"
             },
             "displayName": {
-                "en": "IP ADdress"
+                "en": "IP Address"
             },
             "name": "ipAddress",
             "schema": "string",
@@ -262,10 +295,10 @@
         {
             "@type": "Property",
             "description": {
-                "en": "Firmware version of SAM-IoT in Major.Minor.Patch.Rev format."
+                "en": "Firmware version of the SAM-IoT's ATWINC1510 Wi-Fi controller module in <Major>.<Minor>.<Patch>.<Rev> format"
             },
             "displayName": {
-                "en": "Firmware Version"
+                "en": "ATWINC1510 Firmware Version"
             },
             "name": "firmwareVersion",
             "schema": "string",
@@ -298,7 +331,7 @@
         {
             "@type": "Property",
             "description": {
-                "en": "Application MCU Property in integer.  The specified value will be routed to UART"
+                "en": "Application MCU Property in integer"
             },
             "displayName": {
                 "en": "App MCU Property 3"
@@ -310,7 +343,7 @@
         {
             "@type": "Property",
             "description": {
-                "en": "Application MCU Property in integer.  The specified value will be routed to UART"
+                "en": "Application MCU Property in integer"
             },
             "displayName": {
                 "en": "App MCU Property 4"
@@ -358,7 +391,7 @@
         {
             "@type": "Property",
             "description": {
-                "en": "Set the state of the Yellow LED.  On, off, or blink."
+                "en": "Set the state of the Yellow LED.  On, Off, or Blink."
             },
             "displayName": {
                 "en": "Yellow LED state"
@@ -444,7 +477,7 @@
         {
             "@type": "Command",
             "description": {
-                "en": "Send a text message to SAM-IoT.  Message string will be routed to UART"
+                "en": "Send a text message to SAM-IoT"
             },
             "displayName": {
                 "en": "Send Message"
@@ -464,7 +497,7 @@
                     "fields": [
                         {
                             "displayName": {
-                                "en": "String to send to UART up to 1024 bytes"
+                                "en": "String to send"
                             },
                             "name": "sendMsgString",
                             "schema": "string"

@@ -58,9 +58,9 @@
 
 
 /* SERCOM5 USART baud value for 9600 Hz baud rate */
-//#define SERCOM5_USART_INT_BAUD_VALUE            (65326U)
+#define SERCOM5_USART_INT_BAUD_VALUE            (65326U)
 /* SERCOM5 USART baud value for 460800 Hz baud rate */
-#define SERCOM5_USART_INT_BAUD_VALUE            (55469U)
+//#define SERCOM5_USART_INT_BAUD_VALUE            (55469U)
 
 SERCOM_USART_RING_BUFFER_OBJECT sercom5USARTObj;
 
