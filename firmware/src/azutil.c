@@ -473,6 +473,8 @@ void check_button_status(void)
     return;
 }
 
+#define NUM_PAYLOAD_CHUNKS 8
+
 /**********************************************
 * Read sensor data and send telemetry to cloud
 **********************************************/
@@ -521,11 +523,15 @@ az_result send_telemetry_message(void)
 
     if (az_result_succeeded(rc))
     {
-        CLOUD_publishData((uint8_t*)pnp_telemetry_topic_buffer,
-                (uint8_t*)telemetry_1024b,
-                sizeof(telemetry_1024b) - 1,
-                0);
-        debug_printGood("AZURE: Payload %d of 4", payload_num++);
+        if (payload_num <= NUM_PAYLOAD_CHUNKS)
+        {
+            CLOUD_publishData((uint8_t*)pnp_telemetry_topic_buffer,
+                    (uint8_t*)telemetry_1024b,
+                    sizeof(telemetry_1024b) - 1,
+                    0);
+            debug_printGood("AZURE: Payload chunk #%d of %d (sent every 500 msec)", 
+                    payload_num++, NUM_PAYLOAD_CHUNKS);
+        }
     }
 
     return rc;
