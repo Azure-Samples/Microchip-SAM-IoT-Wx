@@ -481,6 +481,7 @@ void check_button_status(void)
 az_result send_telemetry_message(void)
 {
     az_result rc = AZ_OK;
+
     az_span   telemetry_payload_span;
 
     int16_t temp;
@@ -520,7 +521,6 @@ az_result send_telemetry_message(void)
                                                        sizeof(pnp_telemetry_topic_buffer),
                                                        NULL);
 
-
     if (az_result_succeeded(rc))
     {
         if (payload_num <= NUM_PAYLOAD_CHUNKS)
@@ -529,7 +529,7 @@ az_result send_telemetry_message(void)
                     (uint8_t*)telemetry_1024b,
                     sizeof(telemetry_1024b) - 1,
                     0);
-            debug_printGood("AZURE: Payload chunk #%d of %d (sent every 500 msec)", 
+            debug_printGood("AZURE: 1KB payload #%d of %d", 
                     payload_num++, NUM_PAYLOAD_CHUNKS);
         }
     }

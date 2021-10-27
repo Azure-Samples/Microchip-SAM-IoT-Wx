@@ -1518,7 +1518,7 @@
         <property key="memories.rww" value="true"/>
         <property key="poweroptions.powerenable" value="false"/>
         <property key="programmerToGoFilePath"
-                  value="/Users/c14166/Azure/Microchip-SAM-IoT-Wx-1/firmware/AzureIotPnpDps.X/debug/SAMD21_WG_IOT/AzureIotPnpDps_ptg"/>
+                  value="C:/Repo/IoTPnP/Microchip/new-google-project-based/Microchip-SAM-IoT-Wx/firmware/AzureIotPnpDps.X/debug/SAMD21_WG_IOT/AzureIotPnpDps_ptg"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.preservedataflash" value="false"/>
         <property key="programoptions.preservedataflash.ranges"
