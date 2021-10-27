@@ -105,8 +105,8 @@ void iot_provisioning_completed(void);
 
 #define APP_WIFI_SOFT_AP         0
 #define APP_WIFI_DEFAULT         1
-#define APP_DATATASK_INTERVAL     250L   // 250msec
-#define APP_CLOUDTASK_INTERVAL    250L   // 250msec
+#define APP_DATATASK_INTERVAL    250L // Each unit is in msec (e.g. 250 msec)
+#define APP_CLOUDTASK_INTERVAL   APP_DATATASK_INTERVAL
 #define APP_SW_DEBOUNCE_INTERVAL 1460000L
 
 /* WIFI SSID, AUTH and PWD for AP */
