@@ -53,6 +53,8 @@
 #define WIFI_PARAMS_PSK  2
 #define WIFI_PARAMS_WEP  3
 
+#define TELEMETRY_INDEX_MAX 14
+
 const char* const cli_version_number      = "1.0";
 const char* const firmware_version_number = "1.0.0";
 static char*      ateccsn                 = NULL;
@@ -334,13 +336,13 @@ static void show_send_telemetry_help(SYS_CMD_DEVICE_NODE* pCmdIO)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Send Telemetry <Index>,<Data>");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  Index | Data (in Hex, except 11) | Example");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  1 ~ 4 | Signed integer in hex.   | telemetry 1,FE");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  5 ~ 6 | Double in hex.           | telemetry 5,F537A021CF015B44");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  7 ~ 8 | Float in hex.            | telemetry 7,418345E1");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  9     | Long in hex.             | telemetry 9,CAFE1234BEEF5678");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  10    | Boolean, true/false.     | telemetry 10,true");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  11    | Up to 1024 characters    | telemetry 11,\"Hello World\"\r\n");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " Index | Data                                | Example");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  1~4  | Signed integer in hex (4 bytes max) | telemetry 2,CAFEBEEF");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  5~6  | Double in hex (8 bytes)             | telemetry 5,F537A021CF015B44");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  7~8  | Float in hex (4 bytes)              | telemetry 8,418345E1");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  9    | Long in hex (8 bytes max)           | telemetry 9,CAFE1234BEEF5678");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 10    | Boolean, true/false                 | telemetry 10,true");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 11~14 | String (no spaces, 68 chars max)    | telemetry 13,\"Hello_World!!!\"\r\n");
 }
 
 static void send_telemetry(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
@@ -386,9 +388,9 @@ static void send_telemetry(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
                 (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command parameter\r\n\4");
                 show_send_telemetry_help(pCmdIO);
             }
-            else if (cmdIndex < 1 || cmdIndex > 11)
+            else if (cmdIndex < 1 || cmdIndex > TELEMETRY_INDEX_MAX)
             {
-                (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command index parameter.\r\n\4");
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command index parameter\r\n\4");
                 show_send_telemetry_help(pCmdIO);
             }
             else
@@ -408,6 +410,9 @@ static void send_telemetry(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
                     case 9:
                     case 10:
                     case 11:
+                    case 12:
+                    case 13:
+                    case 14:                        
                     {
                         //(*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Command Data : %s\r\n\4", chCmdData);
                         send_telemetry_from_uart(cmdIndex, chCmdData);

@@ -105,8 +105,8 @@ void iot_provisioning_completed(void);
 
 #define APP_WIFI_SOFT_AP         0
 #define APP_WIFI_DEFAULT         1
-#define APP_DATATASK_INTERVAL    1000L   //1000msec
-#define APP_CLOUDTASK_INTERVAL   1000L   //1000msec
+#define APP_DATATASK_INTERVAL    250L // Each unit is in msec (e.g. 250 msec)
+#define APP_CLOUDTASK_INTERVAL   APP_DATATASK_INTERVAL
 #define APP_SW_DEBOUNCE_INTERVAL 1460000L
 
 /* WIFI SSID, AUTH and PWD for AP */
@@ -507,7 +507,7 @@ void APP_Tasks(void)
 }
 
 
-static int skipper = 0;
+//static int skipper = 0;
 
 // This gets called by the scheduler approximately every 100ms
 static void APP_DataTask(void)
@@ -516,7 +516,7 @@ static void APP_DataTask(void)
     // Example of how to send data when MQTT is connected every 1 second based on the system clock
     if (CLOUD_isConnected())
     {
-        if (skipper++ % 3 == 0)
+        //if (skipper++ % 3 == 0)
         {
             // send telemetry
             APP_SendToCloud();

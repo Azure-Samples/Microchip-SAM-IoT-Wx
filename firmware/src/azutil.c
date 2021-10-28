@@ -35,11 +35,21 @@ static char command_topic_buffer[128];
 static char command_resp_buffer[128];
 
 static int payload_num = 1;
-static char telemetry_512b[] =
-"\"start--0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+//static char telemetry_512b[] =
+//"\"start--$0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+//"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+//"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+//"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef$--end\"";
+
+static char telemetry_1024b[] =
+"\"start--$0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef--end\"";
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef$--end\"";
 
 // Plug and Play Connection Values
 static uint32_t request_id_int = 0;
@@ -54,9 +64,12 @@ static const az_span iot_hub_property_desired_version = AZ_SPAN_LITERAL_FROM_STR
 static const az_span telemetry_name_temperature_span = AZ_SPAN_LITERAL_FROM_STR("temperature");
 static const az_span telemetry_name_light_span       = AZ_SPAN_LITERAL_FROM_STR("light");
 
-// static const az_span telemetry_name_long       = AZ_SPAN_LITERAL_FROM_STR("telemetry_Lng");
+static const az_span telemetry_name_long       = AZ_SPAN_LITERAL_FROM_STR("telemetry_Lng");
 static const az_span telemetry_name_bool       = AZ_SPAN_LITERAL_FROM_STR("telemetry_Bool");
-static const az_span telemetry_name_string     = AZ_SPAN_LITERAL_FROM_STR("telemetry_Str");
+static const az_span telemetry_name_string_1   = AZ_SPAN_LITERAL_FROM_STR("telemetry_Str_1");
+static const az_span telemetry_name_string_2   = AZ_SPAN_LITERAL_FROM_STR("telemetry_Str_2");
+static const az_span telemetry_name_string_3   = AZ_SPAN_LITERAL_FROM_STR("telemetry_Str_3");
+static const az_span telemetry_name_string_4   = AZ_SPAN_LITERAL_FROM_STR("telemetry_Str_4");
 
 // Telemetry Interval writable property
 static const az_span property_telemetry_interval_span = AZ_SPAN_LITERAL_FROM_STR("telemetryInterval");
@@ -460,12 +473,15 @@ void check_button_status(void)
     return;
 }
 
+#define NUM_PAYLOAD_CHUNKS 8
+
 /**********************************************
 * Read sensor data and send telemetry to cloud
 **********************************************/
 az_result send_telemetry_message(void)
 {
     az_result rc = AZ_OK;
+
     az_span   telemetry_payload_span;
 
     int16_t temp;
@@ -505,14 +521,17 @@ az_result send_telemetry_message(void)
                                                        sizeof(pnp_telemetry_topic_buffer),
                                                        NULL);
 
-
     if (az_result_succeeded(rc))
     {
-        CLOUD_publishData((uint8_t*)pnp_telemetry_topic_buffer,
-                (uint8_t*)telemetry_512b,
-                sizeof(telemetry_512b) - 1,
-                0);
-        debug_printGood("AZURE: Payload %d of 8", payload_num++);
+        if (payload_num <= NUM_PAYLOAD_CHUNKS)
+        {
+            CLOUD_publishData((uint8_t*)pnp_telemetry_topic_buffer,
+                    (uint8_t*)telemetry_1024b,
+                    sizeof(telemetry_1024b) - 1,
+                    0);
+            debug_printGood("AZURE: 1KB payload #%d of %d", 
+                    payload_num++, NUM_PAYLOAD_CHUNKS);
+        }
     }
 
     return rc;
@@ -1847,44 +1866,44 @@ bool send_telemetry_from_uart(int cmdIndex, char* data)
         }
         break;
 
-        // case 5:
-        // case 6:
-        // {
-        //     // double
-        //     // An IEEE 8-byte floating point
-        //     uint64_t data_d = strtoll(data, 0, 16);
-        //     sprintf(telemetry_name_buffer, "telemetry_Dbl_%d", cmdIndex - 4);
-        //     telemetry_name_span = az_span_create_from_str((char*)telemetry_name_buffer);
-        //     append_json_property_double(&jw, telemetry_name_span, data_d);
-        // }
-        // break;
-        // case 7:
-        // case 8:
-        // {
-        //     // float
-        //     // An IEEE 4-byte floating point
-        //     uint32_t data_l = strtol(data, 0, 16);
+        case 5:
+        case 6:
+        {
+            // double
+            // An IEEE 8-byte floating point
+            uint64_t data_d = strtoll(data, 0, 16);
+            sprintf(telemetry_name_buffer, "telemetry_Dbl_%d", cmdIndex - 4);
+            telemetry_name_span = az_span_create_from_str((char*)telemetry_name_buffer);
+            append_json_property_double(&jw, telemetry_name_span, data_d);
+        }
+        break;
+        case 7:
+        case 8:
+        {
+            // float
+            // An IEEE 4-byte floating point
+            uint32_t data_l = strtol(data, 0, 16);
 
-        //     float negative = ((data_l >> 31) & 0x1) ? -1.0000 : 1.0000;
-        //     uint32_t exponent = (data_l & 0x7F800000) >> 23;
-        //     uint32_t mantissa = data_l &  0x007FFFFF;
+            float negative = ((data_l >> 31) & 0x1) ? -1.0000 : 1.0000;
+            uint32_t exponent = (data_l & 0x7F800000) >> 23;
+            uint32_t mantissa = data_l &  0x007FFFFF;
 
-        //     float data_f = (float)(1.00000 + mantissa  / (2 << 22));
-        //     data_f  = (float)(negative * (data_f * (2 << ((exponent - 127) - 1))));
+            float data_f = (float)(1.00000 + mantissa  / (2 << 22));
+            data_f  = (float)(negative * (data_f * (2 << ((exponent - 127) - 1))));
 
-        //     sprintf(telemetry_name_buffer, "telemetry_Flt_%d", cmdIndex - 6);
-        //     telemetry_name_span = az_span_create_from_str((char*)telemetry_name_buffer);
-        //     append_json_property_float(&jw, telemetry_name_span, data_f);
-        // }
-        // break;
-        // case 9:
-        // {
-        //     // long
-        //     // A signed 8-byte integer
-        //     int64_t data_l = (int64_t)strtoll(data, 0, 16);
-        //     append_json_property_long(&jw, telemetry_name_long, data_l);
-        // }
-        // break;
+            sprintf(telemetry_name_buffer, "telemetry_Flt_%d", cmdIndex - 6);
+            telemetry_name_span = az_span_create_from_str((char*)telemetry_name_buffer);
+            append_json_property_float(&jw, telemetry_name_span, data_f);
+        }
+        break;
+        case 9:
+        {
+            // long
+            // A signed 8-byte integer
+            int64_t data_l = (int64_t)strtoll(data, 0, 16);
+            append_json_property_long(&jw, telemetry_name_long, data_l);
+        }
+        break;
         case 10:
         {
             // bool
@@ -1908,8 +1927,26 @@ bool send_telemetry_from_uart(int cmdIndex, char* data)
         break;
         case 11:
         {
-            // string
-            append_json_property_string(&jw, telemetry_name_string, az_span_create_from_str(data));
+            // string #1
+            append_json_property_string(&jw, telemetry_name_string_1, az_span_create_from_str(data));
+        }
+        break;
+        case 12:
+        {
+            // string #2
+            append_json_property_string(&jw, telemetry_name_string_2, az_span_create_from_str(data));
+        }
+        break;
+        case 13:
+        {
+            // string #3
+            append_json_property_string(&jw, telemetry_name_string_3, az_span_create_from_str(data));
+        }
+        break;
+        case 14:
+        {
+            // string #4
+            append_json_property_string(&jw, telemetry_name_string_4, az_span_create_from_str(data));
         }
         break;
     }
