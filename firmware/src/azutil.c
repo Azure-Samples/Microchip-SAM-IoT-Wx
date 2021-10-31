@@ -34,24 +34,6 @@ static char pnp_property_payload_buffer[512];
 static char command_topic_buffer[128];
 static char command_resp_buffer[128];
 
-#ifdef _ELIMINATE
-static char telemetry_512b[] =
-"\"start--$0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef$--end\"";
-
-static char telemetry_1024b[] =
-"\"start--$0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef$--end\"";
-#endif /* _ELIMINATE */
-
 // Plug and Play Connection Values
 static uint32_t request_id_int = 0;
 static char     request_id_buffer[16];
@@ -496,14 +478,13 @@ az_result send_telemetry_message(void)
 
     if ((telemetry_disable_flag & DISABLE_LIGHT) == 0)
     {
-        light  = APP_GetLightSensorValue();
+        light = APP_GetLightSensorValue();
     }
 
     if ((telemetry_disable_flag & DISABLE_TEMPERATURE) == 0)
     {
-        temp  = APP_GetTempSensorValue();
+        temp = APP_GetTempSensorValue();
     }
-
 
     RETURN_ERR_WITH_MESSAGE_IF_FAILED(
         build_sensor_telemetry_message(&telemetry_payload_span, temp, light),
@@ -524,17 +505,10 @@ az_result send_telemetry_message(void)
 
     if (az_result_succeeded(rc))
     {
-#ifdef _ELIMINATE
-        if (payload_num <= NUM_PAYLOAD_CHUNKS)
-        {
-            CLOUD_publishData((uint8_t*)pnp_telemetry_topic_buffer,
-                    (uint8_t*)telemetry_1024b,
-                    sizeof(telemetry_1024b) - 1,
-                    0);
-            debug_printGood("AZURE: 1KB payload #%d of %d", 
-                    payload_num++, NUM_PAYLOAD_CHUNKS);
-        }
-#endif /* _ELIMINATE */
+        CLOUD_publishData((uint8_t*)pnp_telemetry_topic_buffer,
+                          az_span_ptr(telemetry_payload_span),
+                          az_span_size(telemetry_payload_span),
+                          1);
     }
 
     return rc;
