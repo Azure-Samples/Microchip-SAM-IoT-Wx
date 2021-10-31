@@ -32,7 +32,8 @@
 #define LENGTH_NUMBYTES 2
 #define HEADER_NUMBYTES (COMMAND_NUMBYTES+INDEX_NUMBYTES+LENGTH_NUMBYTES)
 #define PAYLOAD_NUMBYTES 1024
-#define DATAFRAME_NUMBYTES (COMMAND_NUMBYTES+INDEX_NUMBYTES+LENGTH_NUMBYTES+PAYLOAD_NUMBYTES)
+#define NULLCHAR_NUMBYTES 1
+#define DATAFRAME_NUMBYTES (COMMAND_NUMBYTES+INDEX_NUMBYTES+LENGTH_NUMBYTES+PAYLOAD_NUMBYTES+NULLCHAR_NUMBYTES)
 
 #define FRAMEIDX_CMD 0
 #define FRAMEIDX_INDEX 1
@@ -42,11 +43,13 @@
 #define CMDCHAR_TELEMETRY_1 'T'
 #define CMDCHAR_TELEMETRY_2 't'
 
+#define CHAR_NULL '\0'
+
 typedef struct {
-    uint8_t  command; // character(s) corresponding to the specific command
-    uint8_t  index; // index as defined in the parameter table of the command
-    uint16_t length; // length in bytes for the current payload
-    uint8_t *payload; // pointer to the beginning of the payload array
+    uint8_t  command; // single char/byte corresponding to a valid command
+    uint8_t  index;   // index used to reference a specific parameter in the command
+    uint16_t length;  // 16-bit length (in bytes) for the current payload
+    uint8_t *payload; // pointer to the beginning of the payload array/string
 } Data_Frame;
 
 void FRAME_init(void);
