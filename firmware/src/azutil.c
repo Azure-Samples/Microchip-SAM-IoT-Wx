@@ -34,12 +34,12 @@ static char pnp_property_payload_buffer[512];
 static char command_topic_buffer[128];
 static char command_resp_buffer[128];
 
-static int payload_num = 1;
-//static char telemetry_512b[] =
-//"\"start--$0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-//"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-//"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-//"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef$--end\"";
+#ifdef _ELIMINATE
+static char telemetry_512b[] =
+"\"start--$0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef$--end\"";
 
 static char telemetry_1024b[] =
 "\"start--$0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
@@ -50,6 +50,7 @@ static char telemetry_1024b[] =
 "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef$--end\"";
+#endif /* _ELIMINATE */
 
 // Plug and Play Connection Values
 static uint32_t request_id_int = 0;
@@ -523,6 +524,7 @@ az_result send_telemetry_message(void)
 
     if (az_result_succeeded(rc))
     {
+#ifdef _ELIMINATE
         if (payload_num <= NUM_PAYLOAD_CHUNKS)
         {
             CLOUD_publishData((uint8_t*)pnp_telemetry_topic_buffer,
@@ -532,6 +534,7 @@ az_result send_telemetry_message(void)
             debug_printGood("AZURE: 1KB payload #%d of %d", 
                     payload_num++, NUM_PAYLOAD_CHUNKS);
         }
+#endif /* _ELIMINATE */
     }
 
     return rc;

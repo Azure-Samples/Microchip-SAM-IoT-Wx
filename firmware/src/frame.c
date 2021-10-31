@@ -21,39 +21,50 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-
-#include <stddef.h>        // Defines NULL
-#include <stdbool.h>       // Defines true
-#include <stdlib.h>        // Defines EXIT_FAILURE
-#include "definitions.h"   // SYS function prototypes
 #include "frame.h"
+#include "led.h"
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Main Entry Point
+// Section: Global Variables
 // *****************************************************************************
 // *****************************************************************************
+uint8_t  FRAME_buffer[DATAFRAME_NUMBYTES];
+uint16_t FRAME_index = 0;
+Data_Frame APP_rxDataFrame;
 
-int main(void)
+// *****************************************************************************
+// *****************************************************************************
+// Section: Helper Functions
+// *****************************************************************************
+// *****************************************************************************
+static void SERCOM0_callback(uintptr_t context)
 {
-    /* Initialize all modules */
-    SYS_Initialize(NULL);
-
-    /* Initialize Frame module for Dedicated Telemetry Interface (DTI) */
-    FRAME_init();  
-        
-    while (true)
+    if ( (FRAME_buffer[FRAMEIDX_CMD] == CMDCHAR_TELEMETRY_1) || 
+         (FRAME_buffer[FRAMEIDX_CMD] == CMDCHAR_TELEMETRY_2) )
     {
-        /* Maintain state machines of all polled MPLAB Harmony modules. */
-        SYS_Tasks();
+        if (FRAME_index == HEADER_NUMBYTES)
+        {
+            APP_rxDataFrame.length = ( (FRAME_buffer[FRAMEIDX_LENMSB] << 8) + 
+                    FRAME_buffer[FRAMEIDX_LENLSB] );
+        }
+        if (FRAME_index == (HEADER_NUMBYTES + APP_rxDataFrame.length))
+        {
+            APP_rxDataFrame.command = FRAME_buffer[FRAMEIDX_CMD];
+            APP_rxDataFrame.index = FRAME_buffer[FRAMEIDX_INDEX];
+            APP_rxDataFrame.payload = &FRAME_buffer[HEADER_NUMBYTES];
+            FRAME_index = 0;
+            LED_RED_Toggle_EX();
+        }
     }
-
-    /* Execution should not come here during normal operation */
-
-    return (EXIT_FAILURE);
 }
 
+void FRAME_init(void)
+{
+    SERCOM0_SPI_CallbackRegister(&SERCOM0_callback, (uintptr_t)NULL);
+}
 
 /*******************************************************************************
  End of File
 */
+
