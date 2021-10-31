@@ -39,9 +39,6 @@ int main(void)
     /* Initialize all modules */
     SYS_Initialize(NULL);
 
-    /* Initialize Frame module for Dedicated Telemetry Interface (DTI) */
-    FRAME_init();  
-        
     while (true)
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
