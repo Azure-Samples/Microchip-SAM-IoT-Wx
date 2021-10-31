@@ -35,11 +35,13 @@
 #define NULLCHAR_NUMBYTES 1
 #define DATAFRAME_NUMBYTES (COMMAND_NUMBYTES+INDEX_NUMBYTES+LENGTH_NUMBYTES+PAYLOAD_NUMBYTES+NULLCHAR_NUMBYTES)
 
+/* Indeces pointing to specific locations in the data frame */
 #define FRAMEIDX_CMD 0
 #define FRAMEIDX_INDEX 1
 #define FRAMEIDX_LENMSB 2
 #define FRAMEIDX_LENLSB 3
 
+/* Valid command byte values */
 #define CMDCHAR_TELEMETRY_1 'T'
 #define CMDCHAR_TELEMETRY_2 't'
 

@@ -5,15 +5,11 @@
     Microchip Technology Inc.
 
   File Name:
-    main.c
+    frame.c
 
   Summary:
-    This file contains the "main" function for a project.
+    This file contains the functions for the FRAME software module.
 
-  Description:
-    This file contains the "main" function for a project.  The
-    "main" function calls the "SYS_Initialize" function to initialize the state
-    machines of all modules in the system
  *******************************************************************************/
 
 // *****************************************************************************
