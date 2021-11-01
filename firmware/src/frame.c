@@ -42,6 +42,12 @@ static void SERCOM0_callback(uintptr_t context)
          (FRAME_buffer[FRAME_pIDX_CMD] == FRAME_CMDCHAR_TELEMETRY_2) )
     // Did we receive a valid command byte at the start of the incoming buffer?
     {
+        APP_rxDataFrame.command = FRAME_buffer[FRAME_pIDX_CMD];
+        if (FRAME_index == (FRAME_pIDX_INDEX + 1))
+        // Did we just receive the index parameter?
+        {
+            APP_rxDataFrame.index = FRAME_buffer[FRAME_pIDX_INDEX];
+        }
         if (FRAME_index == FRAME_HEADER_NUMBYTES)
         // Did we just receive the LSB of the 16-bit length parameter?
         {
@@ -53,8 +59,6 @@ static void SERCOM0_callback(uintptr_t context)
         {
             FRAME_buffer[FRAME_index] = CHAR_NULL; // Terminate the array/string
             FRAME_index = 0; // Reset pointer to the beginning of the buffer
-            APP_rxDataFrame.command = FRAME_buffer[FRAME_pIDX_CMD];
-            APP_rxDataFrame.index = FRAME_buffer[FRAME_pIDX_INDEX];
             APP_rxDataFrame.payload = &FRAME_buffer[FRAME_HEADER_NUMBYTES];
             process_telemetry_command(APP_rxDataFrame.index, (char*)APP_rxDataFrame.payload);
         }
