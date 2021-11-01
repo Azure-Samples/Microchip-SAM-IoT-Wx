@@ -56,8 +56,8 @@
 
 #define TELEMETRY_INDEX_MAX 14
 
-const char* const cli_version_number      = "1.0";
-const char* const firmware_version_number = "1.0.0";
+const char* const cli_version_number      = "2.0";
+const char* const firmware_version_number = "2.0.0";
 static char*      ateccsn                 = NULL;
 
 static void reconnect_cmd(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
@@ -344,7 +344,7 @@ static void show_send_telemetry_help(SYS_CMD_DEVICE_NODE* pCmdIO)
     (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 7~8: Update Float in hex (4 bytes) [e.g. telemetry 8,418345E1]");
     (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 9: Update Long in hex (8 bytes max) [e.g. telemetry 9,CAFE1234BEEF5678]");
     (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 10: Update Boolean (true/false) [e.g. telemetry 10,true]");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 11~14: Update String (no spaces, 44 chars max) [e.g. telemetry 13,Hello_World!!!]");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 11~14: Update String (no spaces, 67 chars max) [e.g. telemetry 13,Hello_World!!!]");
 }
 
 static void send_telemetry(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
@@ -420,7 +420,7 @@ static void send_telemetry(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
                     case 14:                        
                     {
                         //(*pCmdIO->pCmdApi->print)(cmdIoParam, LINE_TERM "Command Data : %s\r\n\4", chCmdData);
-                        send_telemetry_from_uart(cmdIndex, chCmdData);
+                        process_telemetry_command(cmdIndex, chCmdData);
                         break;
                     }
                         break;

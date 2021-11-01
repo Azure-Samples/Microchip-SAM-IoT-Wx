@@ -25,9 +25,9 @@ userdata_status_t userdata_status;
 static char pnp_telemetry_topic_buffer[128];
 static char pnp_telemetry_payload_buffer[128];
 
-// use another set of buffers in case two telemetry collides.
+// use another set of buffers in case two telemetry collides
 static char pnp_uart_telemetry_topic_buffer[128];
-static char pnp_uart_telemetry_payload_buffer[128];
+static char pnp_uart_telemetry_payload_buffer[128+FRAME_PAYLOAD_NUMBYTES];
 
 static char pnp_property_topic_buffer[128];
 static char pnp_property_payload_buffer[512];
@@ -1817,7 +1817,7 @@ az_result send_reported_property(
     return rc;
 }
 
-bool send_telemetry_from_uart(int cmdIndex, char* data)
+bool process_telemetry_command(int cmdIndex, char* data)
 {
     az_result      rc = AZ_OK;
     az_json_writer jw;
