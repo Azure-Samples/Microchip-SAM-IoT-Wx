@@ -47,6 +47,7 @@
 #include "m2m_wifi.h"
 #include "services/iot/cloud/mqtt_packetPopulation/mqtt_iotprovisioning_packetPopulate.h"
 #include "azutil.h"
+#include "frame.h"
 
 #define MAX_PUB_KEY_LEN  200
 #define WIFI_PARAMS_OPEN 1
@@ -336,13 +337,14 @@ static void show_send_telemetry_help(SYS_CMD_DEVICE_NODE* pCmdIO)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Send Telemetry <Index>,<Data>");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " Index | Data                                | Example");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  1~4  | Signed integer in hex (4 bytes max) | telemetry 2,CAFEBEEF");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  5~6  | Double in hex (8 bytes)             | telemetry 5,F537A021CF015B44");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  7~8  | Float in hex (4 bytes)              | telemetry 8,418345E1");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "  9    | Long in hex (8 bytes max)           | telemetry 9,CAFE1234BEEF5678");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 10    | Boolean, true/false                 | telemetry 10,true");
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 11~14 | String (no spaces, 68 chars max)    | telemetry 13,\"Hello_World!!!\"\r\n");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " Index: Action [Example]");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 0: Reset Dedicated Telemetry Interface (DTI) [e.g. telemetry 0,0]");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 1~4: Update Signed Integer in hex (4 bytes max) [e.g. telemetry 2,CAFEBEEF]");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 5~6: Update Double in hex (8 bytes) [e.g. telemetry 5,F537A021CF015B44]");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 7~8: Update Float in hex (4 bytes) [e.g. telemetry 8,418345E1]");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 9: Update Long in hex (8 bytes max) [e.g. telemetry 9,CAFE1234BEEF5678]");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 10: Update Boolean (true/false) [e.g. telemetry 10,true]");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " 11~14: Update String (no spaces, 44 chars max) [e.g. telemetry 13,Hello_World!!!]");
 }
 
 static void send_telemetry(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
@@ -388,7 +390,7 @@ static void send_telemetry(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
                 (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command parameter\r\n\4");
                 show_send_telemetry_help(pCmdIO);
             }
-            else if (cmdIndex < 1 || cmdIndex > TELEMETRY_INDEX_MAX)
+            else if (cmdIndex > TELEMETRY_INDEX_MAX)
             {
                 (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command index parameter\r\n\4");
                 show_send_telemetry_help(pCmdIO);
@@ -399,6 +401,9 @@ static void send_telemetry(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
                 switch (cmdIndex)
                 {
+                    case 0:
+                        FRAME_index = 0;
+                    break;
                     case 1:
                     case 2:
                     case 3:
@@ -422,7 +427,7 @@ static void send_telemetry(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
                     default:
                         (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Invalid command index parameter.\r\n\4");
                         show_send_telemetry_help(pCmdIO);
-                        break;
+                    break;
                 }
             }
         }

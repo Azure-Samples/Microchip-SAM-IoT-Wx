@@ -17,6 +17,7 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
+#include "definitions.h"
 #include "frame.h"
 #include "led.h"
 #include "azutil.h"
@@ -56,7 +57,6 @@ static void SERCOM0_callback(uintptr_t context)
             APP_rxDataFrame.index = FRAME_buffer[FRAMEIDX_INDEX];
             APP_rxDataFrame.payload = &FRAME_buffer[HEADER_NUMBYTES];
             LED_RED_Toggle_EX();
-            //send_telemetry_from_uart(APP_rxDataFrame.index, "Hello world!");
             send_telemetry_from_uart(APP_rxDataFrame.index, (char*)APP_rxDataFrame.payload);
         }
     }

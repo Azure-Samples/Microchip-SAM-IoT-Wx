@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 #include "azutil.h"
+#include "frame.h"
 #include "nmdrv.h"
 #include "config/SAMD21_WG_IOT/peripheral/sercom/usart/plib_sercom5_usart.h"
 
@@ -1829,6 +1830,11 @@ bool send_telemetry_from_uart(int cmdIndex, char* data)
 
     switch (cmdIndex)
     {
+        case 0:
+            // Reset the FRAME buffer pointer to the start of the array
+            FRAME_index = 0;
+            return true;
+        break;
         case 1:
         case 2:
         case 3:

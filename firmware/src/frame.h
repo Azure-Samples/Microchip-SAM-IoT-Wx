@@ -19,7 +19,6 @@
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include <string.h>                     // Defines memcpy()
-#include "definitions.h"                // SYS function prototypes
 
 // *****************************************************************************
 // *****************************************************************************
@@ -46,6 +45,8 @@
 #define CMDCHAR_TELEMETRY_2 't'
 
 #define CHAR_NULL '\0'
+
+extern uint16_t FRAME_index;
 
 typedef struct {
     uint8_t  command; // single char/byte corresponding to a valid command
