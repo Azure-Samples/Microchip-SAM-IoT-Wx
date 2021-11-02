@@ -61,6 +61,7 @@ static void SERCOM0_callback(uintptr_t context)
             FRAME_index = 0; // Reset pointer to the beginning of the buffer
             APP_rxDataFrame.payload = &FRAME_buffer[FRAME_HEADER_NUMBYTES];
             process_telemetry_command(APP_rxDataFrame.index, (char*)APP_rxDataFrame.payload);
+            LED_RED_Toggle_EX();
         }
     }
 }
