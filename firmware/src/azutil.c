@@ -27,7 +27,7 @@ static char pnp_telemetry_payload_buffer[128];
 
 // use another set of buffers in case two telemetry collides
 static char pnp_uart_telemetry_topic_buffer[128];
-static char pnp_uart_telemetry_payload_buffer[128+FRAME_PAYLOAD_NUMBYTES];
+static char pnp_uart_telemetry_payload_buffer[128+FRAME_PAYLOADDATA_NUMBYTES];
 
 static char pnp_property_topic_buffer[128];
 static char pnp_property_payload_buffer[512];
@@ -1832,7 +1832,7 @@ bool process_telemetry_command(int cmdIndex, char* data)
     {
         case 0:
             // Reset the FRAME buffer pointer to the start of the array
-            FRAME_index = 0;
+            FRAME_bufferPtr = 0;
             return true;
         break;
         case 1:

@@ -402,7 +402,7 @@ static void send_telemetry(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
                 switch (cmdIndex)
                 {
                     case 0:
-                        FRAME_index = 0;
+                        FRAME_bufferPtr = 0;
                     break;
                     case 1:
                     case 2:

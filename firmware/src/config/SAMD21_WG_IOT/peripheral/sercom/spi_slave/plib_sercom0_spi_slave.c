@@ -47,9 +47,16 @@
 
 #include "plib_sercom0_spi_slave.h"
 #include <string.h>
+#include "../../azutil.h"
+#include "../../frame.h"
 #include "../../led.h"
-extern uint8_t FRAME_buffer[];
-extern uint16_t FRAME_index;
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Global Variables
+// *****************************************************************************
+// *****************************************************************************
+uint16_t FRAME_bufferPtr = 0;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -61,6 +68,7 @@ extern uint16_t FRAME_index;
 
 static uint8_t SERCOM0_SPI_ReadBuffer[SERCOM0_SPI_READ_BUFFER_SIZE];
 static uint8_t SERCOM0_SPI_WriteBuffer[SERCOM0_SPI_WRITE_BUFFER_SIZE];
+static uint8_t FRAME_buffer[FRAME_MAXTOTAL_NUMBYTES];
 
 /* Global object to save SPI Exchange related data  */
 static SPI_SLAVE_OBJECT sercom0SPISObj;
@@ -234,14 +242,50 @@ void SERCOM0_SPI_InterruptHandler(void)
 
     if(SERCOM0_REGS->SPIS.SERCOM_INTFLAG & SERCOM_SPIS_INTFLAG_RXC_Msk)
     {
-
         /* Reading DATA register will also clear the RXC flag */
         txRxData = SERCOM0_REGS->SPIS.SERCOM_DATA;
-
+        
+        /***** [---START---] FRAME Module Processing [---START---] *****/
+        // Save the current received data byte into buffer
+        FRAME_buffer[FRAME_bufferPtr] = txRxData;
+        // Did we just receive the command character?
+        if (FRAME_bufferPtr == FRAME_pIDX_CMDCHAR)
+        {
+            FRAME_parsedInfo.commandChar = txRxData;
+        }
+        // Did we just receive the parameter1 byte?
+        if (FRAME_bufferPtr == FRAME_pIDX_PARAM1)
+        {
+            FRAME_parsedInfo.parameter1 = txRxData;
+        }
+        // Did we just receive the LSB of the 16-bit length parameter?
+        if (FRAME_bufferPtr == FRAME_pIDX_PAYLENLSB)
+        {
+            FRAME_parsedInfo.payloadLen = ( (FRAME_buffer[FRAME_pIDX_PAYLENMSB] << 8) + txRxData);
+        }
+        // Increment pointer for next incoming byte
+        FRAME_bufferPtr++;
+        
+        // Did we just receive the final byte of the payload data?
+        if (FRAME_bufferPtr == (FRAME_HEADER_NUMBYTES + FRAME_parsedInfo.payloadLen))
+        {
+            FRAME_buffer[FRAME_bufferPtr] = CHAR_NULL; // Terminate the array/string
+            FRAME_bufferPtr = 0; // Reset pointer to the beginning of the buffer
+            FRAME_parsedInfo.payloadData = &FRAME_buffer[FRAME_HEADER_NUMBYTES];
+            FRAME_parsedInfo.processRqst = true;
+            if ( (FRAME_parsedInfo.commandChar == FRAME_CMDCHAR_TELEMETRY_1) || 
+                 (FRAME_parsedInfo.commandChar == FRAME_CMDCHAR_TELEMETRY_2) )
+            {
+                    process_telemetry_command(FRAME_parsedInfo.parameter1, 
+                            (char*)FRAME_parsedInfo.payloadData);
+                    LED_RED_Toggle_EX();
+            }
+        }
+        /****** [---END---] FRAME Module Processing [---END---] ********/
+        
         if (sercom0SPISObj.rdInIndex < SERCOM0_SPI_READ_BUFFER_SIZE)
         {
             SERCOM0_SPI_ReadBuffer[sercom0SPISObj.rdInIndex++] = txRxData;
-            FRAME_buffer[FRAME_index++] = txRxData;
         }
     }
 

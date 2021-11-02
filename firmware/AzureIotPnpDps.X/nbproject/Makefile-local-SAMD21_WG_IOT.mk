@@ -35,4 +35,9 @@ MP_AS_DIR="C:\Program Files\Microchip\xc32\v3.01\bin"
 MP_LD_DIR="C:\Program Files\Microchip\xc32\v3.01\bin"
 MP_AR_DIR="C:\Program Files\Microchip\xc32\v3.01\bin"
 # MP_BC_DIR is not defined
+<<<<<<< Updated upstream
 CMSIS_DIR=C:/Program Files/Microchip/MPLABX/v5.50/packs/arm/CMSIS/5.4.0
+=======
+DFP_DIR=/Users/c14166/.mchp_packs/Microchip/SAMD21_DFP/3.5.132
+CMSIS_DIR=/Applications/microchip/mplabx/v5.50/packs/arm/CMSIS/5.4.0
+>>>>>>> Stashed changes
