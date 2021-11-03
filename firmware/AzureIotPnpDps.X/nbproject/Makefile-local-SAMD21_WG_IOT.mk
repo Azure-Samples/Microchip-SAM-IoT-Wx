@@ -14,30 +14,25 @@
 # You can invoke make with the values of the macros:
 # $ makeMP_CC="/opt/microchip/mplabc30/v3.30c/bin/pic30-gcc" ...  
 #
-SHELL=cmd.exe
-PATH_TO_IDE_BIN=C:/Program Files/Microchip/MPLABX/v5.50/mplab_platform/platform/../mplab_ide/modules/../../bin/
+PATH_TO_IDE_BIN=/Applications/microchip/mplabx/v5.50/mplab_platform/platform/../mplab_ide/modules/../../bin/
 # Adding MPLAB X bin directory to path.
-PATH:=C:/Program Files/Microchip/MPLABX/v5.50/mplab_platform/platform/../mplab_ide/modules/../../bin/:$(PATH)
+PATH:=/Applications/microchip/mplabx/v5.50/mplab_platform/platform/../mplab_ide/modules/../../bin/:$(PATH)
 # Path to java used to run MPLAB X when this makefile was created
-MP_JAVA_PATH="C:\Program Files\Microchip\MPLABX\v5.50\sys\java\zulu8.40.0.25-ca-fx-jre8.0.222-win_x64/bin/"
+MP_JAVA_PATH="/Applications/microchip/mplabx/v5.50/sys/java/zulu8.48.0.53-ca-fx-jre8.0.265-macosx_x64/zulu-8.jre/Contents/Home/bin/"
 OS_CURRENT="$(shell uname -s)"
-MP_CC="C:\Program Files\Microchip\xc32\v3.01\bin\xc32-gcc.exe"
-MP_CPPC="C:\Program Files\Microchip\xc32\v3.01\bin\xc32-g++.exe"
+MP_CC="/Applications/microchip/xc32/v3.01/bin/xc32-gcc"
+MP_CPPC="/Applications/microchip/xc32/v3.01/bin/xc32-g++"
 # MP_BC is not defined
-MP_AS="C:\Program Files\Microchip\xc32\v3.01\bin\xc32-as.exe"
-MP_LD="C:\Program Files\Microchip\xc32\v3.01\bin\xc32-ld.exe"
-MP_AR="C:\Program Files\Microchip\xc32\v3.01\bin\xc32-ar.exe"
-DEP_GEN=${MP_JAVA_PATH}java -jar "C:/Program Files/Microchip/MPLABX/v5.50/mplab_platform/platform/../mplab_ide/modules/../../bin/extractobjectdependencies.jar"
-MP_CC_DIR="C:\Program Files\Microchip\xc32\v3.01\bin"
-MP_CPPC_DIR="C:\Program Files\Microchip\xc32\v3.01\bin"
+MP_AS="/Applications/microchip/xc32/v3.01/bin/xc32-as"
+MP_LD="/Applications/microchip/xc32/v3.01/bin/xc32-ld"
+MP_AR="/Applications/microchip/xc32/v3.01/bin/xc32-ar"
+DEP_GEN=${MP_JAVA_PATH}java -jar "/Applications/microchip/mplabx/v5.50/mplab_platform/platform/../mplab_ide/modules/../../bin/extractobjectdependencies.jar"
+MP_CC_DIR="/Applications/microchip/xc32/v3.01/bin"
+MP_CPPC_DIR="/Applications/microchip/xc32/v3.01/bin"
 # MP_BC_DIR is not defined
-MP_AS_DIR="C:\Program Files\Microchip\xc32\v3.01\bin"
-MP_LD_DIR="C:\Program Files\Microchip\xc32\v3.01\bin"
-MP_AR_DIR="C:\Program Files\Microchip\xc32\v3.01\bin"
+MP_AS_DIR="/Applications/microchip/xc32/v3.01/bin"
+MP_LD_DIR="/Applications/microchip/xc32/v3.01/bin"
+MP_AR_DIR="/Applications/microchip/xc32/v3.01/bin"
 # MP_BC_DIR is not defined
-<<<<<<< Updated upstream
-CMSIS_DIR=C:/Program Files/Microchip/MPLABX/v5.50/packs/arm/CMSIS/5.4.0
-=======
 DFP_DIR=/Users/c14166/.mchp_packs/Microchip/SAMD21_DFP/3.5.132
 CMSIS_DIR=/Applications/microchip/mplabx/v5.50/packs/arm/CMSIS/5.4.0
->>>>>>> Stashed changes
