@@ -1,6 +1,6 @@
 format_version: v1.0
 type: UniqueComponent
-attributes: {id: sercom4}
+attributes: {id: sercom0}
 children:
 - type: Symbols
   children:
@@ -10,29 +10,16 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: sercom4, value: '232'}
-  - type: String
-    attributes: {id: RECEIVE_DATA_REGISTER}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: sercom4, value: '&(SERCOM4_REGS->SPIM.SERCOM_DATA)'}
+        attributes: {id: sercom0, value: '232'}
   - type: KeyValueSet
     attributes: {id: SERCOM_MODE}
     children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: readOnly}
-        children:
-        - {type: Value, value: 'true'}
     - type: Values
       children:
-      - type: Dynamic
-        attributes: {id: sercom4, value: '1'}
+      - type: User
+        attributes: {value: '4'}
   - type: File
-    attributes: {id: SERCOM_SPIM_COMMON_HEADER}
+    attributes: {id: SERCOM_SPIS_COMMON_HEADER}
     children:
     - type: Attributes
       children:
@@ -41,7 +28,7 @@ children:
         children:
         - {type: Value, value: 'true'}
   - type: File
-    attributes: {id: SERCOM_SPIM_HEADER}
+    attributes: {id: SERCOM_SPIS_HEADER}
     children:
     - type: Attributes
       children:
@@ -50,7 +37,7 @@ children:
         children:
         - {type: Value, value: 'true'}
   - type: File
-    attributes: {id: SERCOM_SPIM_SOURCE}
+    attributes: {id: SERCOM_SPIS_SOURCE}
     children:
     - type: Attributes
       children:
@@ -85,24 +72,26 @@ children:
         attributes: {id: enabled}
         children:
         - {type: Value, value: 'false'}
-  - type: Integer
-    attributes: {id: SPI_BAUD_RATE}
+  - type: KeyValueSet
+    attributes: {id: SPIS_BUSY_PIN}
     children:
     - type: Attributes
       children:
       - type: Boolean
         attributes: {id: visible}
         children:
-        - {type: Value, value: 'true'}
-  - type: Integer
-    attributes: {id: SPI_BAUD_REG_VALUE}
-    children:
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: sercom4, value: '23'}
+        - {type: Value, value: 'false'}
   - type: KeyValueSet
-    attributes: {id: SPI_CHARSIZE_BITS}
+    attributes: {id: SPIS_BUSY_PIN_LOGIC_LEVEL}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'false'}
+  - type: KeyValueSet
+    attributes: {id: SPIS_CHARSIZE_BITS}
     children:
     - type: Attributes
       children:
@@ -111,43 +100,20 @@ children:
         children:
         - {type: Value, value: 'true'}
   - type: Comment
-    attributes: {id: SPI_CLOCK_MODE_COMMENT}
+    attributes: {id: SPIS_CLOCK_MODE_COMMENT}
     children:
     - type: Attributes
       children:
+      - type: String
+        attributes: {id: text}
+        children:
+        - {type: Value, value: '***SPI Transfer Mode 1 is Selected***'}
       - type: Boolean
         attributes: {id: visible}
         children:
         - {type: Value, value: 'true'}
   - type: KeyValueSet
-    attributes: {id: SPI_CLOCK_PHASE}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'true'}
-  - type: KeyValueSet
-    attributes: {id: SPI_CLOCK_POLARITY}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'true'}
-  - type: KeyValueSet
-    attributes: {id: SPI_DATA_ORDER}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'true'}
-  - type: KeyValueSet
-    attributes: {id: SPI_DIPO}
+    attributes: {id: SPIS_CLOCK_PHASE}
     children:
     - type: Attributes
       children:
@@ -158,9 +124,9 @@ children:
     - type: Values
       children:
       - type: User
-        attributes: {value: '3'}
+        attributes: {value: '1'}
   - type: KeyValueSet
-    attributes: {id: SPI_DOPO}
+    attributes: {id: SPIS_CLOCK_POLARITY}
     children:
     - type: Attributes
       children:
@@ -168,8 +134,8 @@ children:
         attributes: {id: visible}
         children:
         - {type: Value, value: 'true'}
-  - type: Boolean
-    attributes: {id: SPI_INTERRUPT_MODE}
+  - type: KeyValueSet
+    attributes: {id: SPIS_DATA_ORDER}
     children:
     - type: Attributes
       children:
@@ -177,12 +143,8 @@ children:
         attributes: {id: visible}
         children:
         - {type: Value, value: 'true'}
-    - type: Values
-      children:
-      - type: Dynamic
-        attributes: {id: sercom4, value: 'true'}
-  - type: Boolean
-    attributes: {id: SPI_MSSEN}
+  - type: KeyValueSet
+    attributes: {id: SPIS_DIPO}
     children:
     - type: Attributes
       children:
@@ -193,9 +155,22 @@ children:
     - type: Values
       children:
       - type: User
-        attributes: {value: 'true'}
+        attributes: {value: '0'}
+  - type: KeyValueSet
+    attributes: {id: SPIS_DOPO}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '2'}
   - type: Boolean
-    attributes: {id: SPI_RECIEVER_ENABLE}
+    attributes: {id: SPIS_INTERRUPT_MODE}
     children:
     - type: Attributes
       children:
@@ -204,7 +179,7 @@ children:
         children:
         - {type: Value, value: 'true'}
   - type: Boolean
-    attributes: {id: SPI_RUNSTDBY}
+    attributes: {id: SPIS_RUNSTDBY}
     children:
     - type: Attributes
       children:
@@ -212,13 +187,66 @@ children:
         attributes: {id: visible}
         children:
         - {type: Value, value: 'true'}
-  - type: String
-    attributes: {id: TRANSMIT_DATA_REGISTER}
+  - type: Integer
+    attributes: {id: SPIS_RX_BUFFER_SIZE}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '128'}
+  - type: Comment
+    attributes: {id: SPIS_SLAVE_BUSY_PIN_CONFIG_COMMENT}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'false'}
+  - type: Boolean
+    attributes: {id: SPIS_SSDE}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Integer
+    attributes: {id: SPIS_TX_BUFFER_SIZE}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+  - type: Boolean
+    attributes: {id: SPIS_USE_BUSY_PIN}
+    children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'true'}
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: 'false'}
+  - type: Integer
+    attributes: {id: SPI_BAUD_REG_VALUE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: sercom4, value: '&(SERCOM4_REGS->SPIM.SERCOM_DATA)'}
+        attributes: {id: sercom0, value: '23'}
   - type: Integer
     attributes: {id: USART_BAUD_RATE}
     children:
@@ -234,7 +262,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: sercom4, value: '63019'}
+        attributes: {id: sercom0, value: '63019'}
   - type: KeyValueSet
     attributes: {id: USART_CHARSIZE_BITS}
     children:
@@ -247,10 +275,16 @@ children:
   - type: KeyValueSet
     attributes: {id: USART_FORM}
     children:
+    - type: Attributes
+      children:
+      - type: Boolean
+        attributes: {id: visible}
+        children:
+        - {type: Value, value: 'false'}
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: sercom4, value: '0'}
+        attributes: {id: sercom0, value: '0'}
   - type: Boolean
     attributes: {id: USART_INTERRUPT_MODE}
     children:
@@ -266,7 +300,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: sercom4, value: 'false'}
+        attributes: {id: sercom0, value: 'false'}
   - type: KeyValueSet
     attributes: {id: USART_PARITY_MODE}
     children:
@@ -318,14 +352,14 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: sercom4, value: '16'}
+        attributes: {id: sercom0, value: '16'}
   - type: Integer
     attributes: {id: USART_SAMPLE_RATE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: sercom4, value: '0'}
+        attributes: {id: sercom0, value: '0'}
   - type: KeyValueSet
     attributes: {id: USART_STOP_BIT}
     children:
@@ -353,38 +387,5 @@ children:
         attributes: {id: visible}
         children:
         - {type: Value, value: 'false'}
-- type: Attachments
-  children:
-  - type: DirectCapability
-    attributes: {id: SERCOM4_I2C}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: enabled}
-        children:
-        - {type: Value, value: 'false'}
-  - type: DirectCapability
-    attributes: {id: SERCOM4_SPI}
-    children:
-    - type: Attributes
-      children:
-      - type: String
-        attributes: {id: targetComponentID}
-        children:
-        - {type: Value, value: drv_spi_0}
-      - type: String
-        attributes: {id: targetAttachmentID}
-        children:
-        - {type: Value, value: drv_spi_SPI_dependency}
-  - type: DirectCapability
-    attributes: {id: SERCOM4_UART}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: enabled}
-        children:
-        - {type: Value, value: 'false'}
 - type: ElementPosition
-  attributes: {x: '0', y: '274', id: sercom4}
+  attributes: {x: '510', y: '379', id: sercom0}

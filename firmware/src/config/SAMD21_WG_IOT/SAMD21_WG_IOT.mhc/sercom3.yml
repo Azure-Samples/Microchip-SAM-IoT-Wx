@@ -11,55 +11,13 @@ children:
       children:
       - type: Dynamic
         attributes: {id: sercom3, value: '232'}
-  - type: KeyValueSet
-    attributes: {id: I2CM_MODE}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'true'}
-  - type: Integer
-    attributes: {id: I2CM_TRISE}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'true'}
-  - type: Boolean
-    attributes: {id: I2C_ADDR_TENBITEN}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'true'}
   - type: Integer
     attributes: {id: I2C_CLOCK_SPEED}
     children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'true'}
     - type: Values
       children:
       - type: User
         attributes: {value: '100'}
-  - type: Boolean
-    attributes: {id: I2C_RUNSTDBY}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'true'}
   - type: Integer
     attributes: {id: I2C_SCLSM}
     children:
@@ -67,15 +25,6 @@ children:
       children:
       - type: Dynamic
         attributes: {id: sercom3, value: '0'}
-  - type: KeyValueSet
-    attributes: {id: I2C_SDAHOLD_TIME}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'true'}
   - type: String
     attributes: {id: RECEIVE_DATA_REGISTER}
     children:
@@ -113,43 +62,10 @@ children:
   - type: KeyValueSet
     attributes: {id: SERCOM_MODE}
     children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: readOnly}
-        children:
-        - {type: Value, value: 'true'}
     - type: Values
       children:
       - type: Dynamic
         attributes: {id: sercom3, value: '2'}
-  - type: File
-    attributes: {id: SERCOM_USART_COMMON_HEADER}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: enabled}
-        children:
-        - {type: Value, value: 'false'}
-  - type: File
-    attributes: {id: SERCOM_USART_HEADER}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: enabled}
-        children:
-        - {type: Value, value: 'false'}
-  - type: File
-    attributes: {id: SERCOM_USART_SOURCE}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: enabled}
-        children:
-        - {type: Value, value: 'false'}
   - type: Integer
     attributes: {id: SPI_BAUD_REG_VALUE}
     children:
@@ -165,15 +81,6 @@ children:
       - type: Dynamic
         attributes: {id: sercom3, value: ''}
   - type: Integer
-    attributes: {id: USART_BAUD_RATE}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'false'}
-  - type: Integer
     attributes: {id: USART_BAUD_VALUE}
     children:
     - type: Values
@@ -181,36 +88,12 @@ children:
       - type: Dynamic
         attributes: {id: sercom3, value: '63019'}
   - type: KeyValueSet
-    attributes: {id: USART_CHARSIZE_BITS}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'false'}
-  - type: KeyValueSet
     attributes: {id: USART_FORM}
     children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'false'}
     - type: Values
       children:
       - type: Dynamic
         attributes: {id: sercom3, value: '0'}
-  - type: Boolean
-    attributes: {id: USART_INTERRUPT_MODE}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'false'}
   - type: Boolean
     attributes: {id: USART_LIN_MASTER_SUPPORTED}
     children:
@@ -218,51 +101,6 @@ children:
       children:
       - type: Dynamic
         attributes: {id: sercom3, value: 'false'}
-  - type: KeyValueSet
-    attributes: {id: USART_PARITY_MODE}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'false'}
-  - type: Boolean
-    attributes: {id: USART_RING_BUFFER_ENABLE}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'false'}
-  - type: Boolean
-    attributes: {id: USART_RUNSTDBY}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'false'}
-  - type: KeyValueSet
-    attributes: {id: USART_RXPO}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'false'}
-  - type: Boolean
-    attributes: {id: USART_RX_ENABLE}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'false'}
   - type: Integer
     attributes: {id: USART_SAMPLE_COUNT}
     children:
@@ -277,33 +115,6 @@ children:
       children:
       - type: Dynamic
         attributes: {id: sercom3, value: '0'}
-  - type: KeyValueSet
-    attributes: {id: USART_STOP_BIT}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'false'}
-  - type: KeyValueSet
-    attributes: {id: USART_TXPO}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'false'}
-  - type: Boolean
-    attributes: {id: USART_TX_ENABLE}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: visible}
-        children:
-        - {type: Value, value: 'false'}
 - type: Attachments
   children:
   - type: DirectCapability
@@ -319,23 +130,5 @@ children:
         attributes: {id: targetAttachmentID}
         children:
         - {type: Value, value: ATECC608_DEP_PLIB_I2C}
-  - type: DirectCapability
-    attributes: {id: SERCOM3_SPI}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: enabled}
-        children:
-        - {type: Value, value: 'false'}
-  - type: DirectCapability
-    attributes: {id: SERCOM3_UART}
-    children:
-    - type: Attributes
-      children:
-      - type: Boolean
-        attributes: {id: enabled}
-        children:
-        - {type: Value, value: 'false'}
 - type: ElementPosition
   attributes: {x: '803', y: '210', id: sercom3}
