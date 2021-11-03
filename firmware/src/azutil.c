@@ -29,7 +29,7 @@ static char pnp_telemetry_payload_buffer[128];
 
 // use another set of buffers in case two telemetry collides
 static char pnp_uart_telemetry_topic_buffer[128];
-static char pnp_uart_telemetry_payload_buffer[128+DTI_PAYLOADDATA_NUMBYTES];
+static char pnp_uart_telemetry_payload_buffer[128 + DTI_PAYLOADDATA_NUMBYTES];
 
 static char pnp_property_topic_buffer[128];
 static char pnp_property_payload_buffer[512];
