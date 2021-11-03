@@ -189,7 +189,7 @@ az_result process_device_twin_property(
 
 void update_leds(twin_properties_t* twin_properties);
 
-bool send_telemetry_from_uart(
+bool process_telemetry_command(
     int   cmdIndex,
     char* data);
 

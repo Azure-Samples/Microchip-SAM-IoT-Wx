@@ -50,12 +50,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-/firmware/AzureIotPnpDps.X/build/
-/firmware/AzureIotPnpDps.X/dist/
-/firmware/AzureIotPnpDps.X/.generated_files
-firmware/AzureIotPnpDps.X/nbproject/Makefile-genesis.properties
-firmware/AzureIotPnpDps.X/nbproject/Makefile-local-SAMD21_WG_IOT.mk
-firmware/AzureIotPnpDps.X/nbproject/Makefile-SAMD21_WG_IOT.mk
-firmware/AzureIotPnpDps.X/nbproject/private/configurations.xml
-firmware/AzureIotPnpDps.X/nbproject/private/private.xml
-firmware/AzureIotPnpDps.X/nbproject/configurations.xml
+firmware/AzureIotPnpDps.X/build/
+firmware/AzureIotPnpDps.X/dist/
+firmware/AzureIotPnpDps.X/.generated_files

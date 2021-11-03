@@ -66,7 +66,6 @@
 #include "debug_print.h"
 #include "led.h"
 #include "azutil.h"
-//include "mqtt/mqtt_core/mqtt_core.h"
 #include "services/iot/cloud/mqtt_packetPopulation/mqtt_packetPopulate.h"
 #include "services/iot/cloud/mqtt_packetPopulation/mqtt_iothub_packetPopulate.h"
 #include "services/iot/cloud/mqtt_packetPopulation/mqtt_iotprovisioning_packetPopulate.h"
@@ -105,7 +104,7 @@ void iot_provisioning_completed(void);
 
 #define APP_WIFI_SOFT_AP         0
 #define APP_WIFI_DEFAULT         1
-#define APP_DATATASK_INTERVAL    250L // Each unit is in msec (e.g. 250 msec)
+#define APP_DATATASK_INTERVAL    250L // Each unit is in msec
 #define APP_CLOUDTASK_INTERVAL   APP_DATATASK_INTERVAL
 #define APP_SW_DEBOUNCE_INTERVAL 1460000L
 
