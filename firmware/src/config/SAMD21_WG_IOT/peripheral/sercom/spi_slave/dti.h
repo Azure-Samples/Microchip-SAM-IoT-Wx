@@ -23,7 +23,7 @@
 #define NULLCHAR_NUMBYTES 1
 #define DTI_MAXTOTAL_NUMBYTES (DTI_CMDCHAR_NUMBYTES + DTI_PARAM1_NUMBYTES + DTI_PAYLOADLEN_NUMBYTES + DTI_PAYLOADDATA_NUMBYTES + NULLCHAR_NUMBYTES)
 
-/* Indeces pointing to specific locations in the data frame */
+/* Indices pointing to specific locations in the data frame */
 #define DTI_pIDX_CMDCHAR 0
 #define DTI_pIDX_PARAM1 1
 #define DTI_pIDX_PAYLENMSB 2
