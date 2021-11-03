@@ -66,7 +66,6 @@
 #include "debug_print.h"
 #include "led.h"
 #include "azutil.h"
-#include "frame.h"
 #include "services/iot/cloud/mqtt_packetPopulation/mqtt_packetPopulate.h"
 #include "services/iot/cloud/mqtt_packetPopulation/mqtt_iothub_packetPopulate.h"
 #include "services/iot/cloud/mqtt_packetPopulation/mqtt_iotprovisioning_packetPopulate.h"
@@ -304,9 +303,6 @@ void APP_Initialize(void)
     EIC_InterruptEnable(EIC_PIN_1);
 
     userdata_status.as_uint8 = 0;
-    
-    /* Initialize Frame module for Dedicated Telemetry Interface (DTI) */
-    FRAME_init();  
 }
 
 static void APP_ConnectNotifyCb(DRV_HANDLE handle, WDRV_WINC_CONN_STATE currentState, WDRV_WINC_CONN_ERROR errorCode)

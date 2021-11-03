@@ -47,7 +47,6 @@
 #include "m2m_wifi.h"
 #include "services/iot/cloud/mqtt_packetPopulation/mqtt_iotprovisioning_packetPopulate.h"
 #include "azutil.h"
-#include "frame.h"
 
 #define MAX_PUB_KEY_LEN  200
 #define WIFI_PARAMS_OPEN 1
@@ -72,6 +71,7 @@ static void send_telemetry(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void process_property(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
 extern userdata_status_t userdata_status;
+extern uint16_t DTI_bufferPtr;
 
 #define LINE_TERM "\r\n"
 
@@ -402,7 +402,7 @@ static void send_telemetry(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
                 switch (cmdIndex)
                 {
                     case 0:
-                        FRAME_bufferPtr = 0;
+                        DTI_bufferPtr = 0;
                     break;
                     case 1:
                     case 2:

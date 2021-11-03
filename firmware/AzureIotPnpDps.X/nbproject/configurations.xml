@@ -253,6 +253,7 @@
               <logicalFolder name="f4" displayName="spi_slave" projectFiles="true">
                 <itemPath>../src/config/SAMD21_WG_IOT/peripheral/sercom/spi_slave/plib_sercom0_spi_slave.h</itemPath>
                 <itemPath>../src/config/SAMD21_WG_IOT/peripheral/sercom/spi_slave/plib_sercom_spi_slave_common.h</itemPath>
+                <itemPath>../src/config/SAMD21_WG_IOT/peripheral/sercom/spi_slave/dti.h</itemPath>
               </logicalFolder>
               <logicalFolder name="f2" displayName="usart" projectFiles="true">
                 <itemPath>../src/config/SAMD21_WG_IOT/peripheral/sercom/usart/plib_sercom5_usart.h</itemPath>
@@ -408,7 +409,6 @@
       <itemPath>../src/led.h</itemPath>
       <itemPath>../src/app.h</itemPath>
       <itemPath>../src/azutil.h</itemPath>
-      <itemPath>../src/frame.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -685,7 +685,6 @@
       <itemPath>../src/app.c</itemPath>
       <itemPath>../src/iot_cli.c</itemPath>
       <itemPath>../src/azutil.c</itemPath>
-      <itemPath>../src/frame.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

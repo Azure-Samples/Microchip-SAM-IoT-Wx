@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 #include "azutil.h"
-#include "frame.h"
 #include "nmdrv.h"
+#include "config/SAMD21_WG_IOT/peripheral/sercom/spi_slave/dti.h"
 #include "config/SAMD21_WG_IOT/peripheral/sercom/usart/plib_sercom5_usart.h"
 
 #ifdef IOT_PLUG_AND_PLAY_MODEL_ID
@@ -20,6 +20,8 @@ extern led_status_t led_status;
 
 extern uint16_t packet_identifier;
 
+extern uint16_t DTI_bufferPtr;
+
 userdata_status_t userdata_status;
 
 static char pnp_telemetry_topic_buffer[128];
@@ -27,7 +29,7 @@ static char pnp_telemetry_payload_buffer[128];
 
 // use another set of buffers in case two telemetry collides
 static char pnp_uart_telemetry_topic_buffer[128];
-static char pnp_uart_telemetry_payload_buffer[128+FRAME_PAYLOADDATA_NUMBYTES];
+static char pnp_uart_telemetry_payload_buffer[128+DTI_PAYLOADDATA_NUMBYTES];
 
 static char pnp_property_topic_buffer[128];
 static char pnp_property_payload_buffer[512];
@@ -1831,8 +1833,8 @@ bool process_telemetry_command(int cmdIndex, char* data)
     switch (cmdIndex)
     {
         case 0:
-            // Reset the FRAME buffer pointer to the start of the array
-            FRAME_bufferPtr = 0;
+            // Reset the DTI command buffer pointer to the start of the array
+            DTI_bufferPtr = 0;
             return true;
         break;
         case 1:
