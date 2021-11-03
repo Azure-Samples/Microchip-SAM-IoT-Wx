@@ -873,6 +873,7 @@ static az_result process_sendMsg_command(
     {
         RETURN_ERR_IF_FAILED(az_json_token_get_string(&jr.token, messageString, spanSize + 1, NULL));
 
+        strlcat(messageString, "\4", spanSize + 1);
         debug_disable(true);
         SYS_CONSOLE_Message(0, messageString);
         debug_disable(false);
@@ -1668,7 +1669,7 @@ az_result send_reported_property(
         {
             char messageString[11 + 8 + 1]; // 11 for 'property 3,' + 8 for uint32 in string in hex + null
 
-            sprintf(messageString, "property 3,%lx", twin_properties->app_property_3);
+            sprintf(messageString, "property 3,%lx\4", twin_properties->app_property_3);
             debug_disable(true);
             SYS_CONSOLE_Message(0, messageString);
             debug_disable(false);
@@ -1701,7 +1702,7 @@ az_result send_reported_property(
         {
             char messageString[11 + 8 + 1]; // 11 for 'property 3,' + 8 for uint32 in string in hex + null
 
-            sprintf(messageString, "property 4,%lx", twin_properties->app_property_4);
+            sprintf(messageString, "property 4,%lx\4", twin_properties->app_property_4);
             debug_disable(true);
             SYS_CONSOLE_Message(0, messageString);
             debug_disable(false);

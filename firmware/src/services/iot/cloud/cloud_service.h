@@ -24,5 +24,6 @@ void CLOUD_task(void);
 void CLOUD_sched(void);
 void dnsHandler(uint8_t* domainName, uint32_t serverIP);
 void CLOUD_setdeviceId(char* id);
+uint8_t reInit(void);
 
 #endif /* CLOUD_SERVICE_H_ */

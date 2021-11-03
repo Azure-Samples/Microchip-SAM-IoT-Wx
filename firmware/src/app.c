@@ -1,25 +1,25 @@
 /*******************************************************************************
-* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
-*
-* Subject to your compliance with these terms, you may use Microchip software
-* and any derivatives exclusively with Microchip products. It is your
-* responsibility to comply with third party license terms applicable to your
-* use of third party software (including open source software) that may
-* accompany Microchip software.
-*
-* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
-* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
-* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
-* PARTICULAR PURPOSE.
-*
-* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
-* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
-* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
-* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
-* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
-* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
-* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
-*******************************************************************************/
+ * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+ *
+ * Subject to your compliance with these terms, you may use Microchip software
+ * and any derivatives exclusively with Microchip products. It is your
+ * responsibility to comply with third party license terms applicable to your
+ * use of third party software (including open source software) that may
+ * accompany Microchip software.
+ *
+ * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+ * EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+ * WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+ * PARTICULAR PURPOSE.
+ *
+ * IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+ * INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+ * WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+ * BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+ * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+ * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+ * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+ *******************************************************************************/
 
 /*******************************************************************************
   MPLAB Harmony Application Source File
@@ -86,12 +86,15 @@ static void APP_ProvisionRespCb(DRV_HANDLE handle, WDRV_WINC_SSID* targetSSID, W
 static void APP_DHCPAddressEventCb(DRV_HANDLE handle, uint32_t ipAddress);
 static void APP_GetTimeNotifyCb(DRV_HANDLE handle, uint32_t timeUTC);
 static void APP_ConnectNotifyCb(DRV_HANDLE handle, WDRV_WINC_CONN_STATE currentState, WDRV_WINC_CONN_ERROR errorCode);
+static void APP_WifiScanTask(DRV_HANDLE handle);
 
-static char *LED_Property[3] = {
+static char APP_WiFiApList[SERCOM5_USART_WRITE_BUFFER_SIZE - 1];
+
+static char* LED_Property[3] = {
     "On",
     "Off",
-    "Blink"
-    };
+    "Blink",
+};
 
 #ifdef CFG_MQTT_PROVISIONING_HOST
 void iot_provisioning_completed(void);
@@ -126,7 +129,7 @@ void iot_provisioning_completed(void);
 ATCA_STATUS appCryptoClientSerialNumber;
 char*       attDeviceID;
 char        attDeviceID_buf[25] = "BAAAAADD1DBAAADD1D";
-char        deviceIpAddress[16] = {0};
+char        deviceIpAddress[16] = "0.0.0.0";
 
 shared_networking_params_t shared_networking_params;
 
@@ -147,6 +150,7 @@ static SYS_TIME_HANDLE App_DataTaskHandle      = SYS_TIME_HANDLE_INVALID;
 volatile bool          App_DataTaskTmrExpired  = false;
 static SYS_TIME_HANDLE App_CloudTaskHandle     = SYS_TIME_HANDLE_INVALID;
 volatile bool          App_CloudTaskTmrExpired = false;
+volatile bool          App_WifiScanPending     = false;
 
 static time_t     previousTransmissionTime;
 volatile uint32_t telemetryInterval = CFG_DEFAULT_TELEMETRY_INTERVAL_SEC;
@@ -214,8 +218,8 @@ void APP_DataTaskcb(uintptr_t context)
 // React to the WIFI state change here. Status of 1 means connected, Status of 0 means disconnected
 static void APP_WiFiConnectionStateChanged(uint8_t status)
 {
-    //debug_printInfo("  APP: WiFi Connection Status Change to %d", status);
-    // If we have no AP access we want to retry
+    // debug_printInfo("  APP: WiFi Connection Status Change to %d", status);
+    //  If we have no AP access we want to retry
     if (status != 1)
     {
         // Restart the WIFI module if we get disconnected from the WiFi Access Point (AP)
@@ -258,8 +262,10 @@ void APP_Initialize(void)
 {
     debug_printInfo("  APP: %s()", __FUNCTION__);
     /* Place the App state machine in its initial state. */
-    appData.state = APP_STATE_CRYPTO_INIT;
-    //uint8_t wifi_mode = WIFI_DEFAULT;
+    appData.state     = APP_STATE_CRYPTO_INIT;
+    appData.scanState = STATE_SCAN_INIT;
+
+    // uint8_t wifi_mode = WIFI_DEFAULT;
     uint32_t sw0CurrentVal = 0;
     uint32_t sw1CurrentVal = 0;
     uint32_t i             = 0;
@@ -308,10 +314,12 @@ void APP_Initialize(void)
 static void APP_ConnectNotifyCb(DRV_HANDLE handle, WDRV_WINC_CONN_STATE currentState, WDRV_WINC_CONN_ERROR errorCode)
 {
     debug_printTrace("  APP: APP_ConnectNotifyCb %d", currentState);
+    WDRV_WINC_SSID ssid;
 
     if (WDRV_WINC_CONN_STATE_CONNECTED == currentState)
     {
         WiFi_ConStateCb(M2M_WIFI_CONNECTED);
+        WDRV_WINC_AssociationSSIDGet(handle, &ssid, NULL);
     }
     else if (WDRV_WINC_CONN_STATE_DISCONNECTED == currentState)
     {
@@ -321,7 +329,7 @@ static void APP_ConnectNotifyCb(DRV_HANDLE handle, WDRV_WINC_CONN_STATE currentS
 
 static void APP_GetTimeNotifyCb(DRV_HANDLE handle, uint32_t timeUTC)
 {
-    //checking > 0 is not recommended, even if getsystime returns null, utctime value will be > 0
+    // checking > 0 is not recommended, even if getsystime returns null, utctime value will be > 0
     if (timeUTC != 0x86615400U)
     {
         tstrSystemTime pSysTime;
@@ -345,11 +353,11 @@ static void APP_DHCPAddressEventCb(DRV_HANDLE handle, uint32_t ipAddress)
 
     memset(deviceIpAddress, 0, sizeof(deviceIpAddress));
 
-    sprintf(deviceIpAddress, "%lu.%lu.%lu.%lu", 
-                        (0x0FF & (ipAddress)),
-                        (0x0FF & (ipAddress >> 8)),
-                        (0x0FF & (ipAddress >> 16)),
-                        (0x0FF & (ipAddress >> 24)));
+    sprintf(deviceIpAddress, "%lu.%lu.%lu.%lu",
+            (0x0FF & (ipAddress)),
+            (0x0FF & (ipAddress >> 8)),
+            (0x0FF & (ipAddress >> 16)),
+            (0x0FF & (ipAddress >> 24)));
 
     debug_printGood("  APP: DHCP IP Address %s", deviceIpAddress);
 
@@ -358,8 +366,10 @@ static void APP_DHCPAddressEventCb(DRV_HANDLE handle, uint32_t ipAddress)
     shared_networking_params.reported      = 0;
 }
 
-static void APP_ProvisionRespCb(DRV_HANDLE handle, WDRV_WINC_SSID* targetSSID,
-                                WDRV_WINC_AUTH_CONTEXT* authCtx, bool status)
+static void APP_ProvisionRespCb(DRV_HANDLE              handle,
+                                WDRV_WINC_SSID*         targetSSID,
+                                WDRV_WINC_AUTH_CONTEXT* authCtx,
+                                bool                    status)
 {
     uint8_t  sectype;
     uint8_t* ssid;
@@ -380,7 +390,8 @@ void APP_Tasks(void)
 {
     switch (appData.state)
     {
-        case APP_STATE_CRYPTO_INIT: {
+        case APP_STATE_CRYPTO_INIT:
+        {
 
             char serialNumber_buf[25];
 
@@ -430,7 +441,8 @@ void APP_Tasks(void)
             break;
         }
 
-        case APP_STATE_WDRV_INIT: {
+        case APP_STATE_WDRV_INIT:
+        {
             if (SYS_STATUS_READY == WDRV_WINC_Status(sysObj.drvWifiWinc))
             {
                 appData.state = APP_STATE_WDRV_INIT_READY;
@@ -438,7 +450,8 @@ void APP_Tasks(void)
             break;
         }
 
-        case APP_STATE_WDRV_INIT_READY: {
+        case APP_STATE_WDRV_INIT_READY:
+        {
             wdrvHandle = WDRV_WINC_Open(0, 0);
 
             if (DRV_HANDLE_INVALID != wdrvHandle)
@@ -449,7 +462,8 @@ void APP_Tasks(void)
             break;
         }
 
-        case APP_STATE_WDRV_OPEN: {
+        case APP_STATE_WDRV_OPEN:
+        {
             m2m_wifi_configure_sntp((uint8_t*)NTP_HOSTNAME, strlen(NTP_HOSTNAME), SNTP_ENABLE_DHCP);
             m2m_wifi_enable_sntp(1);
             WDRV_WINC_DCPT* pDcpt      = (WDRV_WINC_DCPT*)wdrvHandle;
@@ -463,7 +477,7 @@ void APP_Tasks(void)
             CLOUD_init_host(CFG_MQTT_PROVISIONING_HOST, attDeviceID, &pf_mqtt_iotprovisioning_client);
 #else
             CLOUD_init_host(hub_hostname, attDeviceID, &pf_mqtt_iothub_client);
-#endif   //CFG_MQTT_PROVISIONING_HOST
+#endif   // CFG_MQTT_PROVISIONING_HOST
             if (wifi_mode == WIFI_DEFAULT)
             {
                 /* Enable use of DHCP for network configuration, DHCP is the default
@@ -480,7 +494,8 @@ void APP_Tasks(void)
             break;
         }
 
-        case APP_STATE_WDRV_ACTIV: {
+        case APP_STATE_WDRV_ACTIV:
+        {
             if (App_CloudTaskTmrExpired == true)
             {
                 App_CloudTaskTmrExpired = false;
@@ -493,12 +508,18 @@ void APP_Tasks(void)
                 APP_DataTask();
             }
 
+            if (App_WifiScanPending)
+            {
+                APP_WifiScanTask(wdrvHandle);
+            }
+
             CLOUD_sched();
             wifi_sched();
             MQTT_sched();
             break;
         }
-        default: {
+        default:
+        {
             /* TODO: Handle error in application's state machine. */
             break;
         }
@@ -598,11 +619,11 @@ static void APP_DataTask(void)
 // *****************************************************************************
 
 /**********************************************
-* Command (Direct Method)
-**********************************************/
+ * Command (Direct Method)
+ **********************************************/
 void APP_ReceivedFromCloud_methods(uint8_t* topic, uint8_t* payload)
 {
-    az_result                         rc;
+    az_result rc;
 #ifdef IOT_PLUG_AND_PLAY_MODEL_ID
     az_iot_pnp_client_command_request command_request;
 #else
@@ -640,7 +661,6 @@ void APP_ReceivedFromCloud_methods(uint8_t* topic, uint8_t* payload)
 #else
         process_direct_method_command(payload, &method_request);
 #endif
-
     }
     else
     {
@@ -649,8 +669,8 @@ void APP_ReceivedFromCloud_methods(uint8_t* topic, uint8_t* payload)
 }
 
 /**********************************************
-* Properties (Device Twin)
-**********************************************/
+ * Properties (Device Twin)
+ **********************************************/
 void APP_ReceivedFromCloud_patch(uint8_t* topic, uint8_t* payload)
 {
     az_result         rc;
@@ -740,12 +760,12 @@ void APP_ReceivedFromCloud_twin(uint8_t* topic, uint8_t* payload)
         }
     }
 
-    //debug_printInfo("  APP: << %s() rc = 0x%08x", __FUNCTION__, rc);
+    // debug_printInfo("  APP: << %s() rc = 0x%08x", __FUNCTION__, rc);
 }
 
 /**********************************************
-* Read Temperature Sensor value
-**********************************************/
+ * Read Temperature Sensor value
+ **********************************************/
 float APP_GetTempSensorValue(void)
 {
     float retVal = 0;
@@ -769,10 +789,10 @@ float APP_GetTempSensorValue(void)
         /* Transfer complete. Check if the transfer was successful */
         if (SERCOM3_I2C_ErrorGet() == SERCOM_I2C_ERROR_NONE)
         {
-            rxBuffer[0] = rxBuffer[0] & 0x1F;   //Clear flag bits
+            rxBuffer[0] = rxBuffer[0] & 0x1F;   // Clear flag bits
             if ((rxBuffer[0] & 0x10) == 0x10)
             {
-                rxBuffer[0] = rxBuffer[0] & 0x0F;   //Clear SIGN
+                rxBuffer[0] = rxBuffer[0] & 0x0F;   // Clear SIGN
                 retVal      = 256.0 - (rxBuffer[0] * 16.0 + rxBuffer[1] / 16.0);
             }
             else
@@ -789,8 +809,8 @@ float APP_GetTempSensorValue(void)
 }
 
 /**********************************************
-* Build light sensor value
-**********************************************/
+ * Build light sensor value
+ **********************************************/
 int32_t APP_GetLightSensorValue(void)
 {
     uint32_t input_voltage = 0;
@@ -799,7 +819,7 @@ int32_t APP_GetLightSensorValue(void)
 
     while (!ADC_ConversionStatusGet())
     {
-        //Obtain result from Light sensor
+        // Obtain result from Light sensor
     }
 
     /* Read the ADC result */
@@ -811,8 +831,8 @@ int32_t APP_GetLightSensorValue(void)
 }
 
 /**********************************************
-* Entry point for telemetry
-**********************************************/
+ * Entry point for telemetry
+ **********************************************/
 void APP_SendToCloud(void)
 {
     if (iothubConnected)
@@ -822,8 +842,8 @@ void APP_SendToCloud(void)
 }
 
 /**********************************************
-* Callback functions for MQTT
-**********************************************/
+ * Callback functions for MQTT
+ **********************************************/
 void iot_connection_completed(void)
 {
     debug_printGood("  APP: %s()", __FUNCTION__);
@@ -842,8 +862,101 @@ void iot_provisioning_completed(void)
     CLOUD_reset();
     LED_SetCloud(LED_INDICATOR_PENDING);
 }
-#endif   //CFG_MQTT_PROVISIONING_HOST
+#endif   // CFG_MQTT_PROVISIONING_HOST
 
+void APP_WifiScan(char* buffer)
+{
+    App_WifiScanPending = true;
+    sprintf(buffer, "OK");
+}
+
+void APP_WifiGetStatus(char* buffer)
+{
+    WDRV_WINC_SSID   ssid;
+    WDRV_WINC_STATUS status;
+
+    status = WDRV_WINC_AssociationSSIDGet(wdrvHandle, &ssid, NULL);
+
+    if (status == WDRV_WINC_STATUS_OK)
+    {
+        sprintf(buffer, "%s,%s", deviceIpAddress, ssid.name);
+    }
+    else
+    {
+        // debug_printError("  APP: WDRV_WINC_AssociationSSIDGet failed %d", status);
+        sprintf(buffer, "0.0.0.0");
+    }
+}
+
+static void APP_WifiScanTask(DRV_HANDLE handle)
+{
+    WDRV_WINC_STATUS status;
+
+    switch (appData.scanState)
+    {
+        case STATE_SCAN_INIT:
+
+            memset(APP_WiFiApList, 0, sizeof(APP_WiFiApList));
+
+            if (WDRV_WINC_STATUS_OK == WDRV_WINC_BSSFindFirst(wdrvHandle, WDRV_WINC_ALL_CHANNELS, true, NULL))
+            {
+                appData.scanState = STATE_SCANNING;
+            }
+            else
+            {
+                appData.scanState = STATE_SCAN_ERROR;
+            }
+            break;
+
+        case STATE_SCANNING:
+            if (false == WDRV_WINC_BSSFindInProgress(handle))
+            {
+                appData.scanState = STATE_SCAN_GET_RESULTS;
+            }
+            break;
+
+        case STATE_SCAN_GET_RESULTS:
+        {
+            WDRV_WINC_BSS_INFO BSSInfo;
+            if (WDRV_WINC_STATUS_OK == WDRV_WINC_BSSFindGetInfo(handle, &BSSInfo))
+            {
+                status = WDRV_WINC_BSSFindNext(handle, NULL);
+                if (WDRV_WINC_STATUS_BSS_FIND_END == status)
+                {
+                    appData.scanState = STATE_SCAN_DONE;
+                    break;
+                }
+                else if (status != WDRV_WINC_STATUS_OK)
+                {
+                    appData.scanState = STATE_SCAN_ERROR;
+                    break;
+                }
+                else if (BSSInfo.ssid.length > 0)
+                {
+                    if (strlen(APP_WiFiApList) > 0)
+                    {
+                        strlcat(APP_WiFiApList, ",", sizeof(APP_WiFiApList) - 1);
+                    }
+                    strlcat(APP_WiFiApList, (const char*)&BSSInfo.ssid.name, sizeof(APP_WiFiApList) - 1);
+                }
+            }
+            break;
+        }
+
+        case STATE_SCAN_DONE:
+            App_WifiScanPending = false;
+            strlcat(APP_WiFiApList, "\4", sizeof(APP_WiFiApList));
+            debug_disable(true);
+            SYS_CONSOLE_Message(0, APP_WiFiApList);
+            debug_disable(false);
+            break;
+
+        case STATE_SCAN_ERROR:
+            App_WifiScanPending = false;
+            debug_printError("  APP: Scan failed");
+            break;
+    }
+}
 /*******************************************************************************
  End of File
  */
