@@ -51,5 +51,4 @@ Module.symvers
 Mkfile.old
 dkms.conf
 /firmware/AzureIotPnpDps.X/build/
-/firmware/AzureIotPnpDps.X/dist/
 /firmware/AzureIotPnpDps.X/.generated_files
