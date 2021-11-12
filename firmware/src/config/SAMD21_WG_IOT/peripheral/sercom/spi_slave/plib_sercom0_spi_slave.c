@@ -277,7 +277,7 @@ void SERCOM0_SPI_InterruptHandler(void)
             {
                     process_telemetry_command(DTI_parsedInfo.parameter1, 
                             (char*)DTI_parsedInfo.payloadData);
-                    LED_RED_Toggle_EX();
+                    LED_YELLOW_Toggle_EX();
             }
         }
         /****** [---END---] DTI Module Processing [---END---] ********/

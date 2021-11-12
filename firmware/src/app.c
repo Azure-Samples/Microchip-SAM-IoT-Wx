@@ -527,7 +527,7 @@ void APP_Tasks(void)
 }
 
 
-//static int skipper = 0;
+static int skipper = 0;
 
 // This gets called by the scheduler approximately every 100ms
 static void APP_DataTask(void)
@@ -536,7 +536,7 @@ static void APP_DataTask(void)
     // Example of how to send data when MQTT is connected every 1 second based on the system clock
     if (CLOUD_isConnected())
     {
-        //if (skipper++ % 3 == 0)
+        if (skipper++ % 3 == 0)
         {
             // send telemetry
             APP_SendToCloud();
