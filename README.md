@@ -22,6 +22,7 @@
   - [2. Connecting to Azure IoT Services](#2-connecting-to-azure-iot-services)
       - a. IoT Central (Recommended)
       - b. IoT Hub
+- [SAM-IoT as a Cloud Agent for an External Application Processor](#sam-iot-as-a-cloud-agent-for-an-external-application-processor)
 - [References](#references)
 - [Conclusion](#conclusion)
 
@@ -136,6 +137,10 @@ Click [here](https://docs.microsoft.com/en-us/azure/iot-central/overview-iot-opt
     IoT Hub's capabilities help you build scalable, full-featured IoT solutions such as managing industrial equipment used in manufacturing, tracking valuable assets in healthcare, and monitoring office building usage.
 
     Click this link for the programming procedure: [Connecting the Microchip SAM-IoT Wx Development Board to Azure IoT Hub](./SAM_IoT_Hub.md)
+
+## SAM-IoT as a Cloud Agent for an External Application Processor
+
+The SAM-IoT-WM Version 2 device model adds interfaces for an external application processor to implement its own set of telemetry, properties, and commands. This allows for an existing application processor to relay its own data to the cloud, using the SAM-IoT as a cloud agent to handle all cloud operations.  For example, an external application processor can report its own telemetry or read/write its own set of properties using commands implemented as part of the Command Line Interface.  For larger burst-type telemetry reporting (e.g. > 100-byte chunks of data), an additional Dedicated Telemetry Interface (DTI) can be used by the external application processor to bypass the CLI (i.e. using SPI mode to send larger telemetry updates using data frames). Refer to the procedure for setting up the [SAM-IoT as a cloud agent](./SAM_IoT_Cloud_Agent.md) for connection to an external application processor.
 
 ## References
 

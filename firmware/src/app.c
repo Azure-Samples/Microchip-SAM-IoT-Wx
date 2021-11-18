@@ -526,18 +526,24 @@ void APP_Tasks(void)
     }
 }
 
-
-static int skipper = 0;
-
 // This gets called by the scheduler approximately every 100ms
 static void APP_DataTask(void)
 {
-
+    // Get the current time. This uses the C standard library time functions
+    time_t    timeNow;   // = time(NULL);
+    struct tm sys_time;
+    RTC_RTCCTimeGet(&sys_time);
+    timeNow = mktime(&sys_time);
     // Example of how to send data when MQTT is connected every 1 second based on the system clock
     if (CLOUD_isConnected())
     {
-        if (skipper++ % 3 == 0)
+        // How many seconds since the last time this loop ran?
+        int32_t delta = difftime(timeNow, previousTransmissionTime);
+
+        if (delta >= telemetryInterval)
         {
+            previousTransmissionTime = timeNow;
+
             // send telemetry
             APP_SendToCloud();
         }
