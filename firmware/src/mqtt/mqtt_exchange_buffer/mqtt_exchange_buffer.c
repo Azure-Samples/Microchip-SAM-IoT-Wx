@@ -27,17 +27,27 @@
 
 #include "mqtt_exchange_buffer.h"
 
-void MQTT_ExchangeBufferInit(exchangeBuffer* buffer)
+bool MQTT_ExchangeBufferInit(exchangeBuffer* buffer)
 {
     buffer->currentLocation = buffer->start;
     buffer->dataLength      = 0;
+
+    return (buffer->start == NULL ? false : true);
 }
 
 uint16_t MQTT_ExchangeBufferWrite(exchangeBuffer* buffer, uint8_t* data, uint16_t length)
 {
-    uint8_t* bend = buffer->start + buffer->bufferLength - 1;
-    uint8_t* dend = (buffer->currentLocation - buffer->start + buffer->dataLength) % buffer->bufferLength + buffer->start;
+    uint8_t* bend;
+    uint8_t* dend;
     uint16_t i    = 0;
+
+    if (buffer->start == NULL)
+    {
+        return 0;
+    }
+
+    bend = buffer->start + buffer->bufferLength - 1;
+    dend = (buffer->currentLocation - buffer->start + buffer->dataLength) % buffer->bufferLength + buffer->start;
 
     for (i = length; i > 0; i--)
     {

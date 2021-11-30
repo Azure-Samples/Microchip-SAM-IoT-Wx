@@ -62,7 +62,6 @@ char              mqttSubscribeTopic[TOPIC_SIZE];
 
 static int8_t  connectMQTTSocket(void);
 static void    connectMQTT();
-static uint8_t reInit(void);
 
 bool sendSubscribe = true;
 #define CLOUD_TASK_INTERVAL_MS      500L
@@ -477,12 +476,15 @@ void CLOUD_task(void)
                 {
                     SYS_TIME_TimerStop(mqttTimeoutTaskHandle);
                     SYS_TIME_TimerDestroy(mqttTimeoutTaskHandle);
+                    mqttTimeoutTaskHandle = SYS_TIME_HANDLE_INVALID;
+
                 }
 
                 if (cloudResetTaskHandle != SYS_TIME_HANDLE_INVALID)
                 {
                     SYS_TIME_TimerStop(cloudResetTaskHandle);
                     SYS_TIME_TimerDestroy(cloudResetTaskHandle);
+                    cloudResetTaskHandle = SYS_TIME_HANDLE_INVALID;
                 }
 
                 if (sendSubscribe == true)
@@ -531,7 +533,7 @@ void dnsHandler(uint8_t* domainName, uint32_t serverIP)
     }
 }
 
-static uint8_t reInit(void)
+uint8_t reInit(void)
 {
     debug_printInfo("CLOUD: reInit()");
 

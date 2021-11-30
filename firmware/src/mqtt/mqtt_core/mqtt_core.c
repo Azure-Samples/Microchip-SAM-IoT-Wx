@@ -48,8 +48,8 @@ extern pf_MQTT_CLIENT* pf_mqtt_client;
 /***********************MQTT Client definitions********************************/
 
 #define MQTT_TX_PACKET_DECISION_CONSTANT 0x01
-#define KEEP_ALIVE_CALCULATION_CONSTANT  0x01
-#define CONNECT_CLEAN_SESSION_MASK       0x02
+#define KEEP_ALIVE_CALCULATION_CONSTANT 0x01
+#define CONNECT_CLEAN_SESSION_MASK 0x02
 
 
 // MQTT packet transmission flags. The creation and transmission processes of
@@ -720,7 +720,6 @@ bool MQTT_CreatePublishPacket(mqttPublishPacket* newPublishPacket)
         newPacket->totalLength += sizeof(newPacket->topicLength) + newPacket->topicLength + newPacket->payloadLength;
         newPacket->topicLength = htons(newPacket->topicLength);
 
-
         MQTT_AddPublishPacketToList(newPacket);
 
         mqttTxFlags.newTxPublishPacket = 1;
@@ -825,33 +824,42 @@ static bool mqttSendConnect(mqttContext* mqttConnectionPtr)
 {
     bool ret = false;
 
-    MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff);
-    MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff);
-
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&txConnectPacket.connectFixedHeaderFlags.All, sizeof(txConnectPacket.connectFixedHeaderFlags.All));
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)txConnectPacket.remainingLength, mqttEncodeLength(txConnectPacket.totalLength, txConnectPacket.remainingLength));
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&txConnectPacket.connectVariableHeader, sizeof(txConnectPacket.connectVariableHeader));
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&txConnectPacket.clientIDLength, sizeof(txConnectPacket.clientIDLength));
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)txConnectPacket.clientID, strlen((char*)txConnectPacket.clientID));
-
-    if ((txConnectPacket.passwordLength > 0) || (txConnectPacket.usernameLength > 0))
+    if (!MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff))
     {
-        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&txConnectPacket.usernameLength, sizeof(txConnectPacket.usernameLength));
-        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)txConnectPacket.username, ntohs(txConnectPacket.usernameLength));
-        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&txConnectPacket.passwordLength, sizeof(txConnectPacket.passwordLength));
-        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)txConnectPacket.password, ntohs(txConnectPacket.passwordLength));
+        debug_printError(" MQTT: txBuffer Null");
     }
-
-    ret = MQTT_Send(mqttConnectionPtr);
-
-    if (ret == true)
+    else if (!MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff))
     {
-        mqttTxFlags.newTxConnectPacket = 0;
+        debug_printError(" MQTT: rxBuffer Null");
     }
     else
     {
-        debug_printError(" MQTT: Send Error");
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&txConnectPacket.connectFixedHeaderFlags.All, sizeof(txConnectPacket.connectFixedHeaderFlags.All));
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)txConnectPacket.remainingLength, mqttEncodeLength(txConnectPacket.totalLength, txConnectPacket.remainingLength));
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&txConnectPacket.connectVariableHeader, sizeof(txConnectPacket.connectVariableHeader));
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&txConnectPacket.clientIDLength, sizeof(txConnectPacket.clientIDLength));
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)txConnectPacket.clientID, strlen((char*)txConnectPacket.clientID));
+
+        if ((txConnectPacket.passwordLength > 0) || (txConnectPacket.usernameLength > 0))
+        {
+            MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&txConnectPacket.usernameLength, sizeof(txConnectPacket.usernameLength));
+            MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)txConnectPacket.username, ntohs(txConnectPacket.usernameLength));
+            MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&txConnectPacket.passwordLength, sizeof(txConnectPacket.passwordLength));
+            MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)txConnectPacket.password, ntohs(txConnectPacket.passwordLength));
+        }
+
+        ret = MQTT_Send(mqttConnectionPtr);
+
+        if (ret == true)
+        {
+            mqttTxFlags.newTxConnectPacket = 0;
+        }
+        else
+        {
+            debug_printError(" MQTT: Send Error");
+        }
     }
+
     return ret;
 }
 
@@ -870,42 +878,55 @@ static bool mqttSendPublish(mqttContext* mqttConnectionPtr)
         return ret;
     }
 
-    MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff);
-    MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff);
-
-    // Copy the txPublishPacket data in TCP Tx buffer
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &publishPacket->publishHeaderFlags.All, sizeof(publishPacket->publishHeaderFlags.All));
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, publishPacket->remainingLength, mqttEncodeLength(publishPacket->totalLength, publishPacket->remainingLength));
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&publishPacket->topicLength, sizeof(publishPacket->topicLength));
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, publishPacket->topic, ntohs(publishPacket->topicLength));
-
-    if (publishPacket->publishHeaderFlags.qos == 1)
+    if (!MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff))
     {
-        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &publishPacket->packetIdentifierMSB, sizeof(publishPacket->packetIdentifierMSB));
-        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &publishPacket->packetIdentifierLSB, sizeof(publishPacket->packetIdentifierLSB));
+        debug_printError(" MQTT: txBuffer Null");
     }
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, publishPacket->payload, publishPacket->payloadLength);
-
-    // Function call to TCP_Send() is abstracted
-    if (mqttTxFlags.newTxPublishPacket == 1 || publishPacket->publishHeaderFlags.duplicate == 1)
+    else if (!MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff))
     {
-        ret = MQTT_Send(mqttConnectionPtr);
-        if (ret == true)
+        debug_printError(" MQTT: rxBuffer Null");
+    }
+    else
+    {
+        // Copy the txPublishPacket data in TCP Tx buffer
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &publishPacket->publishHeaderFlags.All, sizeof(publishPacket->publishHeaderFlags.All));
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, publishPacket->remainingLength, mqttEncodeLength(publishPacket->totalLength, publishPacket->remainingLength));
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&publishPacket->topicLength, sizeof(publishPacket->topicLength));
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, publishPacket->topic, ntohs(publishPacket->topicLength));
+
+        if (publishPacket->publishHeaderFlags.qos == 1)
         {
-            mqttTxFlags.newTxPublishPacket = 0;
-            if (publishPacket->publishHeaderFlags.qos == 1)
+            MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &publishPacket->packetIdentifierMSB, sizeof(publishPacket->packetIdentifierMSB));
+            MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &publishPacket->packetIdentifierLSB, sizeof(publishPacket->packetIdentifierLSB));
+        }
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, publishPacket->payload, publishPacket->payloadLength);
+
+        // Function call to TCP_Send() is abstracted
+        if (mqttTxFlags.newTxPublishPacket == 1 || publishPacket->publishHeaderFlags.duplicate == 1)
+        {
+            ret = MQTT_Send(mqttConnectionPtr);
+            if (ret == true)
             {
-                txPublishPacketPending        = publishPacket;
-                mqttRxFlags.newRxPubackPacket = 1;
+                if (txPublishPacketHead == NULL)
+                {
+                    // no more publish packet to send.  Clear flag
+                    mqttTxFlags.newTxPublishPacket = 0;
+                }
+
+                if (publishPacket->publishHeaderFlags.qos == 1)
+                {
+                    txPublishPacketPending        = publishPacket;
+                    mqttRxFlags.newRxPubackPacket = 1;
+                }
+                else
+                {
+                    free(publishPacket);
+                }
             }
             else
             {
                 free(publishPacket);
             }
-        }
-        else
-        {
-            free(publishPacket);
         }
     }
     return ret;
@@ -1461,34 +1482,41 @@ static bool mqttSendSubscribe(mqttContext* mqttConnectionPtr)
     bool    ret        = false;
     uint8_t topicCount = 0;
 
-    MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff);
-    MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff);
-
-    // Copy the txSubscribePacket data in TCP Tx buffer
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txSubscribePacket.subscribeHeaderFlags.All, sizeof(txSubscribePacket.subscribeHeaderFlags.All));
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, txSubscribePacket.remainingLength, mqttEncodeLength(txSubscribePacket.totalLength, txSubscribePacket.remainingLength));
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txSubscribePacket.packetIdentifierMSB, sizeof(txSubscribePacket.packetIdentifierMSB));
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txSubscribePacket.packetIdentifierLSB, sizeof(txSubscribePacket.packetIdentifierLSB));
-
-    for (topicCount = 0; topicCount < MAX_NUM_TOPICS_SUBSCRIBE && txSubscribePacket.subscribePayload[topicCount].topicLength > 0; topicCount++)
+    if (!MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff))
     {
-        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&txSubscribePacket.subscribePayload[topicCount].topicLength, sizeof(txSubscribePacket.subscribePayload[topicCount].topicLength));
-        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, txSubscribePacket.subscribePayload[topicCount].topic, ntohs(txSubscribePacket.subscribePayload[topicCount].topicLength));
-        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txSubscribePacket.subscribePayload[topicCount].requestedQoS, sizeof(txSubscribePacket.subscribePayload[topicCount].requestedQoS));
+        debug_printError(" MQTT: txBuffer Null");
     }
-
-    ret = MQTT_Send(mqttConnectionPtr);
-    if (ret == true)
+    else if (!MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff))
     {
-        mqttTxFlags.newTxSubscribePacket = 0;
-        mqttRxFlags.newRxSubackPacket    = 1;
-
-        //The timeout API names are different in MCC foundation
-        //services timeout driver and START timeout driver
-        subackTimeoutOccured          = false;
-        checkSubackTimeoutStateHandle = SYS_TIME_CallbackRegisterMS(checkSubackTimeoutStatecb, 0, WAITFORSUBACK_TIMEOUT, SYS_TIME_SINGLE);
+        debug_printError(" MQTT: rxBuffer Null");
     }
+    else
+    {
+        // Copy the txSubscribePacket data in TCP Tx buffer
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txSubscribePacket.subscribeHeaderFlags.All, sizeof(txSubscribePacket.subscribeHeaderFlags.All));
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, txSubscribePacket.remainingLength, mqttEncodeLength(txSubscribePacket.totalLength, txSubscribePacket.remainingLength));
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txSubscribePacket.packetIdentifierMSB, sizeof(txSubscribePacket.packetIdentifierMSB));
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txSubscribePacket.packetIdentifierLSB, sizeof(txSubscribePacket.packetIdentifierLSB));
 
+        for (topicCount = 0; topicCount < MAX_NUM_TOPICS_SUBSCRIBE && txSubscribePacket.subscribePayload[topicCount].topicLength > 0; topicCount++)
+        {
+            MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&txSubscribePacket.subscribePayload[topicCount].topicLength, sizeof(txSubscribePacket.subscribePayload[topicCount].topicLength));
+            MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, txSubscribePacket.subscribePayload[topicCount].topic, ntohs(txSubscribePacket.subscribePayload[topicCount].topicLength));
+            MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txSubscribePacket.subscribePayload[topicCount].requestedQoS, sizeof(txSubscribePacket.subscribePayload[topicCount].requestedQoS));
+        }
+
+        ret = MQTT_Send(mqttConnectionPtr);
+        if (ret == true)
+        {
+            mqttTxFlags.newTxSubscribePacket = 0;
+            mqttRxFlags.newRxSubackPacket    = 1;
+
+            //The timeout API names are different in MCC foundation
+            //services timeout driver and START timeout driver
+            subackTimeoutOccured          = false;
+            checkSubackTimeoutStateHandle = SYS_TIME_CallbackRegisterMS(checkSubackTimeoutStatecb, 0, WAITFORSUBACK_TIMEOUT, SYS_TIME_SINGLE);
+        }
+    }
     return ret;
 }
 
@@ -1498,33 +1526,40 @@ static bool mqttSendUnsubscribe(mqttContext* mqttConnectionPtr)
     bool    ret        = false;
     uint8_t topicCount = 0;
 
-    MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff);
-    MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff);
-
-    // Copy the txUnsubscribePacket data in TCP Tx buffer
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txUnsubscribePacket.unsubscribeHeaderFlags.All, sizeof(txUnsubscribePacket.unsubscribeHeaderFlags.All));
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, txUnsubscribePacket.remainingLength, mqttEncodeLength(txUnsubscribePacket.totalLength, txUnsubscribePacket.remainingLength));
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txUnsubscribePacket.packetIdentifierMSB, sizeof(txUnsubscribePacket.packetIdentifierMSB));
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txUnsubscribePacket.packetIdentifierLSB, sizeof(txUnsubscribePacket.packetIdentifierLSB));
-
-    for (topicCount = 0; topicCount < NUM_TOPICS_UNSUBSCRIBE; topicCount++)
+    if (!MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff))
     {
-        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&txUnsubscribePacket.unsubscribePayload[topicCount].topicLength, sizeof(txUnsubscribePacket.unsubscribePayload[topicCount].topicLength));
-        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, txUnsubscribePacket.unsubscribePayload[topicCount].topic, ntohs(txUnsubscribePacket.unsubscribePayload[topicCount].topicLength));
+        debug_printError(" MQTT: txBuffer Null");
     }
-
-    ret = MQTT_Send(mqttConnectionPtr);
-    if (ret == true)
+    else if (!MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff))
     {
-        mqttTxFlags.newTxUnsubscribePacket = 0;
-        mqttRxFlags.newRxUnsubackPacket    = 1;
-
-        //The timeout API names are different in MCC foundation
-        //services timeout driver and START timeout driver
-        unsubackTimeoutOccured          = false;
-        checkUnsubackTimeoutStateHandle = SYS_TIME_CallbackRegisterMS(checkUnsubackTimeoutStatecb, 0, WAITFORUNSUBACK_TIMEOUT, SYS_TIME_SINGLE);
+        debug_printError(" MQTT: rxBuffer Null");
     }
+    else
+    {
+        // Copy the txUnsubscribePacket data in TCP Tx buffer
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txUnsubscribePacket.unsubscribeHeaderFlags.All, sizeof(txUnsubscribePacket.unsubscribeHeaderFlags.All));
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, txUnsubscribePacket.remainingLength, mqttEncodeLength(txUnsubscribePacket.totalLength, txUnsubscribePacket.remainingLength));
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txUnsubscribePacket.packetIdentifierMSB, sizeof(txUnsubscribePacket.packetIdentifierMSB));
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txUnsubscribePacket.packetIdentifierLSB, sizeof(txUnsubscribePacket.packetIdentifierLSB));
 
+        for (topicCount = 0; topicCount < NUM_TOPICS_UNSUBSCRIBE; topicCount++)
+        {
+            MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, (uint8_t*)&txUnsubscribePacket.unsubscribePayload[topicCount].topicLength, sizeof(txUnsubscribePacket.unsubscribePayload[topicCount].topicLength));
+            MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, txUnsubscribePacket.unsubscribePayload[topicCount].topic, ntohs(txUnsubscribePacket.unsubscribePayload[topicCount].topicLength));
+        }
+
+        ret = MQTT_Send(mqttConnectionPtr);
+        if (ret == true)
+        {
+            mqttTxFlags.newTxUnsubscribePacket = 0;
+            mqttRxFlags.newRxUnsubackPacket    = 1;
+
+            //The timeout API names are different in MCC foundation
+            //services timeout driver and START timeout driver
+            unsubackTimeoutOccured          = false;
+            checkUnsubackTimeoutStateHandle = SYS_TIME_CallbackRegisterMS(checkUnsubackTimeoutStatecb, 0, WAITFORUNSUBACK_TIMEOUT, SYS_TIME_SINGLE);
+        }
+    }
     return ret;
 }
 
@@ -1536,33 +1571,40 @@ static bool mqttSendPingreq(mqttContext* mqttConnectionPtr)
 
     ret = false;
     memset(&txPingreqPacket, 0, sizeof(txPingreqPacket));
-    MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff);
-    MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff);
-
-    // Send a PINGREQ packet here
-    txPingreqPacket.pingFixedHeader.controlPacketType = PINGREQ;
-    txPingreqPacket.pingFixedHeader.duplicate         = 0;
-    txPingreqPacket.pingFixedHeader.qos               = 0;
-    txPingreqPacket.pingFixedHeader.retain            = 0;
-    txPingreqPacket.remainingLength                   = 0;
-
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txPingreqPacket.pingFixedHeader.All, sizeof(txPingreqPacket.pingFixedHeader.All));
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txPingreqPacket.remainingLength, sizeof(txPingreqPacket.remainingLength));
-
-    ret = MQTT_Send(mqttConnectionPtr);
-    if (ret == true)
+    if (!MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff))
     {
-        mqttTxFlags.newTxPingreqPacket = 0;
-        // Expect a PINGRESP packet
-        mqttRxFlags.newRxPingrespPacket = 1;
-        // The client expects the server to send a PINGRESP within
-        // keepAliveTimer value.
-
-        //The timeout API names are different in MCC foundation
-        //services timeout driver and START timeout driver
-        checkPingrespTimeoutStateHandle = SYS_TIME_CallbackRegisterMS(checkPingrespTimeoutStatecb, 0, WAITFORPINGRESP_TIMEOUT, SYS_TIME_PERIODIC);
+        debug_printError(" MQTT: txBuffer Null");
     }
+    else if (!MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff))
+    {
+        debug_printError(" MQTT: rxBuffer Null");
+    }
+    else
+    {
+        // Send a PINGREQ packet here
+        txPingreqPacket.pingFixedHeader.controlPacketType = PINGREQ;
+        txPingreqPacket.pingFixedHeader.duplicate         = 0;
+        txPingreqPacket.pingFixedHeader.qos               = 0;
+        txPingreqPacket.pingFixedHeader.retain            = 0;
+        txPingreqPacket.remainingLength                   = 0;
 
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txPingreqPacket.pingFixedHeader.All, sizeof(txPingreqPacket.pingFixedHeader.All));
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txPingreqPacket.remainingLength, sizeof(txPingreqPacket.remainingLength));
+
+        ret = MQTT_Send(mqttConnectionPtr);
+        if (ret == true)
+        {
+            mqttTxFlags.newTxPingreqPacket = 0;
+            // Expect a PINGRESP packet
+            mqttRxFlags.newRxPingrespPacket = 1;
+            // The client expects the server to send a PINGRESP within
+            // keepAliveTimer value.
+
+            //The timeout API names are different in MCC foundation
+            //services timeout driver and START timeout driver
+            checkPingrespTimeoutStateHandle = SYS_TIME_CallbackRegisterMS(checkPingrespTimeoutStatecb, 0, WAITFORPINGRESP_TIMEOUT, SYS_TIME_PERIODIC);
+        }
+    }
     return ret;
 }
 
@@ -1574,22 +1616,30 @@ static bool mqttSendDisconnect(mqttContext* mqttConnectionPtr)
     debug_printWarn(" MQTT: Disconnect");
 
     memset(&txDisconnectPacket, 0, sizeof(txDisconnectPacket));
-    MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff);
-    MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff);
-
-    txDisconnectPacket.disconnectFixedHeader.controlPacketType = DISCONNECT;
-    txDisconnectPacket.disconnectFixedHeader.retain            = 0;
-    txDisconnectPacket.disconnectFixedHeader.qos               = 0;
-    txDisconnectPacket.disconnectFixedHeader.duplicate         = 0;
-
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txDisconnectPacket.disconnectFixedHeader.All, sizeof(txDisconnectPacket.disconnectFixedHeader.All));
-    MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txDisconnectPacket.remainingLength, sizeof(txDisconnectPacket.remainingLength));
-
-    ret = MQTT_Send(mqttConnectionPtr);
-
-    if (ret == true)
+    if (!MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff))
     {
-        mqttTxFlags.All = 0;
+        debug_printError(" MQTT: txBuffer Null");
+    }
+    else if (!MQTT_ExchangeBufferInit(&mqttConnectionPtr->mqttDataExchangeBuffers.rxbuff))
+    {
+        debug_printError(" MQTT: rxBuffer Null");
+    }
+    else
+    {
+        txDisconnectPacket.disconnectFixedHeader.controlPacketType = DISCONNECT;
+        txDisconnectPacket.disconnectFixedHeader.retain            = 0;
+        txDisconnectPacket.disconnectFixedHeader.qos               = 0;
+        txDisconnectPacket.disconnectFixedHeader.duplicate         = 0;
+
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txDisconnectPacket.disconnectFixedHeader.All, sizeof(txDisconnectPacket.disconnectFixedHeader.All));
+        MQTT_ExchangeBufferWrite(&mqttConnectionPtr->mqttDataExchangeBuffers.txbuff, &txDisconnectPacket.remainingLength, sizeof(txDisconnectPacket.remainingLength));
+
+        ret = MQTT_Send(mqttConnectionPtr);
+
+        if (ret == true)
+        {
+            mqttTxFlags.All = 0;
+        }
     }
     return ret;
 }
