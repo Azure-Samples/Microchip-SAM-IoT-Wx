@@ -33,19 +33,33 @@
 #include "../../services/iot/cloud/bsd_adapter/bsdWINC.h"
 #include "debug_print.h"
 
-#define TX_BUFF_SIZE         400
-#define RX_BUFF_SIZE         2096
+// MQTT Tx buffer size: (1KB + 1) bytes payload to support 1024-byte string with NULL char, 35 bytes for CONNECT packet size (mqttConnectPacket), 50 bytes for topic
+#define TX_BUFF_SIZE         ((1024 + 1) + 35 + 50)/*400*/ 
+// MQTT Rx buffer size: How large does this really need to be?  Original setting of 2096 bytes seems to be way overkill...1KB seems to be the minimum required
+#define RX_BUFF_SIZE         1024/*2096*/
 #define USER_LENGTH          0
 #define MQTT_KEEP_ALIVE_TIME 120
 
 static mqttContext mqttConn;
-static uint8_t     mqttTxBuff[TX_BUFF_SIZE];
-static uint8_t     mqttRxBuff[RX_BUFF_SIZE];
+static uint8_t*    mqttTxBuff = NULL;
+static uint8_t    mqttRxBuff[RX_BUFF_SIZE];
 static int8_t      mqqtSocket = -1;
 
 void MQTT_ClientInitialize(void)
 {
     MQTT_initialiseState();
+
+    if (mqttTxBuff == NULL)
+    {
+        mqttTxBuff = malloc(TX_BUFF_SIZE);
+        if (mqttTxBuff == NULL)
+        {
+            debug_printError(" MQTT: TX Buffer fail malloc");
+            return;
+        }
+    }
+
+
     memset(mqttTxBuff, 0, sizeof(TX_BUFF_SIZE));
     memset(mqttRxBuff, 0, sizeof(RX_BUFF_SIZE));
     mqttConn.mqttDataExchangeBuffers.txbuff.start           = mqttTxBuff;
@@ -92,6 +106,8 @@ bool MQTT_Close(mqttContext* connectionPtr)
 
 void MQTT_GetReceivedData(uint8_t* pData, uint16_t len)
 {
-    MQTT_ExchangeBufferInit(&mqttConn.mqttDataExchangeBuffers.rxbuff);
-    MQTT_ExchangeBufferWrite(&mqttConn.mqttDataExchangeBuffers.rxbuff, pData, len);
+    if (MQTT_ExchangeBufferInit(&mqttConn.mqttDataExchangeBuffers.rxbuff))
+    {
+        MQTT_ExchangeBufferWrite(&mqttConn.mqttDataExchangeBuffers.rxbuff, pData, len);
+    }
 }

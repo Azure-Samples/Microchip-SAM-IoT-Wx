@@ -27,6 +27,8 @@
 */
 
 #include <stdint.h>
+#include <stdbool.h>
+#include <stddef.h>
 
 typedef struct
 {
@@ -44,7 +46,7 @@ typedef struct
 } mqttBuffers;
 
 
-void     MQTT_ExchangeBufferInit(exchangeBuffer* buffer);
+bool     MQTT_ExchangeBufferInit(exchangeBuffer* buffer);
 uint16_t MQTT_ExchangeBufferPeek(exchangeBuffer* buffer, uint8_t* data, uint16_t length);
 uint16_t MQTT_ExchangeBufferWrite(exchangeBuffer* buffer, uint8_t* data, uint16_t length);
 uint16_t MQTT_ExchangeBufferRead(exchangeBuffer* buffer, uint8_t* data, uint16_t length);

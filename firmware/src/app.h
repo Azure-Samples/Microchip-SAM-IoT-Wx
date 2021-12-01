@@ -1,25 +1,25 @@
 /*******************************************************************************
-* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
-*
-* Subject to your compliance with these terms, you may use Microchip software
-* and any derivatives exclusively with Microchip products. It is your
-* responsibility to comply with third party license terms applicable to your
-* use of third party software (including open source software) that may
-* accompany Microchip software.
-*
-* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
-* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
-* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
-* PARTICULAR PURPOSE.
-*
-* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
-* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
-* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
-* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
-* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
-* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
-* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
-*******************************************************************************/
+ * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+ *
+ * Subject to your compliance with these terms, you may use Microchip software
+ * and any derivatives exclusively with Microchip products. It is your
+ * responsibility to comply with third party license terms applicable to your
+ * use of third party software (including open source software) that may
+ * accompany Microchip software.
+ *
+ * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+ * EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+ * WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+ * PARTICULAR PURPOSE.
+ *
+ * IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+ * INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+ * WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+ * BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+ * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+ * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+ * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+ *******************************************************************************/
 
 
 /*******************************************************************************
@@ -98,6 +98,15 @@ typedef enum
     APP_STATE_WDRV_ACTIV,
 } APP_STATES;
 
+typedef enum
+{
+    STATE_SCAN_INIT = 0,
+    STATE_SCANNING,
+    STATE_SCAN_GET_RESULTS,
+    STATE_SCAN_DONE,
+    STATE_SCAN_ERROR
+} APP_STATES_WIFI_SCAN;
+
 // *****************************************************************************
 /* Application Data
 
@@ -116,6 +125,8 @@ typedef struct
     /* The application's current state */
     APP_STATES state;
 
+    /* State machine state for WiFi Scan */
+    APP_STATES_WIFI_SCAN scanState;
     /* TODO: Define any additional data used by the application. */
 
 } APP_DATA;
@@ -126,7 +137,7 @@ typedef struct
 // *****************************************************************************
 // *****************************************************************************
 /* These routines are called by drivers when certain events occur.
-*/
+ */
 
 // *****************************************************************************
 // *****************************************************************************
@@ -215,7 +226,8 @@ typedef union
         uint16_t amDisconnecting : 1;
         uint16_t haveERROR : 1;
         uint16_t cloudInitPending : 1;
-        uint16_t : 8;
+        uint16_t reported : 1;
+        uint16_t : 7;
     };
 } shared_networking_params_t;
 
@@ -227,14 +239,16 @@ void    APP_ReceivedFromCloud_patch(uint8_t* topic, uint8_t* payload);
 void    APP_ReceivedFromCloud_twin(uint8_t* topic, uint8_t* payload);
 int32_t APP_GetLightSensorValue(void);
 float   APP_GetTempSensorValue(void);
+void    APP_WifiGetStatus(char* buffer);
+void    APP_WifiScan(char* buffer);
 
 #endif /* _APP_H */
 
-//DOM-IGNORE-BEGIN
+// DOM-IGNORE-BEGIN
 #ifdef __cplusplus
 }
 #endif
-//DOM-IGNORE-END
+// DOM-IGNORE-END
 
 
 /*******************************************************************************

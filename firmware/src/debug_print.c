@@ -38,6 +38,7 @@ static int                    printBuffPtr;
 static OSAL_MUTEX_HANDLE_TYPE consoleMutex;
 static debug_severity_t       debug_severity_filter    = SEVERITY_NONE;
 static char                   debug_message_prefix[25] = "sn000000000000000000";
+static volatile bool          debug_disabled = false;
 
 char tmpBuf[APP_PRINT_BUFFER_SIZE];
 char tmpFormat[APP_PRINT_BUFFER_SIZE];
@@ -68,6 +69,17 @@ void debug_setPrefix(const char* prefix)
 {
     strncpy(debug_message_prefix, prefix, sizeof(debug_message_prefix));
     debug_message_prefix[strlen(debug_message_prefix)] = 0;
+}
+
+void debug_disable(bool disable)
+{
+    // SYS_CONSOLE_Flush(0); // this is NOP
+    debug_disabled = disable;
+
+    if (disable == false)
+    {
+        SYS_CONSOLE_Message(0, "\r\n");
+    }
 }
 
 // *****************************************************************************
@@ -114,25 +126,28 @@ void debug_printer(debug_severity_t debug_severity, debug_errorLevel_t error_lev
 
             debug_mutex_lock(&consoleMutex);
 
-            sprintf(tmpFormat, "%s %s %s %s\r\n" CSI_RESET, debug_message_prefix, severity_strings[debug_severity], level_strings[error_level], format);
-
-            va_start(args, format);
-            len = vsnprintf(tmpBuf, APP_PRINT_BUFFER_SIZE, tmpFormat, args);
-            va_end(args);
-
-            if ((len > 0) && (len < APP_PRINT_BUFFER_SIZE))
+            if (debug_disabled == false || error_level == LEVEL_ERROR) // always print error
             {
-                char* pBuf;
-                if ((len + printBuffPtr) > APP_PRINT_BUFFER_SIZE)
-                {
-                    printBuffPtr = 0;
-                }
+                sprintf(tmpFormat, "%s %s %s %s\r\n" CSI_RESET, debug_message_prefix, severity_strings[debug_severity], level_strings[error_level], format);
 
-                memcpy(&printBuff[printBuffPtr], tmpBuf, len);
-                pBuf                              = &printBuff[printBuffPtr];
-                printBuff[printBuffPtr + len + 1] = '\0';
-                printBuffPtr                      = (printBuffPtr + len + 3) & ~3;
-                SYS_CONSOLE_Write(0, pBuf, len);
+                va_start(args, format);
+                len = vsnprintf(tmpBuf, APP_PRINT_BUFFER_SIZE, tmpFormat, args);
+                va_end(args);
+
+                if ((len > 0) && (len < APP_PRINT_BUFFER_SIZE))
+                {
+                    char* pBuf;
+                    if ((len + printBuffPtr) > APP_PRINT_BUFFER_SIZE)
+                    {
+                        printBuffPtr = 0;
+                    }
+
+                    memcpy(&printBuff[printBuffPtr], tmpBuf, len);
+                    pBuf                              = &printBuff[printBuffPtr];
+                    printBuff[printBuffPtr + len + 1] = '\0';
+                    printBuffPtr                      = (printBuffPtr + len + 3) & ~3;
+                    SYS_CONSOLE_Write(0, pBuf, len);
+                }
             }
             OSAL_MUTEX_Unlock(&consoleMutex);
         }

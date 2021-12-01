@@ -115,6 +115,7 @@ void MQTT_CLIENT_iothub_publish(uint8_t* topic, uint8_t* payload, uint16_t paylo
     // Payload
     cloudPublishPacket.payload       = payload;
     cloudPublishPacket.payloadLength = payload_len;
+    debug_printInfo("  HUB: MQTT Interface Payload: %d", payload_len);
 
     if (MQTT_CreatePublishPacket(&cloudPublishPacket) != true)
     {

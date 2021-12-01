@@ -51,6 +51,7 @@
 #include "peripheral/sercom/i2c_master/plib_sercom3_i2c_master.h"
 #include "peripheral/nvmctrl/plib_nvmctrl.h"
 #include "peripheral/evsys/plib_evsys.h"
+#include "peripheral/sercom/spi_slave/plib_sercom0_spi_slave.h"
 #include "driver/winc/include/wdrv_winc_api.h"
 #include "system/command/sys_command.h"
 #include "peripheral/port/plib_port.h"
