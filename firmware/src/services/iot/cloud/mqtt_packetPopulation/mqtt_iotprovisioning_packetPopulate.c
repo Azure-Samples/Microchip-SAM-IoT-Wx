@@ -22,6 +22,16 @@
 #ifdef CFG_MQTT_PROVISIONING_HOST
 #define HALF_SECOND_MS 500L
 
+/**
+* @brief Provisioning polling interval.
+*
+* @details This is used for cases where the service does not supply a retry-after hint during the 
+*          register and query operations.
+*/
+#ifndef PROVISIONING_POLLING_INTERVAL_S
+    #define PROVISIONING_POLLING_INTERVAL_S (3U)
+#endif
+
 pf_MQTT_CLIENT pf_mqtt_iotprovisioning_client = {
     MQTT_CLIENT_iotprovisioning_publish,
     MQTT_CLIENT_iotprovisioning_receive,
@@ -151,57 +161,76 @@ void MQTT_CLIENT_iotprovisioning_connect(char* device_id)
 void dps_client_register(uint8_t* topic, uint8_t* payload)
 {
     az_result rc;
-    int       topic_len   = strlen((const char*)topic);
-    int       payload_len = strlen((const char*)payload);
+    int topic_len = strlen((const char*)topic);
+    int payload_len = strlen((const char*)payload);
 
-    debug_printTrace("  DPS: dps_client_register (MQTT SUBSCRIBE callback)");
+    debug_printInfo("   DPS: %s()", __func__);
 
-    if (az_result_failed(rc = az_iot_provisioning_client_parse_received_topic_and_payload(&provisioning_client,
-                                                                                          az_span_create(topic, topic_len),
-                                                                                          az_span_create(payload, payload_len),
-                                                                                          &dps_register_response)))
+    if (az_result_failed(
+            rc = az_iot_provisioning_client_parse_received_topic_and_payload(
+                    &provisioning_client,
+                    az_span_create(topic, topic_len),
+                    az_span_create(payload, payload_len),
+                    &dps_register_response)))
     {
-        debug_printError("  DPS: az_iot_provisioning_client_parse_received_topic_and_payload fail. rc = %d\n", rc);
+        if ( rc != AZ_ERROR_IOT_TOPIC_NO_MATCH )
+        {
+            debug_printError("   DPS: az_iot_provisioning_client_parse_received_topic_and_payload fail:%d\n", (int)rc);
+        }
+        else
+        {
+            debug_printWarn("   DPS: ignoring unknown topic.\n");
+        }
     }
-    else
+    else if (az_iot_provisioning_client_operation_complete (dps_register_response.operation_status))
     {
         switch (dps_register_response.operation_status)
         {
-            case AZ_IOT_PROVISIONING_STATUS_ASSIGNING:
-                debug_printInfo("  DPS: ASSIGNING");
-                dps_assigning_timer_handle = SYS_TIME_CallbackRegisterMS(dps_assigning_task,
-                                                                         0,
-                                                                         1000 * dps_register_response.retry_after_seconds,
-                                                                         SYS_TIME_SINGLE);
-                break;
-
             case AZ_IOT_PROVISIONING_STATUS_ASSIGNED:
+                debug_printGood("   DPS: ASSIGNED");
                 SYS_TIME_TimerDestroy(dps_retry_timer_handle);
                 SYS_TIME_TimerDestroy(dps_assigning_timer_handle);
-                az_span_to_str(hub_hostname_buffer,
-                               sizeof(hub_hostname_buffer),
-                               dps_register_response.registration_state.assigned_hub_hostname);
+
+                az_span_to_str(hub_hostname_buffer, sizeof(hub_hostname_buffer), dps_register_response.registration_state.assigned_hub_hostname);
                 hub_hostname = hub_hostname_buffer;
-
-                debug_printGood("  DPS: ASSIGNED to %s", hub_hostname);
-
-                pf_mqtt_iotprovisioning_client.MQTT_CLIENT_task_completed();
                 LED_SetCloud(LED_INDICATOR_PENDING);
+                pf_mqtt_iotprovisioning_client.MQTT_CLIENT_task_completed();
                 break;
 
             case AZ_IOT_PROVISIONING_STATUS_FAILED:
-                debug_printError("  DPS: Registration FAILED.  Status = %d", dps_register_response.status);
+                debug_printError("   DPS: FAILED with error %lu: TrackingID: [%.*s] \"%.*s\"",
+                    (unsigned long)dps_register_response.registration_state.extended_error_code,
+                    (size_t)az_span_size(dps_register_response.registration_state.error_tracking_id),
+                    (char *)az_span_ptr(dps_register_response.registration_state.error_tracking_id),
+                    (size_t)az_span_size(dps_register_response.registration_state.error_message),
+                    (char *)az_span_ptr(dps_register_response.registration_state.error_message));
+
                 LED_SetCloud(LED_INDICATOR_ERROR);
                 break;
 
             case AZ_IOT_PROVISIONING_STATUS_DISABLED:
-                debug_printWarn("  DPS: DISABLED");
+                debug_printError("   DPS: device is DISABLED");
                 LED_SetCloud(LED_INDICATOR_ERROR);
                 break;
 
             default:
+                debug_printError("   DPS: unexpected status: %d\n", (int)dps_register_response.operation_status);
+                LED_SetCloud(LED_INDICATOR_ERROR);
                 break;
         }
+    }
+    else // Operation is not complete.
+    {
+        if (dps_register_response.retry_after_seconds == 0)
+        {
+            dps_register_response.retry_after_seconds = PROVISIONING_POLLING_INTERVAL_S;
+        }
+
+        debug_printInfo("   DPS: ASSIGNING");
+        dps_assigning_timer_handle = SYS_TIME_CallbackRegisterMS(dps_assigning_task,
+                                                            0,
+                                                            1000 * dps_register_response.retry_after_seconds,
+                                                            SYS_TIME_SINGLE);
     }
 }
 
