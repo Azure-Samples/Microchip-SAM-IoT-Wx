@@ -14,6 +14,6 @@
 #define CFG_LED_DEBUG 0
 
 // Comment out or remove IOT_PLUG_AND_PLAY_MODEL_ID to run as non-IoT Plug and Play client
-#define IOT_PLUG_AND_PLAY_MODEL_ID "dtmi:com:Microchip:SAM_IoT_WM;1"
+#define IOT_PLUG_AND_PLAY_MODEL_ID "dtmi:com:Microchip:SAM_IoT_WM;2"
 
 #endif   // IOT_SENSOR_NODE_CONFIG_H

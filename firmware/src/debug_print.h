@@ -29,6 +29,7 @@
 #define DEBUG_PRINT_H
 
 #include "iot_config/IoT_Sensor_Node_config.h"
+#include <stdbool.h>
 
 #define CSI_RESET   "\33[0m"
 #define CSI_BLACK   "\33[30m"
@@ -86,6 +87,7 @@ void debug_setSeverity(debug_severity_t debug_level);
 void debug_printer(debug_severity_t debug_severity, debug_errorLevel_t error_level, const char* format, ...);
 void debug_setPrefix(const char* prefix);
 void debug_init(const char* prefix);
+void debug_disable(bool disable);
 //void debug_printf(const char* format, ...);
 
 
