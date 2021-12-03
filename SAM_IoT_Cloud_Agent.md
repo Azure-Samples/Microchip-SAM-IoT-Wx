@@ -123,11 +123,11 @@ Click this link for the setup procedure: [Development Tools Installation](https:
 
 - Open a serial terminal (e.g. PuTTY, TeraTerm, etc.) and connect to the COM port corresponding to the **SAM-IoT Development Board** at `9600 baud` (e.g. open PuTTY Configuration window &gt; choose `session` &gt; choose `Serial`&gt; Enter the right COMx port). You can find the COM info by opening your PC’s `Device Manager` &gt; expand `Ports(COM & LPT)` &gt; take note of `Curiosity Virtual COM Port` .
 
-<img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image27.png">
+<img src=".//media/image27.png">
 
 4. Before typing anything in the terminal emulator window, **disable** the local echo feature in the terminal settings for best results.  In the terminal window, hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character). Type `help` and then hit `[RETURN]` to get the list of available commands for the CLI.  The Command Line Interface allows you to send simple ASCII-string commands to set or get the user-configurable operating parameters of the application while it is running.
 
-<img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image44.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
+<img src=".//media/image44.png" style="width:5.in;height:3.18982in"/>
 
 5. In the terminal emulator window, set the debug messaging level to 0 to temporarily disable the output messages. The debug level can be set anywhere from 0 to 4.  Use the `debug <level>` command by manually typing it into the CLI.  The complete command must be followed by hitting `[RETURN]`
 
@@ -175,37 +175,37 @@ IoT Central allows you to create an application dashboard to monitor the telemet
 
    - Choose a unique `Application name` which will result in a unique `URL` for accessing your application. Azure IoT Builder will populate a suggested unique `Application name` which can/should be leveraged, resulting in a unique `URL`.
 
-     <img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image80a.png" style="width:5.5.in;height:2.53506in" alt="A screenshot of a cell phone Description automatically generated" />
+     <img src=".//media/image80a.png" style="width:5.5.in;height:2.53506in"/>
 
    - If you select the **Free** plan, you can connect up to 5 devices.  However, the free trial period will expire after 7 days which means a [paid pricing plan](https://azure.microsoft.com/en-us/pricing/details/iot-central/) will need to be selected to continue using the application.  Of course, there is nothing to stop you from creating a new free trial application but the device will need to be configured for the app from scratch.  Since the **Standard** plans each allow 2 free devices with no time-restricted trial period, if you only plan on evaluating 1 or 2 devices for connecting to the IoT Central app, then it's best to choose the **Standard 2** plan to get the highest total allowable number of messages (30K per month).
 
-     <img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image80b.png" style="width:6.5.in;height:3.63506in" alt="A screenshot of a cell phone Description automatically generated" />
+     <img src=".//media/image80b.png" style="width:6.5.in;height:3.63506in" />
 
    - `Billing info` section: If there is an issue with selecting an existing subscription in the drop-down list (or no subscriptions appear in the list at all), click on the `Create subscription` link to create a new subscription to use for the creation of this application.
 
-     <img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image80c.png" style="width:6.5.in;height:2.53506in" alt="A screenshot of a cell phone Description automatically generated" />
+     <img src=".//media/image80c.png" style="width:6.5.in;height:2.53506in"/>
 
 3. Create an X.509 enrollment group for your IoT Central application. If not already opened, launch your IoT Central application and navigate to `Administration` in the left pane and select `Device connection`
 
 4. Select `+ Create enrollment group`, and create a new enrollment group using any name (Group type = `IoT devices`, attestation type = `Certificates (X.509)`).  Hit `Save` when finished
 
-   <img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image81.png" style="width:6.5.in;height:3.63506in" alt="A screenshot of a cell phone Description automatically generated" />
+   <img src=".//media/image81.png" style="width:6.5.in;height:3.63506in" />
 
 5. Now that the new enrollment group has been created, select `+ Manage Primary`.
 
-   <img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image82.png" style="width:5.5.in;height:2.53506in" alt="A screenshot of a cell phone Description automatically generated" />
+   <img src=".//media/image82.png" style="width:5.5.in;height:2.53506in" />
 
 6. Select the file/folder icon associated with the `Primary` field and upload the root certificate file `root-ca.crt` (located in the `ChainOfTrust` sub-folder that was created by the `SAM-IoT Provisioning Tools Package for Windows`).  The message "`(!) Needs verification`" should appear.  The `Subject` and `Thumbprint` fields will automatically populate themselves
 
-   <img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image75.png" style="width:5.5.in;height:3.13506in" alt="A screenshot of a cell phone Description automatically generated" />
+   <img src=".//media/image75.png" style="width:5.5.in;height:3.13506in" />
 
 7. Click `Generate verification code` (this code will be copied to the clipboard which will be needed in a future step)
 
-   <img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image76.png" style="width:6.5.in;height:2.03506in" alt="A screenshot of a cell phone Description automatically generated" />
+   <img src=".//media/image76.png" style="width:6.5.in;height:2.03506in" />
 
 8. Open a Git Bash window (Start menu &gt; type `Git Bash`)
 
-   <img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image15.png" style="width:3.21739in;height:0.94745in" alt="A picture containing ball, clock Description automatically generated" />
+   <img src=".//media/image15.png" style="width:3.21739in;height:0.94745in" />
 
 9. Using the Git Bash command line, navigate to your certificates folder (the `ChainOfTrust` sub-folder which was generated by the [SAM-IoT Provisioning Tools Package for Windows](https://github.com/randywu763/sam-iot-provision))
 
@@ -221,7 +221,7 @@ IoT Central allows you to create an application dashboard to monitor the telemet
     openssl req -new -key root-ca.key -out azure_root_ca_verification.csr
     ```
 
-    <img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image16.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
+    <img src=".//media/image16.png" style="width:5.in;height:3.18982in" />
 
 11. Generate the verification certificate by executing the following command exactly as shown (suggest copy and paste for best results)
 
@@ -231,19 +231,19 @@ IoT Central allows you to create an application dashboard to monitor the telemet
 
 12. Click `Verify` and select the `azure_signer_verification.cer` file to upload.  Confirm that the `Primary` certificate has been verified and that a `Thumbprint` has been generated for your certificate.  Click on `Close` to exit the current window, then click on `Save` at the top of the web application window.  The X.509 enrollment group has been successfully created and should be ready to go!
 
-    <img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image83.png" style="width:5.in;height:2.18982in" alt="A screenshot of a cell phone Description automatically generated" />
+    <img src=".//media/image83.png" style="width:5.in;height:2.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
 13. If not already active, launch a terminal emulator window and connect to the COM port corresponding to the SAM-IoT board at `9600` baud (**disable** local echo for the terminal settings for best results).  Hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character). Type `help` and then hit `[RETURN]` to get the list of available commands for the CLI.  The Command Line Interface allows you to send simple ASCII-string commands to set or get the user-configurable operating parameters of the application while it is running
 
-    <img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image44.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
+    <img src=".//media/image44.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
 14. Look up the `ID Scope` for the DPS created/used by your IoT Central application (navigate to your application's web page and using the left-hand navigation pane, select `Administration` > `Device connection`).  The `ID Scope` will be programmed/saved into the [ATECC608A](https://www.microchip.com/wwwproducts/en/atecc608a) secure element on the board in the next step
 
-    <img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image84.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
+    <img src=".//media/image84.png" style="width:5.in;height:3.18982in" />
 
 15. In the terminal emulator window, hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character>). At the CLI prompt, type in the `idscope <your_ID_scope>` command to set it (which gets saved in the [ATECC608A](https://www.microchip.com/wwwproducts/en/atecc608a) secure element on the board) and then hit `[RETURN]`.  The ID Scope can be read out from the board by issuing the `idscope` command without specifying any parameter on the command line
 
-    <img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image85.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
+    <img src=".//media/image85.png" style="width:5.in;height:3.18982in" />
 
 16. In the terminal emulator window, hit `[RETURN]` to bring up the CLI prompt. Type in the command `reset` and hit `[RETURN]`
 
@@ -259,7 +259,7 @@ IoT Central allows you to create an application dashboard to monitor the telemet
 
 19. Go back to your web browser to access the Azure IoT Central application.  Use the left-hand side pane and select `Devices` > `All Devices`.  Confirm that your device is listed – the device name & ID is the Common Name of the device certificate (which should be `sn + {17-digit device ID}`)
 
-    <img src="C:/Users/keianasnell/Documents/GitHub/Microchip-SAM-IoT-Wx/media/image86.png" style="width:5.in;height:1.38982in" alt="A screenshot of a cell phone Description automatically generated" />
+    <img src=".//media/image86.png" style="width:5.in;height:1.38982in" alt="A screenshot of a cell phone Description automatically generated" />
 
 
 
