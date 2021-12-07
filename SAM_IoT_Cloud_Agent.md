@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This document describes how to utilize the SAM-IoT WG Development Board as a cloud agent and the PIC-IoT Development Board as its host processor to connect Azure IoT Central. The SAM-IoT WG Development Board will be provisioned for use with Azure IoT services using self-signed X.509 certificate-based authentication.
+This document describes how to utilize the SAM-IoT WG Development Board as a cloud agent – providing a serial-to-cloud bridge between an application processor (e.g. PIC-IoT Wx Development Board) and an IoT Central application. The SAM-IoT WG Development Board will be provisioned for use with Azure IoT services using self-signed X.509 certificate-based authentication.
 
 
 
@@ -117,9 +117,13 @@ Click this link for the setup procedure: [Development Tools Installation](https:
 
    
 
-2. Connect the **SAM-IoT Development Board** to the PC, then make sure `CURIOSITY` device shows up as a disk drive on the `Desktop` or in a `File Explorer` window. 
+2. Connect the **SAM-IoT Development Board** to the PC, then make sure `CURtelemIOSITY` device shows up as a disk drive on the `Desktop` or in a `File Explorer` window. 
 
-3. Set up a Command Line Interface (CLI) to the board.
+3. Connect the board to PC, then make sure `CURIOSITY` device shows up as a disk drive on the `Desktop` or in a `File Explorer` window. Drag and drop (i.e. copy) the pre-built `*.hex` file (located in the folder at `Microchip-SAM-IoT-Wx` > `firmware` > `AzurePnPDps.X` > `dist` > `SAMD21_WG_IOT` > `production`) to the `CURIOSITY` drive
+
+   [![img](.//media/image115.png)](https://github.com/Azure-Samples/Microchip-SAM-IoT-Wx/blob/main/media/image115.png)
+
+4. Set up a Command Line Interface (CLI) to the board.
 
 - Open a serial terminal (e.g. PuTTY, TeraTerm, etc.) and connect to the COM port corresponding to the **SAM-IoT Development Board** at `9600 baud` (e.g. open PuTTY Configuration window &gt; choose `session` &gt; choose `Serial`&gt; Enter the right COMx port). You can find the COM info by opening your PC’s `Device Manager` &gt; expand `Ports(COM & LPT)` &gt; take note of `Curiosity Virtual COM Port` .
 
@@ -280,6 +284,20 @@ NOTE: It is strongly recommended to issue the `telemetry 0,0` command on the CLI
 ## Data Visualization using the IoT Central Application
 
 Using the dashboard drop-down selection list, choose the `SAM-IoT WM v2 Properties & Telemetry Data Buckets` dashboard in the IoT Central Template Application to see the last known received values for each of the 4 telemetry string values.
+
+Note: you may need to configure each of the property tiles in the premade IoT Central Template application to the device you just connected and validated. To do this, click the "Edit" button at the top of your dashboard, then click "Configure" (gear icon) on each desired property tile. Then, select your device group (in this case, `SAM-IoT WM v2`) and your device as listed before (which should be `sn + {17-digit device ID}`).
+
+![image132](.//media/image132.png)
+
+
+
+Here are a list of suggested properties to include in the dashboard (see screenshot below for visual):
+
+| System Information                                           | App MCU Properties                                           | LED States                                                   |                              |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------- |
+| ATWINC1510 Firmware Version<br />Debug Level<br/>Disable Telemetry<br/>IP Address<br/>Set Telemetry Interval | App MCU Property 1<br/>App MCU Property 2<br/>App MCU Property 3<br/>App MCU Property 4 | Blue LED state<br/>Green LED state<br/>Red LED state<br/>Yellow LED state |                              |
+| **Telemetry Data Bucket #1**                                 | **Telemetry Data Bucket #2**                                 | **Telemetry Data Bucket #3**                                 | **Telemetry Data Bucket #4** |
+| App MCU Telemetry 1 (String)                                 | App MCU Telemetry 2 (String)                                 | App MCU Telemetry 3 (String)                                 | App MCU Telemetry 4 (String) |
 
 <img src=".//media/image126.png"/>
 
