@@ -1,1 +1,0 @@
- -c -mcpu=$(MP_PROCESSOR_OPTION)      -g -D__DEBUG   -mno-eds-warn  -omf=elf -DXPRJ_PIC24_IOT_WG=$(CND_CONF)  -legacy-libc  $(COMPARISON_BUILD)  -O0 -msmart-io=1 -Wall -msfr-warn=off    -mdfp="${DFP_DIR}/xc16"/Users/c14166/GitHub Repositories/MCHP-IoT_SPI/PIC-IoT_SPI-Master.X/mcc_generated_files/pin_manager.c

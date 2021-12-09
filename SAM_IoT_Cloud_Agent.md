@@ -87,15 +87,15 @@ For example, the following data frame tells the SAM-IoT to update the `telemetry
 
 ## Program the DTI Test Platform using a PIC-IoT Development Board Configured as the SPI Master
 
-1. Clone/download the MPLAB X demo project by issuing the following commands in a `Command Prompt` or `PowerShell` window
+1. Clone/download the SPI code example project by issuing the following commands in a `Command Prompt` or `PowerShell` window
 
    ```bash
-   git clone https://github.com/Azure-Samples/Microchip-SAM-IoT-Wx.git
-   cd Microchip-SAM-IoT-Wx
+   git clone https://github.com/randywu763/MCHP-IoT_SPI.git
+   cd MCHP-IoT_SPI
    git submodule update --init
    ```
 
-2. Connect the **PIC-IoT Development Board** to the PC, then make sure `CURIOSITY` device shows up as a disk drive on the `Desktop` or in a `File Explorer` window. Drag and drop (i.e. copy) the pre-built `*.hex` file (located in the folder at `Microchip-SAM-IoT-Wx` > `firmware` > `PIC-IoT_SPI-Master.X` > `dist` > `PIC24_IOT_WG` > `production`) to the `CURIOSITY` drive.
+2. Connect the **PIC-IoT Development Board** to the PC, then make sure `CURIOSITY` device shows up as a disk drive on the `Desktop` or in a `File Explorer` window. Drag and drop (i.e. copy) the pre-built `*.hex` file (located in the folder at `MCHIP-IoT_SPI` > `PIC-IoT_SPI-Master.X` > `dist` > `PIC24_IOT_WG` > `production`) to the `CURIOSITY` drive.
 
    <img src=".//media/image130.png"/>
 
@@ -111,19 +111,27 @@ Click this link for the setup procedure: [Development Tools Installation](https:
 
 ## Program SAM-IoT Development Board Configured as SPI Slave
 
-1. Make the appropriate jumper connections between the J20 headers on both development boards.
+1. Clone/download the MPLAB X demo project by issuing the following commands in a `Command Prompt` or `PowerShell` window.
+
+   ```bash
+   git clone https://github.com/Azure-Samples/Microchip-SAM-IoT-Wx.git
+   cd Microchip-SAM-IoT-Wx
+   git submodule update --init
+   ```
+
+2. Make the appropriate jumper connections between the J20 headers on both development boards.
 
    <img src=".//media/image125.png"/>
 
    
 
-2. Connect the **SAM-IoT Development Board** to the PC, then make sure `CURtelemIOSITY` device shows up as a disk drive on the `Desktop` or in a `File Explorer` window. 
+3. Connect the **SAM-IoT Development Board** to the PC, then make sure `CURIOSITY` device shows up as a disk drive on the `Desktop` or in a `File Explorer` window. 
 
-3. Connect the board to PC, then make sure `CURIOSITY` device shows up as a disk drive on the `Desktop` or in a `File Explorer` window. Drag and drop (i.e. copy) the pre-built `*.hex` file (located in the folder at `Microchip-SAM-IoT-Wx` > `firmware` > `AzurePnPDps.X` > `dist` > `SAMD21_WG_IOT` > `production`) to the `CURIOSITY` drive
+4. Connect the board to PC, then make sure `CURIOSITY` device shows up as a disk drive on the `Desktop` or in a `File Explorer` window. Drag and drop (i.e. copy) the pre-built `*.hex` file (located in the folder at `Microchip-SAM-IoT-Wx` > `firmware` > `AzurePnPDps.X` > `dist` > `SAMD21_WG_IOT` > `production`) to the `CURIOSITY` drive
 
    [![img](.//media/image115.png)](https://github.com/Azure-Samples/Microchip-SAM-IoT-Wx/blob/main/media/image115.png)
 
-4. Set up a Command Line Interface (CLI) to the board.
+5. Set up a Command Line Interface (CLI) to the board.
 
 - Open a serial terminal (e.g. PuTTY, TeraTerm, etc.) and connect to the COM port corresponding to the **SAM-IoT Development Board** at `9600 baud` (e.g. open PuTTY Configuration window &gt; choose `session` &gt; choose `Serial`&gt; Enter the right COMx port). You can find the COM info by opening your PC’s `Device Manager` &gt; expand `Ports(COM & LPT)` &gt; take note of `Curiosity Virtual COM Port` .
 
