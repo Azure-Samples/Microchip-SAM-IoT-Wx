@@ -301,7 +301,7 @@ Note: you may need to configure each of the property tiles in the premade IoT Ce
 
 Here are a list of suggested properties to include in the dashboard (see screenshot below for visual):
 
-| System Information                                           | App MCU Properties                                           | LED States                                                   |                              |
+| **System Information**                                           | **App MCU Properties**                                           | **LED States**                                                   |                              |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------- |
 | ATWINC1510 Firmware Version<br />Debug Level<br/>Disable Telemetry<br/>IP Address<br/>Set Telemetry Interval | App MCU Property 1<br/>App MCU Property 2<br/>App MCU Property 3<br/>App MCU Property 4 | Blue LED state<br/>Green LED state<br/>Red LED state<br/>Yellow LED state |                              |
 | **Telemetry Data Bucket #1**                                 | **Telemetry Data Bucket #2**                                 | **Telemetry Data Bucket #3**                                 | **Telemetry Data Bucket #4** |
