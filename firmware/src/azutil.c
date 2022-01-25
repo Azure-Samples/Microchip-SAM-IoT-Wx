@@ -126,10 +126,13 @@ void init_twin_data(twin_properties_t* twin_properties)
     twin_properties->reported_led_red   = LED_TWIN_NO_CHANGE;
     twin_properties->reported_led_blue  = LED_TWIN_NO_CHANGE;
     twin_properties->reported_led_green = LED_TWIN_NO_CHANGE;
+    twin_properties->debugLevel         = SEVERITY_INFO;
+    twin_properties->ip_address[0]      = '\0';
     twin_properties->app_property_1     = 0;
     twin_properties->app_property_2     = 0;
     twin_properties->app_property_3     = 0;
     twin_properties->app_property_4     = 0;
+    twin_properties->telemetry_disable_flag = 0;
 }
 
 /**************************************
