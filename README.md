@@ -154,6 +154,8 @@ Refer to the following links for additional information for IoT Explorer, IoT Hu
 
 •	[How to use IoT Explorer to interact with the device](https://docs.microsoft.com/en-us/azure/iot-pnp/howto-use-iot-explorer#install-azure-iot-explorer)
 
+•	[Azure IoT Central - All Documentation](https://docs.microsoft.com/en-us/azure/iot-central/)
+
 •	[Create an Azure IoT Central application](https://docs.microsoft.com/en-us/azure/iot-central/core/quick-deploy-iot-central)
 
 •	[Manage devices in your Azure IoT Central application](https://docs.microsoft.com/en-us/azure/iot-central/core/howto-manage-devices)

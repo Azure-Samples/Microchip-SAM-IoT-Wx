@@ -88,9 +88,13 @@ IoT Central allows you to create an application dashboard to monitor the telemet
         <img src=".//media/image80b.png">
 
     - `Billing info` section: If there is an issue with selecting an existing subscription in the drop-down list (or no subscriptions appear in the list at all), click on the `Create subscription` link to create a new subscription to use for the creation of this application.  Take note of the exact subscription name (e.g. "Azure subscription 1" like shown in the below screen shot) which was selected as it will be needed in a future step (suggest copying/pasting the exact text into a text editor file as temporary storage for the name)
-    
+       
         <img src=".//media/image80c.png">
 
+        NOTE: If the message `Something went wrong` appears underneath the `Azure subscription` field, open up a web browser and log into your account using the [Azure portal](https://portal.azure.com) then retry selecting (or creating) a valid subscription
+
+        <img src=".//media/image80d.png">
+        
 3. Click the `Create` button (the application will be automatically saved in your [IoT Central Portal](https://apps.azureiotcentral.com))
 
 4. Using the individual enrollment method, register the device certificate with your custom IoT Central application by running the [pyazureutils](https://pypi.org/project/pyazureutils/) utility supplied by Microchip (which should already be installed) by executing the following steps:
@@ -106,7 +110,7 @@ IoT Central allows you to create an application dashboard to monitor the telemet
     - Execute the following command line (filling in each of the parameters with all your specific options). You may be prompted to log into your Microsoft Azure account if you are not currently signed in after the `pyazureutils` command starts execution
 
         ```bash
-        pyazureutils --subscription "<SUBSCRIPTION_NAME>" iotcentral register-device --certificate-file "<CERTIFICATE_NAME>" --template "<TEMPLATE_NAME>" --application-name "<APPLICATION_URL>"
+        pyazureutils --subscription "<SUBSCRIPTION_NAME>" iotcentral register-device --certificate-file "<CERTIFICATE_NAME>" --template "<TEMPLATE_NAME>" --application-name "<CUSTOMIZED_PORTION_OF_URL>"
         ```
 
         For example, based on the preceding example screenshots of building the application
@@ -114,7 +118,7 @@ IoT Central allows you to create an application dashboard to monitor the telemet
         - <SUBSCRIPTION_NAME> = Azure Subscription 1
         - <CERTIFICATE_NAME> = device.crt
         - <TEMPLATE_NAME> = SAM_IoT_WM;2
-        - <APPLICATION_URL> = custom-1pfphmras2b
+        - <CUSTOMIZED_PORTION_OF_URL> = custom-1pfphmras2b
 
         ```bash
         pyazureutils --subscription "Azure subscription 1" iotcentral register-device --certificate-file "device.crt" --template "SAM_IoT_WM;2" --application-name "custom-1pfphmras2b"
