@@ -20,7 +20,7 @@ Please install the following software in the exact order listed:
 
 3. Download and run Microchip's [IoT Provisioning Tool](https://github.com/microchip-pic-avr-tools/iotprovision-bin/releases/latest) which is used to (1) generate the security certificates used for authentication and (2) store them into the [ATWINC1510](https://www.microchip.com/en-us/product/ATWINC1510) Wi-Fi controller module by executing the following steps:
 
-   - Connect the Microchip PIC-IoT Development Board to the Host PC using a standard micro-USB cable
+   - Connect the Microchip SAM-IoT Development Board to the Host PC using a standard micro-USB cable
    - Confirm that a device named `CURIOSITY` shows up as a disk drive on the `Desktop` or in a `File Explorer` window
    - Launch a `Command Prompt` or `PowerShell` window (click on `Start` > type `PowerShell` in the Search field > `Open`)
    - Using the command line, navigate to the directory where the `iotprovision-bin` executable file resides (`<my_path>\iotprovision-bin-2\windows64\`)
