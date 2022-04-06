@@ -22,6 +22,7 @@
   - [2. Connecting to Azure IoT Services](#2-connecting-to-azure-iot-services)
       - a. IoT Central (Recommended)
       - b. IoT Hub
+- [Frequently Asked Questions](#frequently-asked-questions)
 - [SAM-IoT as a Cloud Agent for an External Application Processor](#sam-iot-as-a-cloud-agent-for-an-external-application-processor)
 - [References](#references)
 - [Conclusion](#conclusion)
@@ -36,7 +37,7 @@
 
 ### Microchip “Provisioning” vs. Microsoft “Provisioning”
 
-The term “provisioning” is used throughout this document (e.g. SAM-IoT Provisioning Tool, provisioning key, provisioning device, Device Provisioning Service, etc.). On the Microchip side, the provisioning process is to securely inject certificates into the hardware. From the
+The term “provisioning” is used throughout this document (e.g. IoT Provisioning Tool, provisioning key, provisioning device, Device Provisioning Service, etc.). On the Microchip side, the provisioning process is to securely inject certificates into the hardware. From the
 context of Microsoft, provisioning is defined as the relationship between the hardware and the Cloud (Azure). [Azure IoT Hub Device Provisioning Service (DPS)](https://docs.microsoft.com/azure/iot-dps/#:~:text=The%20IoT%20Hub%20Device%20Provisioning%20Service%20%28DPS%29%20is,of%20devices%20in%20a%20secure%20and%20scalable%20manner.)
 allows the hardware to be provisioned securely to the right IoT Hub.
 
@@ -50,7 +51,7 @@ This high-level architecture description summarizes the interactions between the
 
 - [ATWINC1510](https://www.microchip.com/wwwproducts/en/ATWINC1510): a low-power consumption Wi-Fi module that has access to the device certificate, signer CA certificate, and public key for mutual TLS handshaking between the board and the cloud
 
-- [SAM-IoT Provisioning Tools Package for Windows](https://github.com/randywu763/sam-iot-provision): Microchip-provided tools package for provisioning self-signed certificate utilizing the unique serial number and private key stored in the ATECC608A secure element
+- [IoT Provisioning Tool](https://www.microchip.com/design-centers/internet-of-things/iot-dev-kits/iot-provision-tool): Microchip-provided tool for provisioning self-signed certificate utilizing the unique serial number and private key stored in the ATECC608A secure element
 
 - [Azure IoT Embedded C SDK](https://azure.microsoft.com/en-us/updates/embedded-c-sdk-general-availability/): Microsoft-provided API designed to allow small, low-cost embedded IoT devices to communicate with Azure services, serving as translation logic between the application code and transport client
 
@@ -62,7 +63,7 @@ This high-level architecture description summarizes the interactions between the
 
  <img src=".//media/image4.png"/>
 
-In a nutshell, we will use Microchip’s [SAM-IoT Provisioning Tools Package for Windows](https://github.com/randywu763/sam-iot-provision) to send a Certificate Signing Request (CSR) to the ATECC608A to generate a self-signed certificate chain which is then obtained by the ATWINC1510 Wi-Fi module to perform a TLS mutual handshake between the client (SAM-IoT board) and the server (Azure), specifically using DPS.
+In a nutshell, we will use Microchip’s [IoT Provisioning Tool](https://www.microchip.com/design-centers/internet-of-things/iot-dev-kits/iot-provision-tool) to send a Certificate Signing Request (CSR) to the ATECC608A to generate a self-signed certificate chain which is then obtained by the ATWINC1510 Wi-Fi module to perform a TLS mutual handshake between the client (SAM-IoT board) and the server (Azure), specifically using DPS.
 
 On successful authentication, the SAM-IoT board will be provisioned to the correct IoT Hub that is pre-linked to DPS during the setup process. We can then leverage Azure IoT Central or IoT Explorer (the web and graphical tools used for interacting with and testing your IoT devices, respectively). Note that the ATECC608A only contains the private key. The self-signed certificate chain including root CA, signer CA (or intermediate CA), and device is stored in the ATWINC1510 Wi-Fi module used for the TLS handshake.
 
@@ -137,6 +138,10 @@ Click [here](https://docs.microsoft.com/en-us/azure/iot-central/overview-iot-opt
     IoT Hub's capabilities help you build scalable, full-featured IoT solutions such as managing industrial equipment used in manufacturing, tracking valuable assets in healthcare, and monitoring office building usage.
 
     Click this link for the programming procedure: [Connecting the Microchip SAM-IoT Wx Development Board to Azure IoT Hub](./SAM_IoT_Hub.md)
+
+## Frequently Asked Questions
+
+Having issues with connecting the board with Azure IoT services? Check out the [FAQ section](./FAQ.md)
 
 ## SAM-IoT as a Cloud Agent for an External Application Processor
 
