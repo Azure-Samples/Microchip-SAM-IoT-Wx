@@ -181,7 +181,7 @@ For example, if the SSID of the router is "MyWirelessRouter" and the WPA/WPA2 ke
 
 IoT Central allows you to create an application dashboard to monitor the telemetry and take appropriate actions based on customized rules.
 
-1. Create a custom IoT Central application by starting with an existing [Microchip IoT Development Board Template](https://apps.azureiotcentral.com/build/new/fc996b98-956b-4b9e-936c-1bfe4b313cb4) (if there is a problem with loading the template, refer to the [Create an application](https://docs.microsoft.com/en-us/azure/iot-central/core/quick-deploy-iot-central) section to create your IoT Central application from scratch). If you are not currently logged into your [Microsoft account](https://account.microsoft.com/account), you will be prompted to sign in with your credentials to proceed. If you do not have an existing Microsoft account, go ahead and create one now by clicking on the `Create one!` link
+1. Create a custom IoT Central application by starting with an existing [Microchip IoT Development Board Template](https://apps.azureiotcentral.com/build/new/03ac9c5d-8829-4a6f-92c7-ec88b6d24ea7) (if there is a problem with loading the template, refer to the [Create an application](https://docs.microsoft.com/en-us/azure/iot-central/core/quick-deploy-iot-central) section to create your IoT Central application from scratch). If you are not currently logged into your [Microsoft account](https://account.microsoft.com/account), you will be prompted to sign in with your credentials to proceed. If you do not have an existing Microsoft account, go ahead and create one now by clicking on the `Create one!` link
 
 2. Azure IoT Builder will guide you through the process of creating your application. Review and select the various settings for your IoT Central application (if needed, refer to [Create an application](https://docs.microsoft.com/en-us/azure/iot-central/core/quick-deploy-iot-central) for additional guidance on selecting the settings for your application). Do not click the `Create` button just yet - only after reviewing and taking into consideration the following recommendations:
   
@@ -246,11 +246,11 @@ IoT Central allows you to create an application dashboard to monitor the telemet
 
     <img src=".//media/image44.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-6. Look up the `ID Scope` for the DPS created/used by your IoT Central application (navigate to your application's web page and using the left-hand navigation pane, select `Administration` > `Device connection`).  The `ID Scope` will be programmed/saved into the [ATECC608A](https://www.microchip.com/wwwproducts/en/atecc608a) secure element on the board in the next step
+6. Look up the `ID Scope` for the DPS created/used by your IoT Central application (navigate to your application's web page and using the left-hand navigation pane, select `Administration` > `Device connection`).  The `ID Scope` will be programmed/saved into the [ATECC608B](https://www.microchip.com/wwwproducts/en/atecc608b) secure element on the board in the next step
 
     <img src=".//media/image84.png" style="width:5.in;height:3.18982in" />
 
-7. In the terminal emulator window, hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character>). At the CLI prompt, type in the `idscope <your_ID_scope>` command to set it (which gets saved in the [ATECC608A](https://www.microchip.com/wwwproducts/en/atecc608a) secure element on the board) and then hit `[RETURN]`.  The ID Scope can be read out from the board by issuing the `idscope` command without specifying any parameter on the command line
+7. In the terminal emulator window, hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character>). At the CLI prompt, type in the `idscope <your_ID_scope>` command to set it (which gets saved in the [ATECC608B](https://www.microchip.com/wwwproducts/en/atecc608b) secure element on the board) and then hit `[RETURN]`.  The ID Scope can be read out from the board by issuing the `idscope` command without specifying any parameter on the command line
 
     <img src=".//media/image85.png" style="width:5.in;height:3.18982in" />
 
@@ -289,6 +289,8 @@ NOTE: It is strongly recommended to issue the `telemetry 0,0` command on the CLI
 ## Data Visualization using the IoT Central Application
 
 Using the dashboard drop-down selection list, choose the `SAM-IoT WM v2 Properties & Telemetry Data Buckets` dashboard in the IoT Central Template Application to see the last known received values for each of the 4 telemetry string values.
+
+<img src=".//media/image100b.png"/>
 
 Note: you may need to configure each of the property tiles in the premade IoT Central Template application to the device you just connected and validated. To do this, click the "Edit" button at the top of your dashboard, then click "Configure" (gear icon) on each desired property tile. Then, select your device group (in this case, `SAM-IoT WM v2`) and your device as listed before (which should be `sn + {17-digit device ID}`).
 
