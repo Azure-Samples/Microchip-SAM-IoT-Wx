@@ -162,7 +162,7 @@ can assign to &gt; leave the rest as their existing defaults &gt; hit
 
     <img src=".//media/image23.png" style="width:6.5.in;height:1.43506in" alt="A screenshot of a cell phone Description automatically generated" />
 
-9. In the terminal emulator window, confirm that `local echo` is **disabled** in the terminal settings. Hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character). At the CLI prompt, type in the command `idscope <MY_ID_SCOPE>` to set the ID Scope (which gets saved in the ATECC608A secure element on the SAM-IoT board) and then hit `[RETURN]`. To confirm it was set correctly, the ID Scope can be read out from the board by issuing the `idscope` command (i.e. without specifying an ID Scope value as the parameter on the command line).
+9. In the terminal emulator window, confirm that `local echo` is **disabled** in the terminal settings. Hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character). At the CLI prompt, type in the command `idscope <MY_ID_SCOPE>` to set the ID Scope (which gets saved in the ATECCA608B secure element on the SAM-IoT board) and then hit `[RETURN]`. To confirm it was set correctly, the ID Scope can be read out from the board by issuing the `idscope` command (i.e. without specifying an ID Scope value as the parameter on the command line).
 
     <img src=".//media/image46.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
