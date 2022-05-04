@@ -115,7 +115,7 @@ Download and run Microchip's [IoT Provisioning Tool](https://github.com/microchi
    - Connect the Microchip SAM-IoT Development Board to the Host PC using a standard micro-USB cable
    - Confirm that a device named `CURIOSITY` shows up as a disk drive on the `Desktop` or in a `File Explorer` window
    - Launch a `Command Prompt` or `PowerShell` window (click on `Start` > type `PowerShell` in the Search field > `Open`)
-   - Using the command line, navigate to the directory where the `iotprovision-bin` executable file resides (`<my_path>\iotprovision-bin-2\windows64\`)
+   - Using the command line, navigate to the directory where the `iotprovision-bin` executable file resides (`<my_path>\iotprovision-bin\windows64\`)
    - Execute the following command line to launch the provisioning script
 
         ```shell
