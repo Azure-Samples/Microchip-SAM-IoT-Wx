@@ -8,6 +8,8 @@ Please install the following software in the exact order listed:
 
     - [MPLAB XC32 Compiler](https://www.microchip.com/en-us/development-tools-tools-and-software/mplab-xc-compilers#tabs)
 
+        NOTE: The last known XC32 compiler version which successfully builds this demonstration project was version `4.00`.  If the currently available download version is greater than this last known version and does not successfully build the provided demo project, download the last known working XC32 version from the [MPLAB Development Ecosystem Downloads Archive](https://www.microchip.com/en-us/tools-resources/archives/mplab-ecosystem)
+
     - [MPLAB Harmony Software Framework](https://microchipdeveloper.com/harmony3:mhc-overview)
 
 2. Install [Git](https://git-scm.com) (a free and open source distributed version control system) by executing the following steps:
