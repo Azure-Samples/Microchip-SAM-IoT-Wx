@@ -50,7 +50,7 @@ void debug_init(const char* prefix)
         debug_setPrefix(prefix);
     }
 
-    debug_setSeverity(SEVERITY_INFO);
+    debug_setSeverity(SEVERITY_ERROR);
     printBuffPtr = 0;
     OSAL_MUTEX_Create(&consoleMutex);
 }
