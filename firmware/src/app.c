@@ -323,6 +323,29 @@ static void APP_ConnectNotifyCb(DRV_HANDLE handle, WDRV_WINC_CONN_STATE currentS
     }
     else if (WDRV_WINC_CONN_STATE_DISCONNECTED == currentState)
     {
+        switch(errorCode)
+        {
+            case WDRV_WINC_CONN_ERROR_SCAN:
+                debug_printError("  WiFi: DISCONNECTED. Failed to detect AP during scan. Check SSID & authType");
+                break;
+            case WDRV_WINC_CONN_ERROR_AUTH:
+                debug_printError("  WiFi: DISCONNECTED. Failed to authenticate. Check pass phrase");
+                break;
+            case WDRV_WINC_CONN_ERROR_ASSOC:
+                debug_printError("  WiFi: DISCONNECTED, Error Code: %d.  Check WiFi Credentials", errorCode);
+                break;
+            case WDRV_WINC_CONN_ERROR_INPROGRESS:
+                debug_printError("  WiFi: DISCONNECTED, Error Code: %d.  Check WiFi Credentials", errorCode);
+                break;
+            case WDRV_WINC_CONN_ERROR_NOCRED:
+                debug_printError("  WiFi: DISCONNECTED, Error Code: %d.  Check WiFi Credentials", errorCode);
+                break;
+            case WDRV_WINC_CONN_ERROR_UNKNOWN:
+                debug_printError("  WiFi: DISCONNECTED, Error Code: %d.  Check WiFi Credentials", errorCode);
+                break;
+            default:
+                debug_printError("  WiFi: DISCONNECTED, Error Code: %d.  Check WiFi Credentials", errorCode);
+        }
         WiFi_ConStateCb(M2M_WIFI_DISCONNECTED);
     }
 }
