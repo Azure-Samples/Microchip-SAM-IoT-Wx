@@ -331,18 +331,11 @@ static void APP_ConnectNotifyCb(DRV_HANDLE handle, WDRV_WINC_CONN_STATE currentS
             case WDRV_WINC_CONN_ERROR_AUTH:
                 debug_printError("  WiFi: DISCONNECTED. Failed to authenticate. Check pass phrase");
                 break;
-            case WDRV_WINC_CONN_ERROR_ASSOC:
-                debug_printError("  WiFi: DISCONNECTED, Error Code: %d.  Check WiFi Credentials", errorCode);
-                break;
             case WDRV_WINC_CONN_ERROR_INPROGRESS:
-                debug_printError("  WiFi: DISCONNECTED, Error Code: %d.  Check WiFi Credentials", errorCode);
                 break;
+            case WDRV_WINC_CONN_ERROR_ASSOC:
             case WDRV_WINC_CONN_ERROR_NOCRED:
-                debug_printError("  WiFi: DISCONNECTED, Error Code: %d.  Check WiFi Credentials", errorCode);
-                break;
             case WDRV_WINC_CONN_ERROR_UNKNOWN:
-                debug_printError("  WiFi: DISCONNECTED, Error Code: %d.  Check WiFi Credentials", errorCode);
-                break;
             default:
                 debug_printError("  WiFi: DISCONNECTED, Error Code: %d.  Check WiFi Credentials", errorCode);
         }
