@@ -68,7 +68,12 @@ As a solution builder, you can use IoT Central to develop a cloud-hosted IoT sol
     >reset
     ```
 
-9. At this point, the board is connected to Wi-Fi, but has not yet established a connection with the cloud.  The `cloud` command can be used at any time to confirm the cloud connection status.  The complete command must be followed by hitting `[RETURN]`
+9. In the terminal emulator window, set the debug messaging level to 0 to temporarily disable the output messages. The debug level can be set anywhere from 0 to 4.  Use the `debug <level>` command by manually typing it into the CLI.  The complete command must be followed by hitting `[RETURN]`
+    ```bash
+    >debug 0
+    ```
+
+10. At this point, the board is connected to Wi-Fi, but has not yet established a connection with the cloud (the green and red LEDs may be flashing). The `cloud` command can be used at any time to confirm the cloud connection status (which as of right now should be false).  The complete command must be followed by hitting `[RETURN]`
     ```bash
     >cloud -status
     ```
@@ -135,7 +140,7 @@ IoT Central allows you to create an application dashboard to monitor the telemet
 
     **Future Consideration**: An enrollment group is an entry for a group of devices that share a common attestation mechanism. Using an enrollment group is recommended for a large number of devices that share an initial configuration, or for devices that go to the same tenant. Devices that use either symmetric key or X.509 certificates attestation are supported. [Create an X.509 Enrollment Group](./IoT_Central_Enrollment_Group.md) for your IoT Central application should the need ever arise in the future, when tens, hundreds, thousands, or even millions of devices (that are all derived from the same root certificate) need to connect to an application...
 
-5. Launch a terminal emulator window and connect to the COM port corresponding to the SAM-IoT board at `9600` baud (**disable** local echo for the terminal settings for best results).  Hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character). Type `help` and then hit `[RETURN]` to get the list of available commands for the CLI.  The Command Line Interface allows you to send simple ASCII-string commands to set or get the user-configurable operating parameters of the application while it is running
+5. Launch a terminal emulator window and connect to the COM port corresponding to the SAM-IoT board at `9600` baud (**disable** local echo for the terminal settings for best results).  If there are continuous non-stop messages being displayed on the terminal, disable them by typing `debug 0` followed by `[RETURN]`. Hit `[RETURN]` a couple of times to bring up the Command Line Interface prompt (which is simply the `>` character). Type `help` and then hit `[RETURN]` to get the list of available commands for the CLI.  The Command Line Interface allows you to send simple ASCII-string commands to set or get the user-configurable operating parameters of the application while it is running
 
     <img src=".//media/image44.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
@@ -143,9 +148,11 @@ IoT Central allows you to create an application dashboard to monitor the telemet
 
     <img src=".//media/image84a.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-7. In the terminal emulator window, hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character>). At the CLI prompt, type in the `idscope <your_ID_scope>` command to set it (which gets saved in the [ATECC608A](https://www.microchip.com/wwwproducts/en/atecc608a) secure element on the board) and then hit `[RETURN]`.  The ID Scope can be read out from the board by issuing the `idscope` command without specifying any parameter on the command line
+7. In the terminal emulator window, hit `[RETURN]` to bring up the Command Line Interface prompt (which is simply the `>` character>). At the CLI prompt, type in the `idscope <your_ID_scope>` command to set it (which gets saved in the [ATECC608A](https://www.microchip.com/wwwproducts/en/atecc608a) secure element on the board) and then hit `[RETURN]`.  The ID Scope can be read out from the board by issuing the `idscope` command without specifying any parameter on the command line - confirm that the ID Scope has been read back correctly before proceeding to the next step
 
     <img src=".//media/image85.png" style="width:5.in;height:3.18982in" alt="A screenshot of a cell phone Description automatically generated" />
+
+    NOTE: Make sure the ID scope reads back correctly. If not, keep repeating the write/read sequence until the correct ID scope has been read back from the board
 
 8. In the terminal emulator window, hit `[RETURN]` to bring up the CLI prompt. Type in the command `reset` and hit `[RETURN]`
 
@@ -158,7 +165,7 @@ IoT Central allows you to create an application dashboard to monitor the telemet
     >cloud -status
     ```
 
-11. Go back to your web browser to access the Azure IoT Central application.  Use the left-hand side pane and select `Devices` > `All Devices`.  Confirm that your device is listed – the device name & ID is the Common Name of the device certificate (which should be `sn + {17-digit device ID}`)
+11. Go back to your web browser to access the Azure IoT Central application.  Use the left-hand side pane and select `Devices` > `All Devices`.  Confirm that your device is listed – the device name & ID is the Common Name of the device certificate (which should be `sn + {17-digit device ID}`).  Click on the device name to see the additional details available for viewing
 
     <img src=".//media/image86.png" style="width:5.in;height:1.38982in" alt="A screenshot of a cell phone Description automatically generated" />
 
@@ -166,25 +173,29 @@ IoT Central allows you to create an application dashboard to monitor the telemet
 
     <img src=".//media/image87.png" style="width:5.in;height:1.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-13. Click on the `Command` tab; type `PT5S` in the `Reboot delay` field and then click on `Run` to send the command to the device to reboot in 5 seconds
+13. Click on the `Commands` tab; type `PT5S` in the `Delay before rebooting SAM-IoT` field and then click on `Run` to send the command to the device to reboot in 5 seconds
 
     <img src=".//media/image88.png" style="width:5.in;height:1.58982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-14. Within 5 seconds of sending the Reboot command, the SAM-IoT development board should reset itself.  Once the Blue and Green LED's stay constantly ON, press the SW0 and SW1 buttons (the Red LED may toggle with each button press)
+14. Within 5 seconds of sending the Reboot command, the SAM-IoT development board should reset itself.  Once the Blue and Green LED's **both** stay constantly ON, press the SW0 and SW1 buttons (the Red LED may toggle with each button press)
 
     <img src=".//media/image89.png" style="width:5.in;height:1.28982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-15. Click on the `Raw data` tab and confirm that the button press telemetry messages were received
+15. Click on the `Properties (Writable)` tab and type `0` (zero) in the `Disable Telemetry` field, then hit `Save`
 
-    <img src=".//media/image90.png" style="width:5.in;height:1.98982in" alt="A screenshot of a cell phone Description automatically generated" />
+    <img src=".//media/image89a.png"/>
 
-16. Click on the `Refresh` icon to display all messages received since the previous page refresh operation.  Confirm that periodic telemetry messages are being continuously received approximately every 10 seconds (the default interval value for the `telemetryInterval` property)
+16. Click on the `Raw data` tab and confirm that the button press telemetry messages were received (scroll the page to the right to view the `SW0/SW1 button push event` column)
+
+    <img src=".//media/image90.png"/>
+
+17. Click on the `Refresh` icon to display all messages received since the previous page refresh operation.  Confirm that periodic telemetry messages are being continuously received approximately every 10 seconds (the default interval value for the `telemetryInterval` property)
 
     <img src=".//media/image91.png" style="width:5.in;height:1.58982in" alt="A screenshot of a cell phone Description automatically generated" />
 
     <img src=".//media/image92.png" style="width:5.in;height:2.12982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-17. Increase the ambient light source shining on top of the board. Wait approximately 30 seconds.  Click on the `Refresh` icon to confirm that the light sensor value has increased
+18. Increase the ambient light source shining on top of the board. Wait approximately 30 seconds.  Click on the `Refresh` icon to confirm that the light sensor value has increased
 
     <img src=".//media/image93.png" style="width:5.in;height:2.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
@@ -207,7 +218,7 @@ IoT Central allows you to create an application dashboard to monitor the telemet
     <img src=".//media/image102a.png" style="width:5.in;height:2.18982in" alt="A screenshot of a cell phone Description automatically generated" />
     <img src=".//media/image102b.png" style="width:5.in;height:2.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-5. Select `Device Group` > `SAM-IoT WM - All devices` and then check the box for your specific device name for `Devices`
+5. Select `Device Group` > `SAM-IoT WM;2 - All devices` and then check the box for your specific device name for `Devices`
 
     <img src=".//media/image103.png" style="width:5.in;height:2.08982in" alt="A screenshot of a cell phone Description automatically generated" />
 
