@@ -181,7 +181,7 @@ IoT Central allows you to create an application dashboard to monitor the telemet
 
     <img src=".//media/image89.png" style="width:5.in;height:1.28982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-15. Click on the `Properties (Writable)` tab and type `0` (zero) in the `SW0/SW1 button push event` field, then hit `Save`
+15. Click on the `Properties (Writable)` tab and type `0` (zero) in the `Disable Telemetry` field, then hit `Save`
 
     <img src=".//media/image89a.png"/>
 
