@@ -3,7 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/c14166/Azure/Microchip-SAM-IoT-Wx-1/firmware/src/app.c</file>
+            <file>file:/C:/project/f/Microchip-SAM-IoT-Wx/firmware/src/app.c</file>
+            <file>file:/C:/project/f/Microchip-SAM-IoT-Wx/firmware/src/config/SAMD21_WG_IOT/driver/spi/src/drv_spi.c</file>
+            <file>file:/C:/project/f/Microchip-SAM-IoT-Wx/firmware/src/config/SAMD21_WG_IOT/startup_xc32.c</file>
+            <file>file:/C:/project/f/Microchip-SAM-IoT-Wx/firmware/src/main.c</file>
+            <file>file:/C:/project/f/Microchip-SAM-IoT-Wx/firmware/src/iot_cli.c</file>
+            <file>file:/C:/project/f/Microchip-SAM-IoT-Wx/firmware/src/azutil.c</file>
+            <file>file:/C:/project/f/Microchip-SAM-IoT-Wx/firmware/src/debug_print.c</file>
         </group>
     </open-files>
 </project-private>
