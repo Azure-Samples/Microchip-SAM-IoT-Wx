@@ -40,3 +40,14 @@ Please install the following software in the exact order listed:
 
         NOTE: If the `pyazureutils` command cannot be found nor executed, search for the location of the `pyazureutils.exe` program and add the absolute path of its location to the Windows `PATH` environment variable. Launch a new command line window and try bringing up the help menu again
 
+    - Confirm the version of `pyazureutils` that is currently installed (should match the version that was last downloaded)
+ 
+        ```shell
+        pyazureutils -R
+        ```
+    - If desired, `pyazureutils` can be run to output additional debug messages
+ 
+        ```shell
+        pyazureutils -v debug
+        ```
+
