@@ -165,7 +165,6 @@ az_result append_json_property_string(
     az_span         property_name_span,
     az_span         property_val_span);
 
-
 void check_button_status(void);
 
 az_result send_telemetry_message(void);
