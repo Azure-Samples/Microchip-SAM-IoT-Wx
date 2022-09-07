@@ -20,4 +20,4 @@ Please install the following software in the exact order listed:
 
     <img src=".//media/image15.png"/>
 
-3. Install the latest [Python](https://www.python.org) release. During the installation setup, be sure to enable/check the option for `Add Python <X.Y> to PATH`
+3. Any [Terminal Emulator](https://en.wikipedia.org/wiki/List_of_terminal_emulators) program of your choice
