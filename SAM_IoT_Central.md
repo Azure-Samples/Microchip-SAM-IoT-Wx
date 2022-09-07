@@ -197,6 +197,10 @@ IoT Central allows you to create an application dashboard to monitor the telemet
 
     <img src=".//media/image93.png" style="width:5.in;height:2.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
+15. Click on the `Properties (Writable)` tab and try changing the property of the `Yellow LED state` between On, Off, & Blinking (remember to hit the `Save` icon for each property write operation to take effect). Confirm that the Yellow LED on the board corresponds to the state which was selected.
+
+16. Click on the `About` tab to conveniently view all of the device's property settings/states on a single page.
+
 ## Configure the Dashboard for Data Visualization
 
 1. Navigate to the left-hand vertical toolbar and click on the `Dashboards` icon
