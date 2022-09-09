@@ -124,11 +124,11 @@ IoT Central allows you to create an application dashboard to monitor the telemet
 
    <img src=".//media/image82.png" style="width:5.5.in;height:2.53506in" />
 
-4. Click on `+ Add certificate` and browse to the **root** certificate file (`root-ca.crt` which should be located in the hidden `.microchip_iot` sub-folder that was created by the IoT Provisioning Tool). Click the `Upload` button (then click on `Close` when the certificate has been accepted)
+4. Click on `+ Add certificate` and browse to the **root** certificate file (`root-ca.crt` which should be located in the hidden `.microchip_iot` sub-folder that was created by the IoT Provisioning Tool). The IoT Provisioning Tool should have created the `.microchip_iot` hidden folder in the home directory (e.g. `/Users/<username>/.microchip_iot`). Click the `Upload` button (then click on `Close` when the certificate has been accepted)
 
    <img src=".//media/image75.png" style="width:5.5.in;height:2.13506in" />
 
-5. Click on `Manage Secondary` and then click on `+ Add certificate`. Browse to the **signer** certificate file (`signer-ca.crt` which should be located in the hidden `.microchip_iot` sub-folder that was created by the IoT Provisioning Tool). Click the `Upload` button (then click on `Close` when the certificate has been accepted)
+5. Click on `Manage Secondary` and then click on `+ Add certificate`. Browse to the **signer** certificate file (`signer-ca.crt` which should be located in the hidden `.microchip_iot` sub-folder that was created by the IoT Provisioning Tool). The IoT Provisioning Tool should have created the `.microchip_iot` hidden folder in the home directory (e.g. `/Users/<username>/.microchip_iot`). Click the `Upload` button (then click on `Close` when the certificate has been accepted)
 
    <img src=".//media/image76.png" style="width:5.5.in;height:2.13506in" />
 
