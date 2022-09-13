@@ -34,7 +34,7 @@
 
 <img src=".//media/image2.png"/>
 
- Download the [SAM-IoT WG Development Board User Guide](https://github.com/MicrochipTech/MPLAB-Harmony-Reference-Apps/releases/latest/download/SAM_IoT_WG_Development_Board_User_Guide.pdf) for more details
+ Download the [SAM-IoT WG Development Board User Guide](https://github.com/MicrochipTech/MPLAB-Harmony-Reference-Apps/releases/latest/download/SAM_IoT_WG_Development_Board_User_Guide.pdf) for more details including the schematics for the board (do not follow the setup procedure in the document as it is for a Google Cloud demo)
 
 ### Microchip “Provisioning” vs. Microsoft “Provisioning”
 
