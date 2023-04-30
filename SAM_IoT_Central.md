@@ -28,7 +28,7 @@ As a solution builder, you can use IoT Central to develop a cloud-hosted IoT sol
     git submodule update --init
     ```
 
-2. Connect the board to PC, then make sure `CURIOSITY` device shows up as a disk drive on the `Desktop` or in a `File Explorer` window. Drag and drop (i.e. copy) the pre-built `*.hex` file (located in the folder at `Microchip-SAM-IoT-Wx` > `firmware` > `AzurePnPDps.X` > `dist` > `SAMD21_WG_IOT` > `production`) to the `CURIOSITY` drive 
+2. Connect the board to the PC using a micro USB cable, then make sure a device named `CURIOSITY` shows up as a Mass Storage Device (MSD) on the `Desktop` or in a `File Explorer` window. Drag and drop (i.e. copy) the pre-built `*.hex` file (located in the folder at `Microchip-SAM-IoT-Wx` > `firmware` > `AzurePnPDps.X` > `dist` > `SAMD21_WG_IOT` > `production`) to the `CURIOSITY` drive 
 
     <img src=".//media/image115.png">
 
@@ -80,13 +80,15 @@ As a solution builder, you can use IoT Central to develop a cloud-hosted IoT sol
 
 ## Create an IoT Central Application
 
-IoT Central allows you to create an application dashboard to monitor the telemetry and take appropriate actions based on customized rules.
+IoT Central allows you to create an application dashboard to monitor the telemetry and take appropriate actions based on customized rules.  To access all of your custom applications, you must be signed into the [Azure IoT Central Portal](https://apps.azureiotcentral.com) (it is recommended to bookmark this link for later use).
 
-1. Create a custom IoT Central application by starting with an existing [Microchip IoT Development Board Template](https://apps.azureiotcentral.com/build/new/e54c7769-30ed-4223-979f-2667013845fd) (if there is a problem with loading the template, refer to the [Create an application](https://docs.microsoft.com/en-us/azure/iot-central/core/quick-deploy-iot-central) section to create your IoT Central application from scratch). If you are not currently logged into your [Microsoft account](https://account.microsoft.com/account), you will be prompted to sign in with your credentials to proceed. If you do not have an existing Microsoft account, go ahead and create one now by clicking on the `Create one!` link
+1. Review the below recomendations for creating the IoT Central application using the [Azure IoT Central Builder](https://apps.azureiotcentral.com/build) and then create your IoT Central application by clicking [here](https://docs.microsoft.com/en-us/azure/iot-central/core/quick-deploy-iot-central).
 
-2. Azure IoT Builder will guide you through the process of creating your application. Review and select the various settings for your IoT Central application (if needed, refer to [Create an application](https://docs.microsoft.com/en-us/azure/iot-central/core/quick-deploy-iot-central) for additional guidance on selecting the settings for your application). Do not click the `Create` button just yet - only after reviewing and taking into consideration the following recommendations:
-  
-    - Choose a unique `Application name` (which will result in a unique `URL`) for accessing your application. Azure IoT Builder will populate a suggested unique `Application name` which can/should be leveraged, resulting in a unique `URL` shown on the screen. Take note of the unique/customizable portion of the `URL` (e.g. "custom-1pfphmras2b" like shown in the below screen shot) as it will be needed in a future step (suggest copy/pasting the exact text into a text editor doc file as temporary storage for the name)
+    NOTE: **Only** perform the steps in the first 2 sections titled "Prerequisites" and "Create an application"; once the application is created, stop and return to this page (i.e. **DO NOT** do the section titled "Register a device" as that will be done in a future step).
+
+    If you are not currently logged into your [Microsoft account](https://account.microsoft.com/account), you will be prompted to sign in with your credentials to proceed.  
+ 
+    - Choose a unique `Application name` which (will result in a unique `URL`) for accessing your application. Azure IoT Builder will populate a suggested unique `Application name` which can/should be leveraged, resulting in a unique `URL`. Take note of the unique/customizable portion of the `URL` (e.g. "custom-120683lb8ae") as it will be needed in a future step (suggest copy and pasting the exact text into a temporary doc file)
 
         <img src=".//media/image80a.png">
 
@@ -94,19 +96,19 @@ IoT Central allows you to create an application dashboard to monitor the telemet
 
         <img src=".//media/image80b.png">
 
-    - `Billing info` section: If there is an issue with selecting an existing subscription in the drop-down list (or no subscriptions appear in the list at all), click on the `Create subscription` link to create a new subscription to use for the creation of this application.  Take note of the exact subscription name (e.g. "Azure subscription 1" like shown in the below screen shot) which was selected as it will be needed in a future step (suggest copying/pasting the exact text into a text editor file as temporary storage for the name)
-       
+    - `Billing info` section: If there is an issue with selecting an existing subscription in the drop-down list (or no subscriptions appear in the list at all), click on the `Create subscription` link to create a new subscription to use for the creation of this application.  Take note of the exact subscription name (e.g. "Azure subscription 1") which was selected as it will be needed in a future step (suggest typing the exact text into a temporary doc file)
+    
         <img src=".//media/image80c.png">
 
-        NOTE: If the message `Something went wrong` appears underneath the `Azure subscription` field, open up a web browser and log into your account using the [Azure portal](https://portal.azure.com) then retry selecting (or creating) a valid subscription
+    - NOTE: If the message `Something went wrong` appears underneath the `Azure subscription` field, open up a web browser and log into your account using the [Azure portal](https://portal.azure.com) then retry selecting (or creating) a valid subscription
 
         <img src=".//media/image80d.png">
-        
-3. Click the `Create` button (the application will be automatically saved in your [IoT Central Portal](https://apps.azureiotcentral.com))
 
-4. Whenever specific settings are needed to be read (typically the custom URL to access the application in the future), look up the settings for your application by using the left-hand navigation pane to select `Settings` &gt; `Application` &gt; `Management`
+2. Once the application has been created, the application will be automatically saved and accessible in your [IoT Central Portal](https://apps.azureiotcentral.com) (it might be a good idea to bookmark this link now).
 
-5. To access any of your IoT Central applications in the future, you can also go to [Azure IoT Central](https://apps.azureiotcentral.com) and click on `My apps`
+3. Whenever specific settings are needed to be read (typically the custom URL to access the application in the future), look up the settings for your application by using the left-hand navigation pane to select `Settings` &gt; `Application` &gt; `Management`
+
+4. To access any of your IoT Central applications in the future, you can also go to [Azure IoT Central](https://apps.azureiotcentral.com) and click on `My apps`
 
     <img src=".//media/image108.png" style="width:5.in;height:1.98982in" alt="A screenshot of a cell phone Description automatically generated" />
 
@@ -197,58 +199,17 @@ IoT Central allows you to create an application dashboard to monitor the telemet
 
     <img src=".//media/image93.png" style="width:5.in;height:2.18982in" alt="A screenshot of a cell phone Description automatically generated" />
 
-15. Click on the `Properties (Writable)` tab and try changing the property of the `Yellow LED state` between On, Off, & Blinking (remember to hit the `Save` icon for each property write operation to take effect). Confirm that the Yellow LED on the board corresponds to the state which was selected.
+15. Click [here](./DeviceTemplate_CreatingViews.md) to create an additional "Properties" view that allows you to change any of the Cloud-writable properties. Once this new view has been added to the device template, click on the Properties view and type in a new value for the Telemetry Interval. Click on the **Save** icon to send the property update request to the physical device. You should see the status of the property listed as "Pending" until a confirmation has been received from the physical device that the property was successfully updated. At this point in time, the status of the property should revert back to the "Accepted" state.
 
-16. Click on the `About` tab to conveniently view all of the device's property settings/states on a single page.
+    Depending how quickly the write property response is received, it is possible that IoT Central will show the value as "Pending". If the device is offline or doesn't respond to a writable property request, the value can display as "Pending" indefinitely in IoT Central until a valid property update acknowledge has been received from the device.
 
-## Configure the Dashboard for Data Visualization
+16. Click on the `Properties` tab and try changing the property of the `Yellow LED state` between On, Off, & Blinking (remember to hit the `Save` icon for each property write operation to take effect). Confirm that the Yellow LED on the board corresponds to the state which was selected.
 
-1. Navigate to the left-hand vertical toolbar and click on the `Dashboards` icon
+17. Click on the `About` tab to conveniently view all of the device's property settings/states on a single page.
 
-    <img src=".//media/image100.png" style="width:5.in;height:0.98982in" alt="A screenshot of a cell phone Description automatically generated" />
+## Creating a Dashboard for Custom Data Visualization
 
-2. Towards the top of the web page, click on the dashboard selector and change the view to `Microchip IoT Light and Temperature Sensors`
-
-    <img src=".//media/image100a.png">
-
-3. Towards the top of the web page, click on the `Edit` icon
-
-    <img src=".//media/image101.png" style="width:5.in;height:0.38982in" alt="A screenshot of a cell phone Description automatically generated" />
-
-4. For **all** of the existing tiles named `Light` or `Temperature`, click on the upper right-hand corner of the tile to select `Configure`
-
-    <img src=".//media/image102a.png" style="width:5.in;height:2.18982in" alt="A screenshot of a cell phone Description automatically generated" />
-    <img src=".//media/image102b.png" style="width:5.in;height:2.18982in" alt="A screenshot of a cell phone Description automatically generated" />
-
-5. Select `Device Group` > `SAM-IoT WM;2 - All devices` and then check the box for your specific device name for `Devices`
-
-    <img src=".//media/image103.png" style="width:5.in;height:2.08982in" alt="A screenshot of a cell phone Description automatically generated" />
-
-6. Under the `Telemetry` category, click on `+ Capability` and select the parameter pertaining to the title of the tile (e.g. `Brightness from light sensor` for each of the `Light` tiles or `Temperature` for each of the `Temperature` tiles)
-
-    <img src=".//media/image104a.png" style="width:5.in;height:0.89082in" alt="A screenshot of a cell phone Description automatically generated" />
-    <img src=".//media/image104b.png" style="width:5.in;height:2.18982in" alt="A screenshot of a cell phone Description automatically generated" />
-    <img src=".//media/image104c.png" style="width:5.in;height:1.18982in" alt="A screenshot of a cell phone Description automatically generated" />
-
-7. Click on `Update` and repeat the process for the remainder of the existing tiles
-
-    <img src=".//media/image105.png" style="width:5.in;height:0.48982in" alt="A screenshot of a cell phone Description automatically generated" />
-
-8. After every tile has been configured to visualize your device's sensor data, click on the `Save` icon to save the latest changes to the dashboard
-
-    <img src=".//media/image106.png" style="width:5.in;height:0.38982in" alt="A screenshot of a cell phone Description automatically generated" />
-
-9. Confirm that the dashboard is being continuously updated with the expected telemetry data received from the device.  For example, adjust the ambient light source directed at the board and observe that the light sensor values are changing accordingly
-
-    <img src=".//media/image107.png" style="width:5.in;height:2.58982in" alt="A screenshot of a cell phone Description automatically generated" />
-
-10. To access your IoT Central application(s) in the future, go to [Azure IoT Central](https://apps.azureiotcentral.com) and click on `My apps`
-
-    <img src=".//media/image108.png" style="width:5.in;height:1.98982in" alt="A screenshot of a cell phone Description automatically generated" />
-
-## Expand the Dashboard with Additional Tiles
-
-To create additional tiles for your IoT Central dashboard, refer to [Configure the IoT Central application dashboard](https://docs.microsoft.com/en-us/azure/iot-central/core/howto-add-tiles-to-your-dashboard). The below screen captures show additional possibilities of dashboard components that can highlight the telemetry data and properties facilitated by the `Plug and Play` interface.  Note that multiple devices can be selected for each tile to allow groups of devices to be visualized within a single tile. 
+Try creating an IoT Central dashboard by clicking [here](https://docs.microsoft.com/en-us/azure/iot-central/core/howto-add-tiles-to-your-dashboard) and following the procedure outlined in the online guide. The below screen captures show the possibilities of dashboard components that can highlight the telemetry data and properties facilitated by the `IoT Plug and Play` interface.  Note that multiple devices can be selected for each tile to allow groups of devices to be visualized within a single tile. 
 
 <img src=".//media/image95.png" style="width:5.in;height:3.34982in" alt="A screenshot of a cell phone Description automatically generated" />
 
