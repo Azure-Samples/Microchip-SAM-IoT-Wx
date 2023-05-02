@@ -41,7 +41,7 @@ Select `Enrollment Groups` tab:
 
 3. Click on the `Registration + provisioning` tab and configure the following:
     - Attestation mechanism = X.509 certificates uploaded to this Device Provisioning Service instance
-    - Primary certificate = name of the signer certificate (e.g. signer.pem)
+    - Primary certificate = name of the signer certificate which was created earlier
     - Group name = any meaningful name
 
         <img src=".//media/image18c.png" width=500/>
@@ -49,8 +49,6 @@ Select `Enrollment Groups` tab:
 4. Click the `Review + create` button, then click on the `Create` button at the bottom of the next page. Once this has been done, your enrollment group name should show up in the `Enrollment groups` tab.
 
     <img src=".//media/image18d.png" width=500/>
-
-
 
 ### **Program the Plug and Play Demo**
 
