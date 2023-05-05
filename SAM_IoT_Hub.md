@@ -12,7 +12,11 @@ IoT Hub's capabilities help you build scalable, full-featured IoT solutions such
 
 ## Procedure
 
-### **Enroll Device into DPS (Device Provisioning Service)**
+### **Create an IoT Hub and Device Provisioning Service (DPS)**
+
+Click [here](https://learn.microsoft.com/en-us/azure/iot-dps/quick-setup-auto-provision) and follow the procedure to create an IoT Hub, create a Device Provisioning Service (DPS), and link the IoT Hub to the DPS (do **not** do the section "Clean Up Resources").
+
+### **Upload Signer Certificate into DPS**
 
 1. Prepare the certificates for the upload process:
 
@@ -136,15 +140,15 @@ A successful SAM-IoT to Azure DPS connection can be verified two ways:
 
 Procedure:
 
-1. In the [Azure Portal](https://portal.azure.com/#home), go to your DPS &gt; click `Manage enrollments` &gt; under Enrollment Group, click `your group name` &gt; click `Registration Records` &gt; device should show up with the IoT Hub info that it got assigned to
+1. In the [Azure Portal](https://portal.azure.com/#home), go to your DPS &gt; click `Manage enrollments` &gt; under Enrollment Group, click `your group name` &gt; click Registration status `Details` &gt; device should show up with the IoT Hub info that it got assigned to (Assigned Hub)
 
-    <img src=".//media/image28.png" style="width:5.64758in;height:2.34954in" alt="A screenshot of a social media post Description automatically generated" />
+    <img src=".//media/image28a.png"/>
+    <img src=".//media/image28b.png"/>
+    <img src=".//media/image28c.png"/>
 
-2. In the [Azure Portal](https://portal.azure.com/#home), go to your IoT Hub &gt; click `IoT
-    Devices` &gt; click `Refresh` &gt; device should show up with the
-    Status “Enabled” and Authentication Type of “SelfSigned”
+2. In the [Azure Portal](https://portal.azure.com/#home), go to your IoT Hub &gt; click `Devices` &gt; device should show up with Status `Enabled` and Authentication type `Self-signed X509 Certificate`
 
-    <img src=".//media/image29.png" style="width:4.91723in;height:2.58102in" alt="A screenshot of a cell phone Description automatically generated" />
+    <img src=".//media/image29.png"/>
 
 ### **SAM-IoT Board Interaction with Azure IoT Explorer**
 
